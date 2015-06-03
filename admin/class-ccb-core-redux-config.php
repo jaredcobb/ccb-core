@@ -542,7 +542,7 @@ class CCB_Core_Redux_Config extends CCB_Core_Plugin {
 			$spinner_active = 'is-active';
 		}
 		return <<<HTML
-			<div class="sync-wrapper {$sync_type}">
+			<div class="sync-wrapper">
 				<input type="button" name="manual_sync" id="manual-sync" class="button button-primary {$button_disabled}" value="Synchronize" />
 				<div class="spinner {$spinner_active}"></div>
 				{$sync_message}
