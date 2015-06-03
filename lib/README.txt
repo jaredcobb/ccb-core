@@ -29,3 +29,5 @@ Removed lines 405-421
 -                    }
 
 This disables both the tracking and spam
+
+I also deleted the /tests and /samples folders and tracking.php
