@@ -1,5 +1,8 @@
 Customizations have been made to the core files in ReduxFramework.
-Note these customizations will be lost when updating the submodule and need to be done again.
+
+The specific changes are listed below, but in general, these changes completely remove
+the tracking feature of Redux, the notifications features (calling home), and the 
+global notice checks.
 
 ReduxFramework/ReduxCore/framework.php
 
@@ -28,6 +31,13 @@ Removed lines 405-421
 -                        }
 -                    }
 
-This disables both the tracking and spam
+Removed lines 612-618
+-            private function _tracking() {
+-                require_once( dirname( __FILE__ ) . '/inc/tracking.php' );
+-                $tracking = Redux_Tracking::get_instance();
+-                $tracking->load( $this );
+-            }
+-// _tracking()
+-
 
-I also deleted the /tests and /samples folders and tracking.php
+DELETED ReduxFramework/ReduxCore/inc/tracking.php

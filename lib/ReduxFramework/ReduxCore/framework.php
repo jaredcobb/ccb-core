@@ -622,13 +622,6 @@
 
 // get_instance()
 
-            private function _tracking() {
-                require_once( dirname( __FILE__ ) . '/inc/tracking.php' );
-                $tracking = Redux_Tracking::get_instance();
-                $tracking->load( $this );
-            }
-// _tracking()
-
             /**
              * ->_get_default(); This is used to return the default value if default_show is set
              *
