@@ -56,32 +56,31 @@ class CCB_Core_CPTs extends CCB_Core_Plugin {
 	 */
 	public function initialize() {
 
-		global ${$this->plugin_options_name};
-		$options = ${$this->plugin_options_name};
+		$settings = get_option( $this->plugin_settings_name );
 
-		if ( isset( $options['groups-enabled'] ) && $options['groups-enabled'] == 1 ) {
+		if ( isset( $settings['groups-enabled'] ) && $settings['groups-enabled'] == 1 ) {
 
-			$this->groups_cpt_options['name'] = ( empty( $options['groups-name'] ) ? 'Groups' : $options['groups-name'] );
-			$this->groups_cpt_options['slug'] = ( empty( $options['groups-slug'] ) ? 'groups' : $options['groups-slug'] );
+			$this->groups_cpt_options['name'] = ( empty( $settings['groups-name'] ) ? 'Groups' : $settings['groups-name'] );
+			$this->groups_cpt_options['slug'] = ( empty( $settings['groups-slug'] ) ? 'groups' : $settings['groups-slug'] );
 			$this->groups_cpt_options['singular_name'] = rtrim( $this->groups_cpt_options['name'], 's' ); // this is ghetto
-			$this->groups_cpt_options['exclude_from_search'] = ( $options['groups-exclude-from-search'] == '1' ? true : false );
-			$this->groups_cpt_options['publicly_queryable'] = ( $options['groups-publicly-queryable'] == '1' ? true : false );
-			$this->groups_cpt_options['show_ui'] = ( $options['groups-show-ui'] == '1' ? true : false );
-			$this->groups_cpt_options['show_in_nav_menus'] = ( $options['groups-show-in-nav-menus'] == '1' ? true : false );
+			$this->groups_cpt_options['exclude_from_search'] = ( $settings['groups-exclude-from-search'] == 'yes' ? true : false );
+			$this->groups_cpt_options['publicly_queryable'] = ( $settings['groups-publicly-queryable'] == 'yes' ? true : false );
+			$this->groups_cpt_options['show_ui'] = ( $settings['groups-show-ui'] == 'yes' ? true : false );
+			$this->groups_cpt_options['show_in_nav_menus'] = ( $settings['groups-show-in-nav-menus'] == 'yes' ? true : false );
 
 			$this->register_groups();
 
 		}
 
-		if ( isset( $options['calendar-enabled'] ) && $options['calendar-enabled'] == 1 ) {
+		if ( isset( $settings['calendar-enabled'] ) && $settings['calendar-enabled'] == 1 ) {
 
-			$this->calendar_cpt_options['name'] = ( empty( $options['calendar-name'] ) ? 'calendar' : $options['calendar-name'] );
-			$this->calendar_cpt_options['slug'] = ( empty( $options['calendar-slug'] ) ? 'calendar' : $options['calendar-slug'] );
+			$this->calendar_cpt_options['name'] = ( empty( $settings['calendar-name'] ) ? 'Events' : $settings['calendar-name'] );
+			$this->calendar_cpt_options['slug'] = ( empty( $settings['calendar-slug'] ) ? 'events' : $settings['calendar-slug'] );
 			$this->calendar_cpt_options['singular_name'] = rtrim( $this->calendar_cpt_options['name'], 's' ); // this is ghetto
-			$this->calendar_cpt_options['exclude_from_search'] = ( $options['calendar-exclude-from-search'] == '1' ? true : false );
-			$this->calendar_cpt_options['publicly_queryable'] = ( $options['calendar-publicly-queryable'] == '1' ? true : false );
-			$this->calendar_cpt_options['show_ui'] = ( $options['calendar-show-ui'] == '1' ? true : false );
-			$this->calendar_cpt_options['show_in_nav_menus'] = ( $options['calendar-show-in-nav-menus'] == '1' ? true : false );
+			$this->calendar_cpt_options['exclude_from_search'] = ( $settings['calendar-exclude-from-search'] == 'yes' ? true : false );
+			$this->calendar_cpt_options['publicly_queryable'] = ( $settings['calendar-publicly-queryable'] == 'yes' ? true : false );
+			$this->calendar_cpt_options['show_ui'] = ( $settings['calendar-show-ui'] == 'yes' ? true : false );
+			$this->calendar_cpt_options['show_in_nav_menus'] = ( $settings['calendar-show-in-nav-menus'] == 'yes' ? true : false );
 
 			$this->register_calendar();
 

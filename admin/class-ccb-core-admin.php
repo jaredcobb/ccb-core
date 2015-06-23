@@ -28,25 +28,65 @@ class CCB_Core_Admin extends CCB_Core_Plugin {
 	}
 
 	/**
-	 * Initialize the ReduxFramework
+	 * Initialize the Settings Menu and Page
 	 *
-	 * @since    0.9.0
+	 * @access    public
+	 * @since     0.9.0
+	 * @return    void
 	 */
-	public function initialize_redux() {
+	public function initialize_settings_menu() {
 
-		$redux_options = new CCB_Core_Redux_Config();
-		$redux_options->initialize();
+		$settings = new CCB_Core_Settings();
+		$settings_definitions = $settings->get_settings_definitions();
+		$settings_page = new CCB_Core_Settings_Page( $this->plugin_settings_name );
 
+		add_menu_page( $this->plugin_display_name, $this->plugin_short_display_name, 'manage_options', $this->plugin_settings_name, function(){}, 'dashicons-update', '80.9' );
+
+		if ( is_array( $settings_definitions ) && ! empty( $settings_definitions ) ) {
+			foreach ( $settings_definitions as $page_id => $page ) {
+				$settings_page = new CCB_Core_Settings_Page( $page_id, $page );
+				add_submenu_page( $this->plugin_settings_name, $page['page_title'], $page['page_title'], 'manage_options', $page_id, array( $settings_page, 'render_page' ) );
+			}
+		}
 	}
 
 	/**
-	 * Removes the built in Redux menu so as not to confuse users
+	 * Initialize the Settings
 	 *
-	 * @since    0.9.0
+	 * @access    public
+	 * @since     0.9.0
+	 * @return    void
 	 */
-	public function remove_redux_menu() {
+	public function initialize_settings() {
 
-		remove_submenu_page('tools.php','redux-about');
+		$settings = new CCB_Core_Settings();
+		$settings_definitions = $settings->get_settings_definitions();
+
+		if ( is_array( $settings_definitions ) && ! empty( $settings_definitions ) ) {
+			foreach ( $settings_definitions as $page_id => $page ) {
+
+				register_setting( $page_id, $this->plugin_settings_name, array( $settings, 'validate_settings' ) );
+
+				if ( isset( $page['sections'] ) && ! empty( $page['sections'] ) ) {
+					foreach ( $page['sections'] as $section_id => $section ) {
+
+						$settings_section = new CCB_Core_Settings_Section( $section_id, $section );
+						add_settings_section( $section_id, $section['section_title'], array( $settings_section, 'render_section' ), $page_id );
+
+						if ( isset( $section['fields'] ) && ! empty( $section['fields'] ) ) {
+							foreach ( $section['fields'] as $field_id => $field ) {
+
+								$settings_field = new CCB_Core_Settings_Field( $field_id, $field );
+								add_settings_field( $field_id, $field['field_title'], array( $settings_field, 'render_field' ), $page_id, $section_id );
+
+							}
+						}
+
+					}
+				}
+
+			}
+		}
 
 	}
 
@@ -147,20 +187,6 @@ class CCB_Core_Admin extends CCB_Core_Plugin {
 	}
 
 	/**
-	 * Decrypts the password and sets its plain text value
-	 * into the field before the form is rendered
-	 *
-	 * @param object $redux_object
-	 * @access    public
-	 * @since     0.9.0
-	 * @return    void
-	 */
-	public function redux_before_form_render( $redux_object ) {
-		$redux_object->parent->options['password']['password'] = $this->decrypt( $redux_object->parent->options['password']['password'] );
-		$this->refresh_test_login_wrapper( $redux_object->parent->options );
-	}
-
-	/**
 	 * Create a helpful settings link on the plugin page
 	 *
 	 * @param array $links
@@ -169,7 +195,7 @@ class CCB_Core_Admin extends CCB_Core_Plugin {
 	 * @return    array
 	 */
 	public function add_settings_link( $links ) {
-		$links[] = '<a href="' . esc_url( get_admin_url( null, 'options-general.php?page=' . $this->plugin_name ) ) . '">Settings</a>';
+		$links[] = '<a href="' . esc_url( get_admin_url( null, 'admin.php?page=' . $this->plugin_settings_name ) ) . '">Settings</a>';
 		return $links;
 	}
 
@@ -183,14 +209,13 @@ class CCB_Core_Admin extends CCB_Core_Plugin {
 	 */
 	public function check_auto_refresh() {
 
-		global ${$this->plugin_options_name};
-		$options = ${$this->plugin_options_name};
+		$settings = get_option( $this->plugin_settings_name );
 
-		if ( $options['auto-sync'] == 1 ) {
+		if ( isset( $settings['auto-sync'] ) && $settings['auto-sync'] == 1 ) {
 			$latest_sync = get_option( $this->plugin_name . '-latest-sync' );
 
 			if ( ! empty( $latest_sync ) ) {
-				$auto_sync_timeout = $options['auto-sync-timeout'];
+				$auto_sync_timeout = $settings['auto-sync-timeout'];
 				$now = time();
 				$diff = $now - $latest_sync['timestamp'];
 
@@ -224,8 +249,12 @@ class CCB_Core_Admin extends CCB_Core_Plugin {
 	 */
 	public function enqueue_styles( $hook ) {
 
-		if ( $hook == "settings_page_{$this->plugin_name}" ) {
+		if ( stristr( $hook, $this->plugin_settings_name ) !== false ) {
 			wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/ccb-core-admin.css', array(), $this->version, 'all' );
+			wp_enqueue_style( 'switchery', plugin_dir_url( __FILE__ ) . 'css/vendor/switchery.min.css', array(), $this->version, 'all' );
+			wp_enqueue_style( 'powerange', plugin_dir_url( __FILE__ ) . 'css/vendor/powerange.min.css', array(), $this->version, 'all' );
+			wp_enqueue_style( 'picker', plugin_dir_url( __FILE__ ) . 'css/vendor/default.css', array(), $this->version, 'all' );
+			wp_enqueue_style( 'picker-date', plugin_dir_url( __FILE__ ) . 'css/vendor/default.date.css', array(), $this->version, 'all' );
 		}
 
 	}
@@ -237,56 +266,17 @@ class CCB_Core_Admin extends CCB_Core_Plugin {
 	 */
 	public function enqueue_scripts( $hook ) {
 
-		if ( $hook == "settings_page_{$this->plugin_name}" ) {
+		if ( stristr( $hook, $this->plugin_settings_name ) !== false ) {
 			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/ccb-core-admin.js', array( 'jquery' ), $this->version, false );
-			wp_localize_script( $this->plugin_name, strtoupper( $this->plugin_options_name ), array(
+			wp_enqueue_script( 'switchery', plugin_dir_url( __FILE__ ) . 'js/vendor/switchery.min.js', array( 'jquery' ), $this->version, false );
+			wp_enqueue_script( 'powerange', plugin_dir_url( __FILE__ ) . 'js/vendor/powerange.min.js', array( 'jquery' ), $this->version, false );
+			wp_enqueue_script( 'picker', plugin_dir_url( __FILE__ ) . 'js/vendor/picker.js', array( 'jquery' ), $this->version, false );
+			wp_enqueue_script( 'picker-date', plugin_dir_url( __FILE__ ) . 'js/vendor/picker.date.js', array( 'picker' ), $this->version, false );
+			wp_localize_script( $this->plugin_name, strtoupper( $this->plugin_settings_name ), array(
 				'nextNonce' => wp_create_nonce( $this->plugin_name . '-nonce' ))
 			);
 		}
 
-	}
-
-	/**
-	 * Handles actions we wish to run after the form is saved
-	 *
-	 * @param array $value
-	 * @access    public
-	 * @since     0.9.0
-	 * @return    void
-	 */
-	public function redux_after_form_save( $value ) {
-		$this->refresh_test_login_wrapper( $value );
-	}
-
-	/**
-	 * Checks if the credentials are at least entered
-	 * and shows/hides the test button after save
-	 *
-	 * @param    array    $value
-	 * @access   protected
-	 * @since    0.9.0
-	 * @return   void
-	 */
-	protected function refresh_test_login_wrapper( $value ) {
-
-		if ( empty( $value['subdomain'] ) || empty( $value['password']['password'] ) || empty( $value['password']['username'] ) ) {
-			echo <<<HTML
-				<style>
-				.ccb-core-test-login {
-					display: none;
-				}
-				</style>
-HTML;
-		}
-		else {
-			echo <<<HTML
-				<style>
-				.ccb-core-test-login {
-					display: table-row;
-				}
-				</style>
-HTML;
-		}
 	}
 
 }

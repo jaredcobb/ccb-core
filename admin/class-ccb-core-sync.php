@@ -92,36 +92,35 @@ class CCB_Core_Sync extends CCB_Core_Plugin {
 
 		parent::__construct();
 
-		global ${$this->plugin_options_name};
-		$options = ${$this->plugin_options_name};
+		$settings = get_option( $this->plugin_settings_name );
 
-		$this->subdomain = $options['subdomain'];
-		$this->username = $options['password']['username'];
-		$this->password = $this->decrypt( $options['password']['password'] );
+		$this->subdomain = $settings['subdomain'];
+		$this->username = $settings['credentials']['username'];
+		$this->password = $this->decrypt( $settings['credentials']['password'] );
 
-		if ( isset( $options['groups-enabled'] ) && $options['groups-enabled'] == 1 ) {
+		if ( isset( $settings['groups-enabled'] ) && $settings['groups-enabled'] == 1 ) {
 
 			$this->enabled_apis['group_profiles'] = true;
 
 		}
-		if ( isset( $options['calendar-enabled'] ) && $options['calendar-enabled'] == 1 ) {
+		if ( isset( $settings['calendar-enabled'] ) && $settings['calendar-enabled'] == 1 ) {
 
 			$this->enabled_apis['public_calendar_listing'] = true;
 
-			if ( $options['calendar-date-range-type'] == 'relative' ) {
+			if ( $settings['calendar-date-range-type'] == 'relative' ) {
 
-				$this->calendar_start_date = date( 'Y-m-d', strtotime( $options['calendar-relative-weeks-past'] . ' weeks ago') );
-				$this->calendar_end_date = date( 'Y-m-d', strtotime( '+' . $options['calendar-relative-weeks-future'] . ' weeks' ) );
+				$this->calendar_start_date = date( 'Y-m-d', strtotime( $settings['calendar-relative-weeks-past'] . ' weeks ago') );
+				$this->calendar_end_date = date( 'Y-m-d', strtotime( '+' . $settings['calendar-relative-weeks-future'] . ' weeks' ) );
 
 			}
-			elseif ( $options['calendar-date-range-type'] == 'specific' ) {
+			elseif ( $settings['calendar-date-range-type'] == 'specific' ) {
 
 				// TODO: Use localization for date formats other than U.S.
 
-				if ( $options['calendar-specific-start'] ) {
+				if ( $settings['calendar-specific-start'] ) {
 
 					$last_year = strtotime( '1 year ago' );
-					$start_timestamp = strtotime( $options['calendar-specific-start'] );
+					$start_timestamp = strtotime( $settings['calendar-specific-start'] );
 
 					if ( abs( $start_timestamp - $last_year ) > 0 ) {
 						$this->calendar_start_date = date( 'Y-m-d', $start_timestamp );
@@ -135,10 +134,10 @@ class CCB_Core_Sync extends CCB_Core_Plugin {
 					$this->calendar_start_date = date( 'Y-m-d' );
 				}
 
-				if ( $options['calendar-specific-end'] ) {
+				if ( $settings['calendar-specific-end'] ) {
 
 					$next_year = strtotime( '+1 year' );
-					$end_timestamp = strtotime( $options['calendar-specific-end'] );
+					$end_timestamp = strtotime( $settings['calendar-specific-end'] );
 
 					if ( abs( $next_year - $end_timestamp ) > 0 ) {
 						$this->calendar_end_date = date( 'Y-m-d', $end_timestamp );

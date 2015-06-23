@@ -27,12 +27,7 @@ class CCB_Core_Activator extends CCB_Core_Plugin {
 	 * @since    0.9.0
 	 */
 	public static function activate() {
-
-		$redux_installed_version = get_option( 'redux_version_upgraded_from' );
-
-		if ( $redux_installed_version != static::$redux_bundled_version ) {
-			update_option( 'redux_version_upgraded_from', static::$redux_bundled_version );
-		}
+		// TODO: check dependencies like mcrypt and memory limits
 	}
 
 }

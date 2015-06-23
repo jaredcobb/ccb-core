@@ -30,13 +30,13 @@ class CCB_Core_Plugin {
 	protected $plugin_name;
 
 	/**
-	 * The options variable name used to access the options object
+	 * The settings variable name used to access the plugin settings
 	 *
 	 * @since    0.9.0
 	 * @access   protected
-	 * @var      string    $plugin_options_name
+	 * @var      string    $plugin_settings_name
 	 */
-	protected $plugin_options_name;
+	protected $plugin_settings_name;
 
 	/**
 	 * The display name of this plugin.
@@ -48,6 +48,15 @@ class CCB_Core_Plugin {
 	protected $plugin_display_name;
 
 	/**
+	 * The short display name of this plugin.
+	 *
+	 * @since    0.9.0
+	 * @access   protected
+	 * @var      string    $plugin_short_display_name    The short display name of this plugin.
+	 */
+	protected $plugin_short_display_name;
+
+	/**
 	 * The current version of the plugin.
 	 *
 	 * @since    0.9.0
@@ -55,15 +64,6 @@ class CCB_Core_Plugin {
 	 * @var      string    $version    The current version of the plugin.
 	 */
 	protected $version;
-
-	/**
-	 * The current version of ReduxFramework that is bundled
-	 *
-	 * @since    0.9.0
-	 * @access   protected
-	 * @var      string    $redux_installed_version    Static property accessed by static method for plugin activation
-	 */
-	protected static $redux_bundled_version = '3.5.4.12';
 
 	/**
 	 * Define the core properties of the plugin
@@ -75,8 +75,9 @@ class CCB_Core_Plugin {
 	public function __construct() {
 
 		$this->plugin_name = 'ccb-core';
-		$this->plugin_options_name = 'ccb_core_options';
+		$this->plugin_settings_name = 'ccb_core_settings';
 		$this->plugin_display_name = __( 'Church Community Builder Core API', $this->plugin_name );
+		$this->plugin_short_display_name = __( 'CCB Core API', $this->plugin_name );
 		$this->version = '0.9.0';
 
 	}
@@ -96,7 +97,7 @@ class CCB_Core_Plugin {
 
 		if ( ! empty( $data ) ) {
 			try {
-				$e = new Encryption( MCRYPT_BlOWFISH, MCRYPT_MODE_CBC );
+				$e = new CCB_Core_Vendor_Encryption( MCRYPT_BlOWFISH, MCRYPT_MODE_CBC );
 				$encrypted_value = base64_encode( $e->encrypt( $data, $key ) );
 			}
 			catch ( Exception $ex ) {
@@ -123,7 +124,7 @@ class CCB_Core_Plugin {
 
 		if ( ! empty( $data ) ) {
 			try {
-				$e = new Encryption( MCRYPT_BlOWFISH, MCRYPT_MODE_CBC );
+				$e = new CCB_Core_Vendor_Encryption( MCRYPT_BlOWFISH, MCRYPT_MODE_CBC );
 				$decrypted_value = $e->decrypt( base64_decode( $data ), $key );
 			}
 			catch ( Exception $ex ) {
@@ -199,21 +200,21 @@ class CCB_Core_Plugin {
 			if ( $latest_sync['success'] == true ) {
 
 				$latest_sync_message = array(
-					'style' => 'success',
+					'style' => 'updated',
 					'description' => $latest_sync['message'],
 				);
 
 			}
 			else {
 				$latest_sync_message = array(
-					'style' => 'critical',
+					'style' => 'error',
 					'description' => $latest_sync['message'],
 				);
 			}
 		}
 		else {
 			$latest_sync_message = array(
-				'style' => 'warning',
+				'style' => 'notice',
 				'description' => "It looks like you haven't synchronized anything yet."
 			);
 		}

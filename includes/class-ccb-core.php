@@ -77,15 +77,7 @@ class CCB_Core extends CCB_Core_Plugin {
 	 */
 	private function load_dependencies() {
 
-		// Redux Framework for plugin settings
-		if ( ! class_exists( 'ReduxFramework' ) ) {
-			require_once plugin_dir_path( dirname( __FILE__ ) ) . 'lib/ReduxFramework/ReduxCore/framework.php';
-		}
-
-		// Redux Framework config
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-ccb-core-redux-config.php';
-
-		// Encryption class to provide better security and ease of use
+		// encryption class to provide better security and ease of use
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'lib/Encryption/Encryption.php';
 
 		// the class responsible for orchestrating the actions and filters of the core plugin.
@@ -93,6 +85,12 @@ class CCB_Core extends CCB_Core_Plugin {
 
 		// the class responsible for defining internationalization functionality of the plugin.
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-ccb-core-i18n.php';
+
+		// the class that defines options and settings for the plugin
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-ccb-core-settings.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-ccb-core-settings-page.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-ccb-core-settings-section.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-ccb-core-settings-field.php';
 
 		// the class responsible for defining all actions that occur in the Dashboard.
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-ccb-core-admin.php';
@@ -135,20 +133,20 @@ class CCB_Core extends CCB_Core_Plugin {
 
 		$plugin_admin = new CCB_Core_Admin();
 
-		$this->loader->add_action( 'plugins_loaded', $plugin_admin, 'initialize_redux' );
-		$this->loader->add_action( 'redux/page/' . $this->plugin_options_name . '/form/before', $plugin_admin, 'redux_before_form_render' );
-		$this->loader->add_action( 'redux/options/' . $this->plugin_options_name . '/saved', $plugin_admin, 'redux_after_form_save' );
-		$this->loader->add_action( 'admin_menu', $plugin_admin, 'remove_redux_menu', 12 );
 		$this->loader->add_action( 'init', $plugin_admin, 'initialize_custom_post_types' );
+		$this->loader->add_action( 'admin_menu', $plugin_admin, 'initialize_settings_menu' );
+		$this->loader->add_action( 'admin_init', $plugin_admin, 'initialize_settings' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		$this->loader->add_filter( 'plugin_action_links_' . $this->plugin_basename, $plugin_admin, 'add_settings_link' );
+		$this->loader->add_action( 'schedule_auto_refresh', $plugin_admin, 'auto_sync' );
+		$this->loader->add_action( 'wp_loaded', $plugin_admin, 'check_auto_refresh' );
+
+		// all backend ajax hooks
 		$this->loader->add_action( 'wp_ajax_sync', $plugin_admin, 'ajax_sync' );
 		$this->loader->add_action( 'wp_ajax_poll_sync', $plugin_admin, 'ajax_poll_sync' );
 		$this->loader->add_action( 'wp_ajax_test_credentials', $plugin_admin, 'ajax_test_credentials' );
 		$this->loader->add_action( 'wp_ajax_get_latest_sync', $plugin_admin, 'ajax_get_latest_sync' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
-		$this->loader->add_action( 'wp_loaded', $plugin_admin, 'check_auto_refresh' );
-		$this->loader->add_action( 'schedule_auto_refresh', $plugin_admin, 'auto_sync' );
-		$this->loader->add_filter( 'plugin_action_links_' . $this->plugin_basename, $plugin_admin, 'add_settings_link' );
 
 	}
 
