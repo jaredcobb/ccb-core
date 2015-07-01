@@ -80,7 +80,7 @@ class CCB_Core_Vendor_Encryption {
      * @returns string The encrypted data
      */
     public function encrypt($data, $key) {
-        $salt = mcrypt_create_iv(128, MCRYPT_DEV_URANDOM);
+        $salt = mcrypt_create_iv(128, MCRYPT_RAND);
         list ($cipherKey, $macKey, $iv) = $this->getKeys($salt, $key);
 
         $data = $this->pad($data);

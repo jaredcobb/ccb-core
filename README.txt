@@ -3,7 +3,7 @@ Contributors: jaredcobb
 Tags: ccb, church, api, chms
 Requires at least: 3.0.1
 Tested up to: 4.2.2
-Stable tag: 0.9.0
+Stable tag: 0.9.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -51,7 +51,7 @@ alter your theme to *take advantage* of this data.
 
 You'll need to ensure your [group settings](https://support.churchcommunitybuilder.com/customer/portal/articles/361764-editing-groups)
 allow the group to be publicly listed. A great way to cross reference if your group is publicly visible is to visit
-http://<your-site>.ccbchurch.com/w_group_list.php and see if the missing group shows up there.
+http://[your-subdomain].ccbchurch.com/w_group_list.php and see if the missing group shows up there.
 
 == Screenshots ==
 
@@ -60,5 +60,8 @@ http://<your-site>.ccbchurch.com/w_group_list.php and see if the missing group s
 
 == Changelog ==
 
-= 0.9 =
+= 0.9.1 =
+* Fixed an issue where some web hosts were not saving encypted passwords
+
+= 0.9.0 =
 * Initial release
