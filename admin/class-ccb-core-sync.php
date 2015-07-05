@@ -107,7 +107,14 @@ class CCB_Core_Sync extends CCB_Core_Plugin {
 
 			$this->enabled_apis['public_calendar_listing'] = true;
 
-			if ( $settings['calendar-date-range-type'] == 'relative' ) {
+			// use sane defaults if this advanced setting isn't set
+			if ( ! isset( $settings['calendar-date-range-type'] ) ) {
+
+				$this->calendar_start_date = date( 'Y-m-d', strtotime( '1 weeks ago') );
+				$this->calendar_end_date = date( 'Y-m-d', strtotime( '+16 weeks' ) );
+
+			}
+			elseif ( $settings['calendar-date-range-type'] == 'relative' ) {
 
 				$this->calendar_start_date = date( 'Y-m-d', strtotime( $settings['calendar-relative-weeks-past'] . ' weeks ago') );
 				$this->calendar_end_date = date( 'Y-m-d', strtotime( '+' . $settings['calendar-relative-weeks-future'] . ' weeks' ) );
