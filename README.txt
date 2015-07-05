@@ -3,7 +3,7 @@ Contributors: jaredcobb
 Tags: ccb, church, api, chms
 Requires at least: 3.0.1
 Tested up to: 4.2.2
-Stable tag: 0.9.1
+Stable tag: 0.9.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -61,6 +61,11 @@ allow the group to be publicly listed. A great way to cross reference if your gr
 2. screenshot-2.png
 
 == Changelog ==
+
+= 0.9.2 =
+* Added tooltips to some settings to help explain the functionality
+* Added better defaults for date ranges
+* Updated the plugin web site to http://www.wpccb.com
 
 = 0.9.1 =
 * Fixed an issue where some web hosts were not saving encypted passwords
