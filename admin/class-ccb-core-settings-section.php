@@ -63,6 +63,16 @@ class CCB_Core_Settings_Section extends CCB_Core_Plugin {
 	 * @return    void
 	 */
 	public function render_section_about() {
+
+		// if the user has set their subdomain, use it for the url to w_group_list.php
+		$settings = get_option( $this->plugin_settings_name );
+		if ( isset( $settings['subdomain'] ) && ! empty( $settings['subdomain'] ) ) {
+			$w_group_list = "<a href=\"https://{$settings['subdomain']}.ccbchurch.com/w_group_list.php\" target=\"_blank\">https://{$settings['subdomain']}.ccbchurch.com/w_group_list.php</a>";
+		}
+		else {
+			$w_group_list = 'https://[yoursite].ccbchurch.com/w_group_list.php';
+		}
+
 		// this unfortunately includes a dirty hack to prevent chrome from autopopulating username/password
 		// so this will inject a fake login panel because chrome ignores autocomplete="off"
 		echo <<<HTML
@@ -129,7 +139,7 @@ class CCB_Core_Settings_Section extends CCB_Core_Plugin {
 			<blockquote>
 				You'll need to ensure your <a href="https://support.churchcommunitybuilder.com/customer/portal/articles/361764-editing-groups" target="_blank">group settings</a>
 				allow the group to be publicly listed. A great way to cross reference if your group is publicly visible is to visit
-				<em style="white-space:nowrap;">http://[your-site].ccbchurch.com/w_group_list.php</em> and see if the missing group shows up there.
+				<em style="white-space:nowrap;">{$w_group_list}</em> and see if the missing group shows up there.
 			</blockquote>
 HTML;
 	}

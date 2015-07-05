@@ -72,6 +72,9 @@ class CCB_Core_Settings_Field extends CCB_Core_Plugin {
 	public function render_field() {
 		if ( isset( $this->field['field_render_function'] ) && is_callable( array( $this, $this->field['field_render_function'] ) ) ) {
 			call_user_func( array( $this, $this->field['field_render_function'] ) );
+			if ( isset( $this->field['field_tooltip'] ) ) {
+				echo '<span class="ccb-core-tooltip dashicons dashicons-editor-help" data-tip="' . esc_html( $this->field['field_tooltip'] ) . '"></span>';
+			}
 		}
 	}
 

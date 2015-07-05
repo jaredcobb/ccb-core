@@ -36,10 +36,22 @@
   margin-right: 12px;
 }
 
+.ccb_core_settings-wrapper .date-picker-wrapper {
+  display: inline;
+}
 .ccb_core_settings-wrapper .date-picker-wrapper .picker .picker__table {
   width: inherit;
 }
 .ccb_core_settings-wrapper .date-picker-wrapper .picker .picker__frame {
   max-width: 500px;
+}
+
+.ccb_core_settings-wrapper fieldset {
+  display: inline;
+}
+
+.ccb_core_settings-wrapper .ccb-core-tooltip {
+  font-size: 24px;
+  margin-left: 24px;
 }
 

@@ -255,6 +255,7 @@ class CCB_Core_Admin extends CCB_Core_Plugin {
 			wp_enqueue_style( 'powerange', plugin_dir_url( __FILE__ ) . 'css/vendor/powerange.min.css', array(), $this->version, 'all' );
 			wp_enqueue_style( 'picker', plugin_dir_url( __FILE__ ) . 'css/vendor/default.css', array(), $this->version, 'all' );
 			wp_enqueue_style( 'picker-date', plugin_dir_url( __FILE__ ) . 'css/vendor/default.date.css', array(), $this->version, 'all' );
+			wp_enqueue_style( 'tipr', plugin_dir_url( __FILE__ ) . 'css/vendor/tipr.css', array(), $this->version, 'all' );
 		}
 
 	}
@@ -272,6 +273,7 @@ class CCB_Core_Admin extends CCB_Core_Plugin {
 			wp_enqueue_script( 'powerange', plugin_dir_url( __FILE__ ) . 'js/vendor/powerange.min.js', array( 'jquery' ), $this->version, false );
 			wp_enqueue_script( 'picker', plugin_dir_url( __FILE__ ) . 'js/vendor/picker.js', array( 'jquery' ), $this->version, false );
 			wp_enqueue_script( 'picker-date', plugin_dir_url( __FILE__ ) . 'js/vendor/picker.date.js', array( 'picker' ), $this->version, false );
+			wp_enqueue_script( 'tipr', plugin_dir_url( __FILE__ ) . 'js/vendor/tipr.min.js', array( 'jquery' ), $this->version, false );
 			wp_localize_script( $this->plugin_name, strtoupper( $this->plugin_settings_name ), array(
 				'nextNonce' => wp_create_nonce( $this->plugin_name . '-nonce' ))
 			);

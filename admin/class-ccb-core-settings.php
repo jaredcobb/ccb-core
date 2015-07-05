@@ -179,11 +179,13 @@ class CCB_Core_Settings extends CCB_Core_Plugin {
 								'field_render_function' => 'render_text',
 								'field_placeholder' => 'subdomain',
 								'field_validation' => 'alphanumeric',
+								'field_tooltip' => 'We just need the first part of your software URL (<em>without</em> "http://" and <em>without</em> ".ccbchurch.com").',
 							),
 							'credentials' => array(
 								'field_title' => 'API Credentials',
 								'field_render_function' => 'render_credentials',
 								'field_validation' => 'encrypt',
+								'field_tooltip' => 'This is the username and password for the API user in your Church Community Builder software.',
 							),
 							'test_credentials' => array(
 								'field_title' => 'Test Credentials',
@@ -210,6 +212,7 @@ class CCB_Core_Settings extends CCB_Core_Plugin {
 								'field_placeholder' => 'Groups',
 								'field_validation' => 'alphanumeric_extended',
 								'field_attributes' => array( 'data-requires' => '{"groups-enabled":1}' ),
+								'field_tooltip' => 'This is what you call the groups in your church (i.e. <em>Home Groups, Connections, Life Groups, etc.</em>).',
 							),
 							'groups-slug' => array(
 								'field_title' => 'Groups URL Name',
@@ -217,9 +220,10 @@ class CCB_Core_Settings extends CCB_Core_Plugin {
 								'field_placeholder' => 'groups',
 								'field_validation' => 'slug',
 								'field_attributes' => array( 'data-requires' => '{"groups-enabled":1}' ),
+								'field_tooltip' => 'This is typically where your theme will display <em>all</em> the groups. WordPress calls this a "slug".',
 							),
 							'groups-advanced' => array(
-								'field_title' => 'Enable Advanced Settings',
+								'field_title' => 'Enable Advanced Settings <em>(Optional)</em>',
 								'field_render_function' => 'render_switch',
 								'field_validation' => 'switch',
 								'field_attributes' => array( 'data-requires' => '{"groups-enabled":1}' ),
@@ -289,6 +293,7 @@ class CCB_Core_Settings extends CCB_Core_Plugin {
 								'field_placeholder' => 'Events',
 								'field_validation' => 'alphanumeric_extended',
 								'field_attributes' => array( 'data-requires' => '{"calendar-enabled":1}' ),
+								'field_tooltip' => 'This is what you call the events in your church (i.e. <em>Meetups, Hangouts, etc.</em>).',
 							),
 							'calendar-slug' => array(
 								'field_title' => 'Events URL Name',
@@ -296,9 +301,10 @@ class CCB_Core_Settings extends CCB_Core_Plugin {
 								'field_placeholder' => 'events',
 								'field_validation' => 'slug',
 								'field_attributes' => array( 'data-requires' => '{"calendar-enabled":1}' ),
+								'field_tooltip' => 'This is typically where your theme will display <em>all</em> the events. WordPress calls this a "slug".',
 							),
 							'calendar-advanced' => array(
-								'field_title' => 'Enable Advanced Settings',
+								'field_title' => 'Enable Advanced Settings <em>(Optional)</em>',
 								'field_render_function' => 'render_switch',
 								'field_validation' => 'switch',
 								'field_attributes' => array( 'data-requires' => '{"calendar-enabled":1}' ),
@@ -313,6 +319,7 @@ class CCB_Core_Settings extends CCB_Core_Plugin {
 								'field_validation' => '',
 								'field_default' => 'relative',
 								'field_attributes' => array( 'class' => 'date-range-type', 'data-requires' => '{"calendar-enabled":1,"calendar-advanced":1}' ),
+								'field_tooltip' => '<strong>Relative:</strong> For example, always get the events from <em>\'One week ago\'</em>, up to <em>\'Eight weeks from now\'</em>.<br>This is the best setting for most churches.<br><br><strong>Specific:</strong> For example, only get events from <em>\'6/1/2015\'</em> to <em>\'12/1/2015\'</em>.<br>This setting is best if you want to tightly manage the events that get published.',
 							),
 							'calendar-relative-weeks-past' => array(
 								'field_title' => 'How Far Back?',
@@ -325,6 +332,7 @@ class CCB_Core_Settings extends CCB_Core_Plugin {
 								'field_default' => 1,
 								'field_validation' => '',
 								'field_attributes' => array( 'data-requires' => '{"calendar-enabled":1,"calendar-advanced":1,"calendar-date-range-type":"relative"}' ),
+								'field_tooltip' => 'Every time we synchronize, how many <strong>weeks</strong> in the past should we look?<em>(0 would be "today")</em>',
 							),
 							'calendar-relative-weeks-future' => array(
 								'field_title' => 'How Into The Future?',
@@ -337,18 +345,21 @@ class CCB_Core_Settings extends CCB_Core_Plugin {
 								'field_default' => 16,
 								'field_validation' => '',
 								'field_attributes' => array( 'data-requires' => '{"calendar-enabled":1,"calendar-advanced":1,"calendar-date-range-type":"relative"}' ),
+								'field_tooltip' => 'Every time we synchronize, how many <strong>weeks</strong> in the future should we look?',
 							),
 							'calendar-specific-start' => array(
 								'field_title' => 'Specific Start Date',
 								'field_render_function' => 'render_date_picker',
 								'field_validation' => '',
 								'field_attributes' => array( 'data-requires' => '{"calendar-enabled":1,"calendar-advanced":1,"calendar-date-range-type":"specific"}' ),
+								'field_tooltip' => 'When synchronizing, we should get events that start <strong>after</strong> this date.<br><em>(Leave empty to always start "today")</em>',
 							),
 							'calendar-specific-end' => array(
 								'field_title' => 'Specific End Date',
 								'field_render_function' => 'render_date_picker',
 								'field_validation' => '',
 								'field_attributes' => array( 'data-requires' => '{"calendar-enabled":1,"calendar-advanced":1,"calendar-date-range-type":"specific"}' ),
+								'field_tooltip' => 'When synchronizing, we should get events that start <strong>before</strong> this date.<br><em>(Setting this too far into the future may cause the API to timeout)</em>',
 							),
 							'calendar-exclude-from-search' => array(
 								'field_title' => 'Exclude From Search?',
@@ -420,6 +431,7 @@ class CCB_Core_Settings extends CCB_Core_Plugin {
 								'field_default' => 90,
 								'field_validation' => '',
 								'field_attributes' => array( 'data-requires' => '{"auto-sync":1}' ),
+								'field_tooltip' => 'We keep a local copy (cache) of your Church Community Builder data for the best performance.<br>How often (in minutes) should we check for new data?<br><em>90 minutes is recommended.</em>',
 							),
 							'manual-sync' => array(
 								'field_title' => 'Manual Sync',

@@ -41,6 +41,10 @@
         hiddenName: true
       });
 
+      $('.ccb-core-tooltip').tipr({
+        "mode":"top"
+      });
+
     },
 
     refreshEnabledFields : function() {
