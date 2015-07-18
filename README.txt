@@ -3,7 +3,7 @@ Contributors: jaredcobb
 Tags: ccb, church, api, chms
 Requires at least: 3.0.1
 Tested up to: 4.2.2
-Stable tag: 0.9.2
+Stable tag: 0.9.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -61,6 +61,9 @@ allow the group to be publicly listed. A great way to cross reference if your gr
 2. screenshot-2.png
 
 == Changelog ==
+
+= 0.9.3 =
+* Fixed a bug for backwards compatibility with PHP 5.2 servers
 
 = 0.9.2 =
 * Added tooltips to some settings to help explain the functionality
