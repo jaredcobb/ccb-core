@@ -40,7 +40,7 @@ class CCB_Core_Admin extends CCB_Core_Plugin {
 		$settings_definitions = $settings->get_settings_definitions();
 		$settings_page = new CCB_Core_Settings_Page( $this->plugin_settings_name );
 
-		add_menu_page( $this->plugin_display_name, $this->plugin_short_display_name, 'manage_options', $this->plugin_settings_name, function(){}, 'dashicons-update', '80.9' );
+		add_menu_page( $this->plugin_display_name, $this->plugin_short_display_name, 'manage_options', $this->plugin_settings_name, '__return_null', 'dashicons-update', '80.9' );
 
 		if ( is_array( $settings_definitions ) && ! empty( $settings_definitions ) ) {
 			foreach ( $settings_definitions as $page_id => $page ) {
