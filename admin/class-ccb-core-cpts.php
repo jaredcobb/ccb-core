@@ -257,6 +257,34 @@ class CCB_Core_CPTs extends CCB_Core_Plugin {
 				'api_mapping' => 'calendar_feed',
 				'data_type' => 'string',
 			),
+			'addresses' => array(
+				'api_mapping' => 'addresses',
+				'data_type' => 'object',
+				'child_object' => array(
+					'address' => array(
+						'api_mapping' => 'address',
+						'data_type' => 'object',
+						'child_object' => array(
+							'longitude' => array(
+								'api_mapping' => 'longitude',
+								'data_type' => 'string'
+							),
+							'latitude' => array(
+								'api_mapping' => 'latitude',
+								'data_type' => 'string'
+							),
+							'address_line_1' => array(
+								'api_mapping' => 'line_1',
+								'data_type' => 'string'
+							),
+							'address_line_2' => array(
+								'api_mapping' => 'line_2',
+								'data_type' => 'string'
+							),
+						)
+					),
+				),
+			),
 		);
 	}
 
