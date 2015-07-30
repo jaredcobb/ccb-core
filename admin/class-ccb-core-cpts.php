@@ -239,7 +239,7 @@ class CCB_Core_CPTs extends CCB_Core_Plugin {
 				'api_mapping' => 'image',
 				'data_type' => 'string',
 			),
-			'group_leader' => array(
+			'group_main_leader' => array(
 				'api_mapping' => 'main_leader',
 				'data_type' => 'object',
 				'child_object' => array(

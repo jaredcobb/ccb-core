@@ -214,6 +214,30 @@ class CCB_Core_Sync extends CCB_Core_Plugin {
 		set_time_limit(600);
 		$full_response = array();
 
+		// for debugging purposes, set a constant and serialize and array like so:
+		// define( 'RESPONSE_FILE', serialize( array( 'filename' => 'some_file.xml', 'service_name' => 'group_profiles' ) ) );
+		// file must be located in the /uploads/ccb-core/ folder
+		if ( WP_DEBUG == true && defined( 'RESPONSE_FILE' ) ) {
+
+			$service = unserialize( RESPONSE_FILE );
+			$upload_dir = wp_upload_dir();
+			$filepath = trailingslashit( trailingslashit( $upload_dir['basedir'] ) . $this->plugin_name ) . $service['filename'];
+
+			if ( file_exists( $filepath ) ) {
+				$response_body = file_get_contents( $filepath );
+				libxml_use_internal_errors(true);
+				$response_xml = simplexml_load_string( $response_body );
+
+				if ( is_object( $response_xml ) ) {
+					$full_response['success'] = true;
+					$full_response[ $service['service_name'] ] = $response_xml;
+				}
+
+				return $full_response;
+			}
+
+		}
+
 		if ( ! empty( $services ) && is_array( $services ) ) {
 
 			foreach ( $services as $service ) {
@@ -321,10 +345,13 @@ class CCB_Core_Sync extends CCB_Core_Plugin {
 		// GROUP PROFILES
 		if ( $this->enabled_apis['group_profiles'] ) {
 
+			$include_participants = false;
+			$include_participants = apply_filters( 'ccb_include_group_participants', $include_participants );
+
 			$services[] = array(
 				'service_name' => 'group_profiles',
 				'params' => array(
-					'include_participants' => 'false',
+					'include_participants' => $include_participants,
 				),
 			);
 
@@ -503,7 +530,10 @@ class CCB_Core_Sync extends CCB_Core_Plugin {
 		if ( $this->enabled_apis['group_profiles'] == true && isset( $full_response['group_profiles']->response->groups->group ) && ! empty( $full_response['group_profiles']->response->groups->group ) ) {
 
 			$groups_taxonomy_map = CCB_Core_CPTs::get_groups_taxonomy_map();
+			$groups_taxonomy_map = apply_filters( 'ccb_get_groups_taxonomy_map', $groups_taxonomy_map );
+
 			$groups_custom_fields_map = CCB_Core_CPTs::get_groups_custom_fields_map();
+			$groups_custom_fields_map = apply_filters( 'ccb_get_groups_custom_fields_map', $groups_custom_fields_map );
 
 			// delete the existing taxonomy terms
 			foreach ( $groups_taxonomy_map as $taxonomy_name => $taxonomy ) {
@@ -557,7 +587,7 @@ class CCB_Core_Sync extends CCB_Core_Plugin {
 					// insert custom fields
 					$custom_fields_atts = $this->get_custom_fields_atts( $group, $groups_custom_fields_map );
 					if ( ! empty( $custom_fields_atts ) ) {
-						foreach ( $custom_fields_atts as $custom_fields_attribute ) {
+						foreach ( $custom_fields_atts as $field_key => $custom_fields_attribute ) {
 							add_post_meta( $post_id, $custom_fields_attribute['field_name'], $custom_fields_attribute['field_value'] );
 						}
 					}
@@ -575,7 +605,10 @@ class CCB_Core_Sync extends CCB_Core_Plugin {
 		if ( $this->enabled_apis['public_calendar_listing'] == true && isset( $full_response['public_calendar_listing']->response->items->item ) && ! empty( $full_response['public_calendar_listing']->response->items->item ) ) {
 
 			$calendar_taxonomy_map = CCB_Core_CPTs::get_calendar_taxonomy_map();
+			$calendar_taxonomy_map = apply_filters( 'ccb_get_calendar_taxonomy_map', $calendar_taxonomy_map );
+
 			$calendar_custom_fields_map = CCB_Core_CPTs::get_calendar_custom_fields_map();
+			$calendar_custom_fields_map = apply_filters( 'ccb_get_calendar_custom_fields_map', $calendar_custom_fields_map );
 
 			// delete the existing taxonomy terms
 			foreach ( $calendar_taxonomy_map as $taxonomy_name => $taxonomy ) {
@@ -619,7 +652,7 @@ class CCB_Core_Sync extends CCB_Core_Plugin {
 				// insert custom fields
 				$custom_fields_atts = $this->get_custom_fields_atts( $event, $calendar_custom_fields_map );
 				if ( ! empty( $custom_fields_atts ) ) {
-					foreach ( $custom_fields_atts as $custom_fields_attribute ) {
+					foreach ( $custom_fields_atts as $field_key => $custom_fields_attribute ) {
 						add_post_meta( $post_id, $custom_fields_attribute['field_name'], $custom_fields_attribute['field_value'] );
 					}
 				}
@@ -706,13 +739,14 @@ class CCB_Core_Sync extends CCB_Core_Plugin {
 	 * Uses a custom fields map to build out the custom fields
 	 * for a CCB custom post type
 	 *
-	 * @param     mixed    $post_data
-	 * @param     array    $custom_fields_map
+	 * @param     mixed     $post_data
+	 * @param     array     $custom_fields_map
+	 * @param     string    $parent_field_name
 	 * @access    protected
 	 * @since     0.9.0
 	 * @return    void
 	 */
-	protected function get_custom_fields_atts( $post_data, $custom_fields_map ) {
+	protected function get_custom_fields_atts( $post_data, $custom_fields_map, $parent_field_name = '' ) {
 
 		$custom_fields_collection = array();
 
@@ -735,8 +769,21 @@ class CCB_Core_Sync extends CCB_Core_Plugin {
 					break;
 				case 'object':
 					if ( isset( $field_data['child_object'] ) && ! empty( $field_data['child_object'] ) ) {
-						$child_custom_fields_collection = $this->get_custom_fields_atts( $post_data->$field_data['api_mapping'], $field_data['child_object'] );
-						$custom_fields_collection = array_merge( $custom_fields_collection, $child_custom_fields_collection );
+						// some child objects may be collections of objects
+						if ( count( $post_data->$field_data['api_mapping'] ) > 1 ) {
+							$collection_grouping = array();
+							foreach ( $post_data->$field_data['api_mapping'] as $key => $child_field_data ) {
+								if ( is_object ( $child_field_data ) ) {
+									$collection_grouping[] = $this->get_custom_fields_atts( $child_field_data, $field_data['child_object'], $field_name );
+								}
+							}
+							$prepared_field_collection = $this->prepare_field_collection( $parent_field_name, $collection_grouping );
+							$custom_fields_collection[] = $prepared_field_collection;
+						}
+						else {
+							$child_custom_fields_collection = $this->get_custom_fields_atts( $post_data->$field_data['api_mapping'], $field_data['child_object'], $field_name );
+							$custom_fields_collection = array_merge( $custom_fields_collection, $child_custom_fields_collection );
+						}
 					}
 					break;
 			}
@@ -745,5 +792,42 @@ class CCB_Core_Sync extends CCB_Core_Plugin {
 
 		return $custom_fields_collection;
 
+	}
+
+	/**
+	 * Takes a multidimensional array of field collections and formats
+	 * them into groups that are compatible with storage in a
+	 * single custom field
+	 *
+	 * @param     string    $field_name
+	 * @param     array     $collection_grouping
+	 * @access    protected
+	 * @since     0.9.4
+	 * @return    array
+	 */
+	protected function prepare_field_collection( $field_name, $collection_grouping ) {
+
+		$flat_collection = array(
+			'field_name' => $field_name,
+			'field_value' => array(),
+		);
+
+		foreach( $collection_grouping as $grouping_value ) {
+
+			$grouping_array = array();
+
+			foreach ( $grouping_value as $value_pair ) {
+
+				$grouping_array[] = array(
+					$value_pair['field_name'] => $value_pair['field_value']
+				);
+
+			}
+
+			$flat_collection['field_value'][] = $grouping_array;
+
+		}
+
+		return $flat_collection;
 	}
 }
