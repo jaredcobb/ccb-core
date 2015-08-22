@@ -79,6 +79,7 @@ class CCB_Core_Plugin {
 		$this->plugin_display_name = __( 'Church Community Builder Core API', $this->plugin_name );
 		$this->plugin_short_display_name = __( 'CCB Core API', $this->plugin_name );
 		$this->version = '0.9.4';
+		add_theme_support( 'post-thumbnails' );
 
 	}
 
@@ -162,6 +163,7 @@ class CCB_Core_Plugin {
 		flush();
 
 		return true;
+
 	}
 
 	/**

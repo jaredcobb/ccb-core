@@ -222,6 +222,18 @@ class CCB_Core_Settings extends CCB_Core_Plugin {
 								'field_attributes' => array( 'data-requires' => '{"groups-enabled":1}' ),
 								'field_tooltip' => 'This is typically where your theme will display <em>all</em> the groups. WordPress calls this a "slug".',
 							),
+							'groups-import-images' => array(
+								'field_title' => 'Also Import Group Images?',
+								'field_render_function' => 'render_radio',
+								'field_options' => array(
+									'yes' => 'Yes',
+									'no' => 'No'
+								),
+								'field_validation' => '',
+								'field_default' => 'no',
+								'field_attributes' => array( 'data-requires' => '{"groups-enabled":1}' ),
+								'field_tooltip' => "This will download the CCB Group Image and attach it as a Featured Image.<br>If you don't need group images, then disabling this feature will speed up the synchronization.",
+							),
 							'groups-advanced' => array(
 								'field_title' => 'Enable Advanced Settings <em>(Optional)</em>',
 								'field_render_function' => 'render_switch',

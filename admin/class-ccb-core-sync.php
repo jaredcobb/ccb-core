@@ -84,6 +84,15 @@ class CCB_Core_Sync extends CCB_Core_Plugin {
 	protected $valid_services;
 
 	/**
+	 * Whether or not to additionally import group images
+	 *
+	 * @since    0.9.5
+	 * @access   protected
+	 * @var      array    $valid_services
+	 */
+	protected $import_group_images;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    0.9.0
@@ -101,6 +110,13 @@ class CCB_Core_Sync extends CCB_Core_Plugin {
 		if ( isset( $settings['groups-enabled'] ) && $settings['groups-enabled'] == 1 ) {
 
 			$this->enabled_apis['group_profiles'] = true;
+
+			if ( isset( $settings['groups-import-images'] ) && $settings['groups-import-images'] == 'yes' ) {
+				$this->import_group_images = true;
+			}
+			else {
+				$this->import_group_images = false;
+			}
 
 		}
 		if ( isset( $settings['calendar-enabled'] ) && $settings['calendar-enabled'] == 1 ) {
@@ -214,9 +230,10 @@ class CCB_Core_Sync extends CCB_Core_Plugin {
 		set_time_limit(600);
 		$full_response = array();
 
-		// for debugging purposes, set a constant and serialize and array like so:
+		// for debugging purposes, set a constant and serialize an array like so:
 		// define( 'RESPONSE_FILE', serialize( array( 'filename' => 'some_file.xml', 'service_name' => 'group_profiles' ) ) );
 		// file must be located in the /uploads/ccb-core/ folder
+		// this will prevent a real api call and will use an xml file
 		if ( WP_DEBUG == true && defined( 'RESPONSE_FILE' ) ) {
 
 			$service = unserialize( RESPONSE_FILE );
@@ -303,7 +320,7 @@ class CCB_Core_Sync extends CCB_Core_Plugin {
 						$files = preg_grep( '/' . $now->format( 'Y-m-d' ) . '/', glob( trailingslashit( trailingslashit( $upload_dir['basedir'] ) . $this->plugin_name ) . '*' ), PREG_GREP_INVERT );
 						foreach ( $files as $file ) {
 							if ( is_file( $file ) ) {
-								unlink( $file );
+								@unlink( $file );
 							}
 						}
 
@@ -548,16 +565,27 @@ class CCB_Core_Sync extends CCB_Core_Plugin {
 			// delete existing custom posts
 			$custom_posts = get_posts( array( 'post_type' => $this->plugin_name . '-groups', 'posts_per_page' => -1 ) );
 			foreach( $custom_posts as $custom_post ) {
+
+				// delete the post thumbnail if it exists before deleting the post
+				$thumbnail_id = get_post_thumbnail_id( $custom_post->ID );
+				if ( $thumbnail_id ) {
+					wp_delete_attachment( $thumbnail_id, true );
+				}
+
 				wp_delete_post( $custom_post->ID, true);
 			}
 
 			// commit the deletes now
 			$wpdb->query( 'COMMIT;' );
 
+			// keep track of whether or not a default image has already been imported
+			$default_attachment = 0;
+
 			foreach ( $full_response['group_profiles']->response->groups->group as $group ) {
 
 				// only allow publicly listed and active groups to be imported
 				if ( $group->inactive == 'false' && $group->public_search_listed == 'true' ) {
+
 					$group_id = 0;
 					foreach( $group->attributes() as $key => $value ) {
 						if ( $key == 'id' ) {
@@ -590,6 +618,36 @@ class CCB_Core_Sync extends CCB_Core_Plugin {
 						foreach ( $custom_fields_atts as $field_key => $custom_fields_attribute ) {
 							add_post_meta( $post_id, $custom_fields_attribute['field_name'], $custom_fields_attribute['field_value'] );
 						}
+					}
+
+					// download and attach the group image as the featured image
+					if ( isset( $group->image ) && $this->import_group_images == true ) {
+
+						$group_image_url = esc_url_raw( $group->image );
+
+						if ( ! empty( $group_image_url ) ) {
+
+							// handle default images
+							if ( strpos( $group_image_url, 'default' ) ) {
+								if ( ! $default_attachment ) {
+									$attachment_result = $this->create_media_image( 'default', 0, $group_image_url );
+									if ( $attachment_result ) {
+										$default_attachment = $attachment_result;
+										set_post_thumbnail( $post_id, $default_attachment );
+									}
+								}
+								else {
+									set_post_thumbnail( $post_id, $default_attachment );
+								}
+							}
+							else {
+								$attachment_result = $this->create_media_image( $group->name, $post_id, $group_image_url );
+								if ( $attachment_result ) {
+									set_post_thumbnail( $post_id, $attachment_result );
+								}
+							}
+						}
+
 					}
 
 				}
@@ -830,4 +888,76 @@ class CCB_Core_Sync extends CCB_Core_Plugin {
 
 		return $flat_collection;
 	}
+
+	/**
+	 * Downloads an image from a URL, uploads it to the Media Library,
+	 * and then optionally attaches it to a post
+	 *
+	 * @param     string    $group_name
+	 * @param     int       $post_id
+	 * @param     string    $image_url
+	 * @access    protected
+	 * @since     0.9.5
+	 * @return    mixed     Returns a media id or false on failure
+	 */
+	protected function create_media_image( $group_name, $post_id, $image_url ) {
+
+		// fetch the image from the cdn and store temporarily
+		$temp_file = download_url( $image_url );
+
+		if ( is_wp_error( $temp_file ) ) {
+			return false;
+		}
+
+		// attempt to detect the mimetype based on the available functions
+		$extension = false;
+		if ( function_exists( 'exif_imagetype' ) && function_exists( 'image_type_to_extension' ) ) {
+			// open with exif
+			$image_type = exif_imagetype( $temp_file );
+			if ( $image_type ) {
+				$extension = image_type_to_extension( $image_type );
+			}
+		}
+		elseif ( function_exists( 'getimagesize' ) && function_exists( 'image_type_to_extension' ) ) {
+			// open with gd
+			$file_size = getimagesize( $temp_file );
+			if ( isset( $file_size[2] ) ) {
+				$extension = image_type_to_extension( $file_size[2] );
+			}
+		}
+		elseif ( function_exists( 'finfo_open' ) ) {
+			// open with fileinfo
+			$resource = finfo_open( FILEINFO_MIME_TYPE );
+			$mimetype = finfo_file( $resource, $temp_file );
+			finfo_close( $resource );
+			if ( $mimetype ) {
+				$mimetype_array = explode( '/', $mimetype );
+				$extension = '.' . $mimetype_array[1];
+			}
+		}
+
+		if ( $extension ) {
+
+			$filename = 'ccb-' . sanitize_file_name( strtolower( $group_name ) ) . $extension;
+
+			$file_array = array(
+				'name' => $filename,
+				'tmp_name' => $temp_file,
+			);
+
+			$media_id = media_handle_sideload( $file_array, $post_id );
+			@unlink( $temp_file );
+
+			if ( is_wp_error( $media_id ) ) {
+				return false;
+			}
+
+			return $media_id;
+
+		}
+		else {
+			return false;
+		}
+	}
+
 }

@@ -235,10 +235,6 @@ class CCB_Core_CPTs extends CCB_Core_Plugin {
 	 */
 	public static function get_groups_custom_fields_map() {
 		return array(
-			'group_image_url' => array(
-				'api_mapping' => 'image',
-				'data_type' => 'string',
-			),
 			'group_main_leader' => array(
 				'api_mapping' => 'main_leader',
 				'data_type' => 'object',
