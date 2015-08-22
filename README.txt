@@ -2,8 +2,8 @@
 Contributors: jaredcobb
 Tags: ccb, church, api, chms
 Requires at least: 3.0.1
-Tested up to: 4.2.2
-Stable tag: 0.9.4
+Tested up to: 4.3.0
+Stable tag: 0.9.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -61,6 +61,16 @@ allow the group to be publicly listed. A great way to cross reference if your gr
 2. screenshot-2.png
 
 == Changelog ==
+
+= 0.9.5 =
+* Added an option to import Group Images as the Featured Image (no longer referencing the CCB CDN location which expires quickly)
+* Added filters which allow you to customize the API to Custom Post Type mappings:
+ * `add_filter( 'ccb_include_group_participants' )`, whether or not to ask the API to include group participants in the response
+ * `add_filter( 'ccb_get_groups_taxonomy_map' )`, ability to customize the taxonomy mapping for groups
+ * `add_filter( 'ccb_get_groups_custom_fields_map' )`, ability to customize the custom fields mapping for groups
+ * `add_filter( 'ccb_get_calendar_taxonomy_map' )`, ability to customize the taxonomy mapping for events
+ * `add_filter( 'ccb_get_calendar_custom_fields_map' )`, ability to customize the custom fields mapping for events
+* Added ability to automatically import collections of meta data (for example, multiple group leaders)
 
 = 0.9.4 =
 * Added Group "Meet At" address and longitude / latitude coordinates as custom fields
