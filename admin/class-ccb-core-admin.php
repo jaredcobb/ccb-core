@@ -91,6 +91,49 @@ class CCB_Core_Admin extends CCB_Core_Plugin {
 	}
 
 	/**
+	 * Just before the settings are saved, check for changes
+	 * that would require us to flush the rewrite rules
+	 *
+	 * @param     array     $new_settings
+	 * @param     array     $previous_settings
+	 * @access    public
+	 * @since     0.9.6
+	 * @return    array
+	 */
+	public function update_settings_callback( $new_settings, $previous_settings ) {
+
+		// create a collection of settings that, if they change, should
+		// trigger a flush_rewrite_rules event
+		$setting_array = array(
+			'groups-enabled',
+			'calendar-enabled',
+		);
+
+		foreach ( $setting_array as $setting ) {
+			if ( isset( $new_settings[ $setting ] ) ) {
+				if ( ! isset( $previous_settings[ $setting ] ) || $new_settings[ $setting ] !== $previous_settings[ $setting ] ) {
+					// schedule an event to flush the rewrite rules on the next page load because the settings aren't quite saved yet
+					wp_schedule_single_event( time(), 'schedule_flush_rewrite_rules' );
+				}
+			}
+		}
+
+		return $new_settings;
+	}
+
+	/**
+	 * Simple callback function for flushing the rewrite rules
+	 *
+	 * @access    public
+	 * @since     0.9.6
+	 * @return    void
+	 */
+	public function flush_rewrite_rules_event() {
+
+		flush_rewrite_rules();
+	}
+
+	/**
 	 * Register the CCB custom post types if enabled
 	 *
 	 * @access    public

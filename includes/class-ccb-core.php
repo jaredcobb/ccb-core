@@ -141,6 +141,8 @@ class CCB_Core extends CCB_Core_Plugin {
 		$this->loader->add_filter( 'plugin_action_links_' . $this->plugin_basename, $plugin_admin, 'add_settings_link' );
 		$this->loader->add_action( 'schedule_auto_refresh', $plugin_admin, 'auto_sync' );
 		$this->loader->add_action( 'wp_loaded', $plugin_admin, 'check_auto_refresh' );
+		$this->loader->add_action( 'pre_update_option_' . $this->plugin_settings_name, $plugin_admin, 'update_settings_callback', 10, 2 );
+		$this->loader->add_action( 'schedule_flush_rewrite_rules', $plugin_admin, 'flush_rewrite_rules_event' );
 
 		// all backend ajax hooks
 		$this->loader->add_action( 'wp_ajax_sync', $plugin_admin, 'ajax_sync' );
