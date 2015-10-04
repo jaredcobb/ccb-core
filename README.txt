@@ -32,6 +32,10 @@ your theme, widgets, or even your own plugins!
 * Works in the background (never interrupts you or your visitors)
 * Secure (API communication is encypted, and so are your credentials)
 
+= Documentation =
+
+The [http://www.wpccb.com/documentation/](official documentation) has more information, including code samples, hooks, filters, and links to tutorials.
+
 == Installation ==
 
 1. Upload the entire plugin folder to the `/wp-content/plugins/` directory

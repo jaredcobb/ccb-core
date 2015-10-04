@@ -141,6 +141,17 @@ class CCB_Core_Settings_Section extends CCB_Core_Plugin {
 				allow the group to be publicly listed. A great way to cross reference if your group is publicly visible is to visit
 				<em style="white-space:nowrap;">{$w_group_list}</em> and see if the missing group shows up there.
 			</blockquote>
+
+			<h3>Documentation</h3>
+			<p>
+				The <a href="http://www.wpccb.com/documentation/" target="_blank">official documentation</a> has more information, including code samples, hooks &amp; filters, and links to tutorials.
+			</p>
+
+			<h3>Support</h3>
+			<p>
+				Support is limited, but if you have questions as a <strong>user</strong> of the plugin you can submit them on the official <a href="https://wordpress.org/support/plugin/church-community-builder-core-api" target="_blank">WordPress plugin support forum</a>.
+				If you're a Developer and would like to submit a bug report or pull request, you can do that on <a href="https://github.com/jaredcobb/ccb-core" target="_blank">GitHub</a>.
+			</p>
 HTML;
 	}
 

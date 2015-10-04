@@ -106,7 +106,9 @@ class CCB_Core_Admin extends CCB_Core_Plugin {
 		// trigger a flush_rewrite_rules event
 		$setting_array = array(
 			'groups-enabled',
+			'groups-slug',
 			'calendar-enabled',
+			'calendar-slug',
 		);
 
 		foreach ( $setting_array as $setting ) {
