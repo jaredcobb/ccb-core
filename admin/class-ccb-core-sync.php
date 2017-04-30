@@ -369,7 +369,9 @@ class CCB_Core_Sync extends CCB_Core_Plugin {
 				'service_name' => 'group_profiles',
 				'params' => array(
 					'include_participants' => $include_participants,
+					'include_image_link' => '1',
 				),
+
 			);
 
 		}

@@ -310,6 +310,10 @@ class CCB_Core_CPTs extends CCB_Core_Plugin {
 				'api_mapping' => 'event_duration',
 				'data_type' => 'int',
 			),
+			'calendar_location' => array(
+				'api_mapping' => 'location',
+				'data_type' => 'string',
+			),
 		);
 	}
 
