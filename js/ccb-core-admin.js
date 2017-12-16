@@ -11,9 +11,9 @@
       this.syncPollId = setInterval(this.pollForActiveSync, 10000);
       this.pollForActiveSync();
 
-      $('.test-login-wrapper .button').on('click', event, this.testCredentials);
+      $('.test-login-wrapper .button').on('click', window.event, this.testCredentials);
 
-      $('.sync-wrapper .button').on('click', event, this.syncData);
+      $('.sync-wrapper .button').on('click', window.event, this.syncData);
 
       var switches = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
       switches.forEach(function(html) {
@@ -50,7 +50,6 @@
     refreshEnabledFields : function() {
 
       $('[data-requires]').each(function() {
-        //var requiredElements = $(this).data('requires').split(' ');
         var displayField = true;
         var requiresObject = $(this).data('requires');
 
@@ -59,13 +58,13 @@
             if (requiresObject.hasOwnProperty(key)) {
 
               var requiredElement = $("[name='ccb_core_settings[" + key + "]']");
-              if (requiredElement.is(':checkbox')) {
+              if (requiredElement.is('input:checkbox')) {
                 if (!requiredElement.is(':checked')) {
                   displayField = false;
                   break;
                 }
               }
-              else if (requiredElement.is(':radio')) {
+              else if (requiredElement.is('input:radio')) {
                 requiredElement = $("[name='ccb_core_settings[" + key + "]']:checked");
                 if (requiredElement.val() !== requiresObject[key])
                   displayField = false;

@@ -2,7 +2,7 @@
 /**
  * The dashboard-specific functionality of the plugin.
  *
- * @link       http://jaredcobb.com/ccb-core
+ * @link       https://www.wpccb.com
  * @since      0.9.0
  *
  * @package    CCB_Core
@@ -25,69 +25,6 @@ class CCB_Core_Admin extends CCB_Core_Plugin {
 	 */
 	public function __construct() {
 		parent::__construct();
-	}
-
-	/**
-	 * Initialize the Settings Menu and Page
-	 *
-	 * @access    public
-	 * @since     0.9.0
-	 * @return    void
-	 */
-	public function initialize_settings_menu() {
-
-		$settings = new CCB_Core_Settings();
-		$settings_definitions = $settings->get_settings_definitions();
-		$settings_page = new CCB_Core_Settings_Page( $this->plugin_settings_name );
-
-		add_menu_page( $this->plugin_display_name, $this->plugin_short_display_name, 'manage_options', $this->plugin_settings_name, '__return_null', 'dashicons-update', '80.9' );
-
-		if ( is_array( $settings_definitions ) && ! empty( $settings_definitions ) ) {
-			foreach ( $settings_definitions as $page_id => $page ) {
-				$settings_page = new CCB_Core_Settings_Page( $page_id, $page );
-				add_submenu_page( $this->plugin_settings_name, $page['page_title'], $page['page_title'], 'manage_options', $page_id, array( $settings_page, 'render_page' ) );
-			}
-		}
-	}
-
-	/**
-	 * Initialize the Settings
-	 *
-	 * @access    public
-	 * @since     0.9.0
-	 * @return    void
-	 */
-	public function initialize_settings() {
-
-		$settings = new CCB_Core_Settings();
-		$settings_definitions = $settings->get_settings_definitions();
-
-		if ( is_array( $settings_definitions ) && ! empty( $settings_definitions ) ) {
-			foreach ( $settings_definitions as $page_id => $page ) {
-
-				register_setting( $page_id, $this->plugin_settings_name, array( $settings, 'validate_settings' ) );
-
-				if ( isset( $page['sections'] ) && ! empty( $page['sections'] ) ) {
-					foreach ( $page['sections'] as $section_id => $section ) {
-
-						$settings_section = new CCB_Core_Settings_Section( $section_id, $section );
-						add_settings_section( $section_id, $section['section_title'], array( $settings_section, 'render_section' ), $page_id );
-
-						if ( isset( $section['fields'] ) && ! empty( $section['fields'] ) ) {
-							foreach ( $section['fields'] as $field_id => $field ) {
-
-								$settings_field = new CCB_Core_Settings_Field( $field_id, $field );
-								add_settings_field( $field_id, $field['field_title'], array( $settings_field, 'render_field' ), $page_id, $section_id );
-
-							}
-						}
-
-					}
-				}
-
-			}
-		}
-
 	}
 
 	/**
@@ -232,19 +169,6 @@ class CCB_Core_Admin extends CCB_Core_Plugin {
 	}
 
 	/**
-	 * Create a helpful settings link on the plugin page
-	 *
-	 * @param array $links
-	 * @access    public
-	 * @since     0.9.0
-	 * @return    array
-	 */
-	public function add_settings_link( $links ) {
-		$links[] = '<a href="' . esc_url( get_admin_url( null, 'admin.php?page=' . $this->plugin_settings_name ) ) . '">Settings</a>';
-		return $links;
-	}
-
-	/**
 	 * Check if we should schedule a synchronization based on
 	 * the options set by the user
 	 *
@@ -285,45 +209,6 @@ class CCB_Core_Admin extends CCB_Core_Plugin {
 	public function auto_sync() {
 		$sync = new CCB_Core_Sync();
 		$sync->sync();
-	}
-
-	/**
-	 * Register the stylesheets for the dashboard.
-	 *
-	 * @since    0.9.0
-	 */
-	public function enqueue_styles( $hook ) {
-
-		if ( stristr( $hook, $this->plugin_settings_name ) !== false ) {
-			wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/ccb-core-admin.css', array(), $this->version, 'all' );
-			wp_enqueue_style( 'switchery', plugin_dir_url( __FILE__ ) . 'css/vendor/switchery.min.css', array(), $this->version, 'all' );
-			wp_enqueue_style( 'powerange', plugin_dir_url( __FILE__ ) . 'css/vendor/powerange.min.css', array(), $this->version, 'all' );
-			wp_enqueue_style( 'picker', plugin_dir_url( __FILE__ ) . 'css/vendor/default.css', array(), $this->version, 'all' );
-			wp_enqueue_style( 'picker-date', plugin_dir_url( __FILE__ ) . 'css/vendor/default.date.css', array(), $this->version, 'all' );
-			wp_enqueue_style( 'tipr', plugin_dir_url( __FILE__ ) . 'css/vendor/tipr.css', array(), $this->version, 'all' );
-		}
-
-	}
-
-	/**
-	 * Register the scripts for the dashboard.
-	 *
-	 * @since    0.9.0
-	 */
-	public function enqueue_scripts( $hook ) {
-
-		if ( stristr( $hook, $this->plugin_settings_name ) !== false ) {
-			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/ccb-core-admin.js', array( 'jquery' ), $this->version, false );
-			wp_enqueue_script( 'switchery', plugin_dir_url( __FILE__ ) . 'js/vendor/switchery.min.js', array( 'jquery' ), $this->version, false );
-			wp_enqueue_script( 'powerange', plugin_dir_url( __FILE__ ) . 'js/vendor/powerange.min.js', array( 'jquery' ), $this->version, false );
-			wp_enqueue_script( 'picker', plugin_dir_url( __FILE__ ) . 'js/vendor/picker.js', array( 'jquery' ), $this->version, false );
-			wp_enqueue_script( 'picker-date', plugin_dir_url( __FILE__ ) . 'js/vendor/picker.date.js', array( 'picker' ), $this->version, false );
-			wp_enqueue_script( 'tipr', plugin_dir_url( __FILE__ ) . 'js/vendor/tipr.min.js', array( 'jquery' ), $this->version, false );
-			wp_localize_script( $this->plugin_name, strtoupper( $this->plugin_settings_name ), array(
-				'nextNonce' => wp_create_nonce( $this->plugin_name . '-nonce' ))
-			);
-		}
-
 	}
 
 }

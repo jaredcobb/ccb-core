@@ -2,7 +2,7 @@
 /**
  * Synchronize CCB API data
  *
- * @link       http://jaredcobb.com/ccb-core
+ * @link       https://www.wpccb.com
  * @since      0.9.0
  *
  * @package    CCB_Core
@@ -12,13 +12,13 @@
 /**
  * Synchronize CCB API data
  *
- * Handles the cURL request, throttling, and caching of data
+ * Handles the remote request, throttling, and caching of data
  *
  * @package    CCB_Core
- * @subpackage CCB_Core/admin
+ * @subpackage CCB_Core/includes
  * @author     Jared Cobb <wordpress@jaredcobb.com>
  */
-class CCB_Core_Sync extends CCB_Core_Plugin {
+class CCB_Core_Sync {
 
 	/**
 	 * The subdomain of the ccb church installation

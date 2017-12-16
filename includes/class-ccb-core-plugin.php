@@ -2,7 +2,7 @@
 /**
  * Parent class for all plugin files
  *
- * @link       http://jaredcobb.com/ccb-core
+ * @link       https://www.wpccb.com
  * @since      0.9.0
  *
  * @package    CCB_Core
@@ -84,60 +84,6 @@ class CCB_Core_Plugin {
 	}
 
 	/**
-	 * Encrypts and base64_encodes a string safe for serialization in WordPress
-	 *
-	 * @since     0.9.0
-	 * @access    protected
-	 * @param     string    $data
-	 * @return    string
-	 */
-	protected function encrypt( $data ) {
-
-		$encrypted_value = false;
-		$key = wp_salt() . md5( $this->plugin_name );
-
-		if ( ! empty( $data ) ) {
-			try {
-				$e = new CCB_Core_Vendor_Encryption( MCRYPT_BlOWFISH, MCRYPT_MODE_CBC );
-				$encrypted_value = base64_encode( $e->encrypt( $data, $key ) );
-			}
-			catch ( Exception $ex ) {
-				// TODO: Better exception handling
-			}
-
-		}
-
-		return $encrypted_value;
-	}
-
-	/**
-	 * Decrypts and base64_decodes a string
-	 *
-	 * @since     0.9.0
-	 * @access    protected
-	 * @param     string    $data
-	 * @return    string
-	 */
-	protected function decrypt( $data ) {
-
-		$decrypted_value = false;
-		$key = wp_salt() . md5( $this->plugin_name );
-
-		if ( ! empty( $data ) ) {
-			try {
-				$e = new CCB_Core_Vendor_Encryption( MCRYPT_BlOWFISH, MCRYPT_MODE_CBC );
-				$decrypted_value = $e->decrypt( base64_decode( $data ), $key );
-			}
-			catch ( Exception $ex ) {
-				// TODO: Better exception handling
-			}
-
-		}
-
-		return $decrypted_value;
-	}
-
-	/**
 	 * Responds to the client with a json response
 	 * but allows the script to continue
 	 *
@@ -169,7 +115,7 @@ class CCB_Core_Plugin {
 	/**
 	 * Helper function to check if a date is valid
 	 *
-	 * @param     string    $date
+	 * @param     string $date The date.
 	 * @param     string    $format
 	 * @access    protected
 	 * @since     0.9.0

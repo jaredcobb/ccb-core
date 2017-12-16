@@ -2,48 +2,48 @@
 /**
  * Church Community Builder Core API
  *
- * @link              http://www.wpccb.com
+ * @link              https://www.wpccb.com
  * @since             0.9.0
  * @package           CCB_Core
  *
  * @wordpress-plugin
  * Plugin Name:       Church Community Builder Core API
- * Plugin URI:        http://www.wpccb.com
+ * Plugin URI:        https://www.wpccb.com
  * Description:       A plugin to provide a core integration of the Church Community Builder API into WordPress custom post types
- * Version:           0.9.6
+ * Version:           1.0.0
  * Author:            Jared Cobb
- * Author URI:        http://jaredcobb.com/
+ * Author URI:        https://www.jaredcobb.com/
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       ccb-core
  * Domain Path:       /languages
  */
 
-// do not allow direct access to this file
+// do not allow direct access to this file.
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-// parent class for entire plugin (name, version, other helpful properties and utility methods)
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-ccb-core-plugin.php';
+define( 'CCB_CORE_PATH', plugin_dir_path( __FILE__ ) );
+define( 'CCB_CORE_URL', plugin_dir_url( __FILE__ ) );
+define( 'CCB_CORE_BASENAME', plugin_basename( __FILE__ ) );
+define( 'CCB_CORE_VERSION', '1.0.0' );
 
-// code that runs during plugin activation
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-ccb-core-activator.php';
+// code that runs during plugin activation.
+require_once CCB_CORE_PATH . 'includes/class-ccb-core-activator.php';
 register_activation_hook( __FILE__, array( 'CCB_Core_Activator', 'activate' ) );
 
 // internationalization, dashboard-specific hooks, and public-facing site hooks.
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-ccb-core.php';
+require_once CCB_CORE_PATH . 'includes/class-ccb-core.php';
 
 /**
  * Begin execution of the plugin.
  *
- * @since    0.9.0
+ * @access public
+ * @return void
  */
 function run_ccb_core() {
-
-	$plugin_basename = plugin_basename( __FILE__ );
-	$plugin = new CCB_Core( $plugin_basename );
-	$plugin->run();
+	$plugin = new CCB_Core();
 
 }
 run_ccb_core();

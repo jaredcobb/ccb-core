@@ -2,7 +2,7 @@
 /**
  * Everything related to the plugin settings sections
  *
- * @link       http://jaredcobb.com/ccb-core
+ * @link       https://www.wpccb.com
  * @since      0.9.0
  *
  * @package    CCB_Core
@@ -16,7 +16,7 @@
  * @subpackage CCB_Core/admin
  * @author     Jared Cobb <wordpress@jaredcobb.com>
  */
-class CCB_Core_Settings_Section extends CCB_Core_Plugin {
+class CCB_Core_Settings_Section {
 
 	/**
 	 * The key for the section in the settings array
@@ -39,17 +39,13 @@ class CCB_Core_Settings_Section extends CCB_Core_Plugin {
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @access    public
-	 * @since     0.9.0
-	 * @return    void
+	 * @param   string $section_id The slug of the section.
+	 * @param   array  $section An array of section settings.
+	 * @return void
 	 */
 	public function __construct( $section_id, $section ) {
-
-		parent::__construct();
-
 		$this->section_id = $section_id;
 		$this->section = $section;
-
 	}
 
 	/**
@@ -64,24 +60,15 @@ class CCB_Core_Settings_Section extends CCB_Core_Plugin {
 	 */
 	public function render_section_about() {
 
-		// if the user has set their subdomain, use it for the url to w_group_list.php
-		$settings = get_option( $this->plugin_settings_name );
-		if ( isset( $settings['subdomain'] ) && ! empty( $settings['subdomain'] ) ) {
-			$w_group_list = "<a href=\"https://{$settings['subdomain']}.ccbchurch.com/w_group_list.php\" target=\"_blank\">https://{$settings['subdomain']}.ccbchurch.com/w_group_list.php</a>";
-		}
-		else {
-			$w_group_list = 'https://[yoursite].ccbchurch.com/w_group_list.php';
-		}
-
-		// this unfortunately includes a dirty hack to prevent chrome from autopopulating username/password
-		// so this will inject a fake login panel because chrome ignores autocomplete="off"
-		echo <<<HTML
+		// This unfortunately includes a dirty hack to prevent chrome from autopopulating username/password
+		// so this will inject a fake login panel because chrome ignores autocomplete="off".
+		echo '
 
 			<span style="display:none;visibility:hidden"><input name="username" readonly /><input type="password" name="password" readonly /></span>
 
 			<p>
 				Church Community Builder Core API <em>synchronizes</em> your church data to WordPress custom post types.
-				This plugin is geared toward developers (or advanced WordPress users who aren't afraid to get into a little bit of code).
+				This plugin is geared toward developers (or advanced WordPress users who aren\'t afraid to get into a little bit of code).
 			</p>
 
 			<h4>Why Use This Plugin?</h4>
@@ -121,7 +108,7 @@ class CCB_Core_Settings_Section extends CCB_Core_Plugin {
 			<h4>Frequently Asked Questions</h4>
 
 			<p>
-				<strong>I installed this plugin and my site doesn't look any different</strong>
+				<strong>I installed this plugin and my site doesn\'t look any different</strong>
 			</p>
 
 			<blockquote>
@@ -132,27 +119,41 @@ class CCB_Core_Settings_Section extends CCB_Core_Plugin {
 
 			<p>
 				<strong>
-				Some of my groups in Church Community Builder aren't being synchronized
+				Some of my groups in Church Community Builder aren\'t being synchronized
 				</strong>
-			</p>
+			</p>';
 
+		echo '
 			<blockquote>
-				You'll need to ensure your <a href="https://support.churchcommunitybuilder.com/customer/portal/articles/361764-editing-groups" target="_blank">group settings</a>
-				allow the group to be publicly listed. A great way to cross reference if your group is publicly visible is to visit
-				<em style="white-space:nowrap;">{$w_group_list}</em> and see if the missing group shows up there.
+				You\'ll need to ensure your <a href="https://support.churchcommunitybuilder.com/customer/portal/articles/361764-editing-groups" target="_blank">group settings</a>
+				allow the group to be publicly listed. A great way to cross reference if your group is publicly visible is to visit ';
+
+		// If the user has set their subdomain, use it for the url to w_group_list.php.
+		$options = CCB_Core_Helpers::instance()->get_options();
+		if ( ! empty( $options['subdomain'] ) ) {
+			echo sprintf(
+				'<em style="white-space:nowrap;">
+					<a href="https://%1$s.ccbchurch.com/w_group_list.php target="_blank">%1$s</a>
+				</em>',
+				esc_url( $options['subdomain'] )
+			);
+		} else {
+			echo '<em style="white-space:nowrap;">https://[yoursite].ccbchurch.com/w_group_list.php</em>';
+		}
+
+		echo ' and see if the missing group shows up there.
 			</blockquote>
 
 			<h3>Documentation</h3>
 			<p>
-				The <a href="http://www.wpccb.com/documentation/" target="_blank">official documentation</a> has more information, including code samples, hooks &amp; filters, and links to tutorials.
+				The <a href="https://www.wpccb.com/documentation/" target="_blank">official documentation</a> has more information, including code samples, hooks &amp; filters, and links to tutorials.
 			</p>
 
 			<h3>Support</h3>
 			<p>
 				Support is limited, but if you have questions as a <strong>user</strong> of the plugin you can submit them on the official <a href="https://wordpress.org/support/plugin/church-community-builder-core-api" target="_blank">WordPress plugin support forum</a>.
-				If you're a Developer and would like to submit a bug report or pull request, you can do that on <a href="https://github.com/jaredcobb/ccb-core" target="_blank">GitHub</a>.
-			</p>
-HTML;
+				If you\'re a Developer and would like to submit a bug report or pull request, you can do that on <a href="https://github.com/jaredcobb/ccb-core" target="_blank">GitHub</a>.
+			</p>';
 	}
 
 	/**
@@ -163,8 +164,8 @@ HTML;
 	 * @return    void
 	 */
 	public function render_section() {
-		if ( $this->section_id == 'about' ) {
-			echo $this->render_section_about();
+		if ( 'about' === $this->section_id ) {
+			$this->render_section_about();
 		}
 	}
 

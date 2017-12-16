@@ -1,9 +1,9 @@
 === Church Community Builder Core API ===
 Contributors: jaredcobb
 Tags: ccb, church, api, chms
-Requires at least: 3.0.1
-Tested up to: 4.3.1
-Stable tag: 0.9.6
+Requires at least: 4.4.0
+Tested up to: 4.7.2
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,7 +14,7 @@ Provides a core integration to the Church Community Builder API.
 Church Community Builder Core API *synchronizes* your church data to WordPress [custom post types](https://codex.wordpress.org/Custom_Post_Types).
 This plugin is geared toward developers (or advanced WordPress users who aren't afraid to get into a little bit of code).
 
-Find out more at [http://www.wpccb.com/](http://www.wpccb.com).
+Find out more at [https://www.wpccb.com](https://www.wpccb.com).
 
 = Why Use This Plugin? =
 
@@ -34,7 +34,7 @@ your theme, widgets, or even your own plugins!
 
 = Documentation =
 
-The [http://www.wpccb.com/documentation/](official documentation) has more information, including code samples, hooks, filters, and links to tutorials.
+The [official documentation](https://www.wpccb.com/documentation) has more information, including code samples, hooks, filters, and links to tutorials.
 
 == Installation ==
 
@@ -66,6 +66,11 @@ allow the group to be publicly listed. A great way to cross reference if your gr
 
 == Changelog ==
 
+= 1.0.0 =
+* Official stable release
+* Fixed broken group images (CCB API query parameter `include_image_link=true`)
+* Refactored code to be faster, simpler, prettier, tastier
+
 = 0.9.6 =
 * Added automatic flushing of rewrite rules when custom post type settings are changed
 * Added link to official documentation in README and About page
@@ -89,7 +94,7 @@ allow the group to be publicly listed. A great way to cross reference if your gr
 = 0.9.2 =
 * Added tooltips to some settings to help explain the functionality
 * Added better defaults for date ranges
-* Updated the plugin web site to http://www.wpccb.com
+* Updated the plugin web site to https://www.wpccb.com
 
 = 0.9.1 =
 * Fixed an issue where some web hosts were not saving encypted passwords

@@ -2,7 +2,7 @@
 /**
  * Fired during plugin activation
  *
- * @link       http://jaredcobb.com/ccb-core
+ * @link       https://www.wpccb.com
  * @since      0.9.0
  *
  * @package    CCB_Core
@@ -19,7 +19,7 @@
  * @subpackage CCB_Core/includes
  * @author     Jared Cobb <wordpress@jaredcobb.com>
  */
-class CCB_Core_Activator extends CCB_Core_Plugin {
+class CCB_Core_Activator {
 
 	/**
 	 * Activation code
@@ -27,7 +27,7 @@ class CCB_Core_Activator extends CCB_Core_Plugin {
 	 * @since    0.9.0
 	 */
 	public static function activate() {
-		// TODO: check dependencies like mcrypt and memory limits
+		// TODO: check dependencies like mcrypt and memory limits.
 	}
 
 }

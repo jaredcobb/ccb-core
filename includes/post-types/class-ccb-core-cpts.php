@@ -2,7 +2,7 @@
 /**
  * Custom post types used in this plugin
  *
- * @link       http://jaredcobb.com/ccb-core
+ * @link       https://www.wpccb.com
  * @since      0.9.0
  *
  * @package    CCB_Core
@@ -16,7 +16,7 @@
  * @subpackage CCB_Core/admin
  * @author     Jared Cobb <wordpress@jaredcobb.com>
  */
-class CCB_Core_CPTs extends CCB_Core_Plugin {
+class CCB_Core_CPT {
 
 	/**
 	 * The options we should use to register the groups CPT
