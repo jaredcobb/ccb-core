@@ -37,6 +37,7 @@ abstract class CCB_Core_Taxonomy {
 	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'register_taxonomy' ) );
+		add_filter( 'ccb_core_taxonomy_map', [ $this, 'get_taxonomy_map' ] );
 	}
 
 	/**
@@ -45,12 +46,30 @@ abstract class CCB_Core_Taxonomy {
 	 * @return void
 	 */
 	public function register_taxonomy() {
-		register_taxonomy( $this->name, $this->object_types, static::get_taxonomy_mapping() );
+		register_taxonomy( $this->name, $this->object_types, static::get_taxonomy_args() );
+	}
+
+	/**
+	 * Define the mapping of CCB API fields to this taxonomy
+	 *
+	 * @since    1.0.0
+	 * @param    array $map A collection of mappings from the API to WordPress.
+	 * @return   array
+	 */
+	public function get_taxonomy_map( $map ) {
+		if ( ! empty( $this->object_types ) ) {
+			foreach ( $this->object_types as $object_type ) {
+				$taxonomy_args = static::get_taxonomy_args();
+				$hierarchical = ! empty( $taxonomy_args['hierarchical'] ) ? 'hierarchical' : 'nonhierarchical';
+				$map[ $object_type ]['taxonomies'][ $hierarchical ][ $this->name ] = $taxonomy_args['api_mapping'];
+			}
+		}
+		return $map;
 	}
 
 	/**
 	 * Register the taxonomy.
 	 */
-	abstract public static function get_taxonomy_mapping();
+	abstract public static function get_taxonomy_args();
 
 }

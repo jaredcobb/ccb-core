@@ -71,7 +71,7 @@ class CCB_Core_Helpers {
 	 */
 	private function setup() {
 		// Get any options the user may have set.
-		$this->plugin_options = get_option( 'ccb_core' );
+		$this->plugin_options = get_option( 'ccb_core_settings' );
 	}
 
 	/**
@@ -101,7 +101,7 @@ class CCB_Core_Helpers {
 				$e = new CCB_Core_Vendor_Encryption( MCRYPT_BlOWFISH, MCRYPT_MODE_CBC );
 				$encrypted_value = base64_encode( $e->encrypt( $data, $key ) );
 			} catch ( Exception $ex ) {
-				// TODO: Better exception handling.
+				return new WP_Error( 'encrypt_failure', __( 'The string could not be encrypted', 'ccb-core' ) );
 			}
 
 		}
@@ -127,12 +127,143 @@ class CCB_Core_Helpers {
 				$e = new CCB_Core_Vendor_Encryption( MCRYPT_BlOWFISH, MCRYPT_MODE_CBC );
 				$decrypted_value = $e->decrypt( base64_decode( $data ), $key );
 			} catch ( Exception $ex ) {
-				// TODO: Better exception handling.
+				return new WP_Error( 'decrypt_failure', __( 'The string could not be decrypted', 'ccb-core' ) );
 			}
 
 		}
 
 		return $decrypted_value;
+	}
+
+	/**
+	 * Responds to the client with a json response
+	 * but allows the script to continue
+	 *
+	 * @access   public
+	 * @since    1.0.0
+	 * @return   bool
+	 */
+	public function send_non_blocking_json_success() {
+
+		ignore_user_abort( true );
+		ob_start();
+
+		header( 'Content-Type: application/json' );
+		header( 'Content-Encoding: none' );
+
+		echo wp_json_encode( [ 'success' => true ] );
+
+		header( 'Connection: close' );
+		header( 'Content-Length: ' . ob_get_length() );
+
+		ob_end_flush();
+		ob_flush();
+		flush();
+
+		// Some environments may be running PHP-FPM.
+		if ( function_exists( 'fastcgi_finish_request' ) ) {
+			fastcgi_finish_request();
+		}
+
+		return true;
+
+	}
+
+	/**
+	 * Downloads an image from a URL, uploads it to the Media Library,
+	 * and then optionally attaches it to a post.
+	 *
+	 * We are using this custom function instead of media_sideload_image
+	 * because images with dynamic URLs (like those on S3) do not have
+	 * file extensions and core ticket #18730 will never be resolved.
+	 * https://core.trac.wordpress.org/ticket/18730
+	 *
+	 * @param    string $image_url The URL of the image.
+	 * @param    string $filename Optional.
+	 * @param    int    $post_id Optional.
+	 * @access   public
+	 * @return   mixed  Returns a media id or false on failure
+	 */
+	public function download_image( $image_url, $filename = '', $post_id = 0 ) {
+
+		// Fetch the image and store temporarily.
+		$temp_file = download_url( $image_url );
+
+		if ( is_wp_error( $temp_file ) ) {
+			return false;
+		}
+
+		// Attempt to detect the mimetype based on the available functions.
+		$extension = false;
+		if ( function_exists( 'exif_imagetype' ) && function_exists( 'image_type_to_extension' ) ) {
+			// Open with exif.
+			$image_type = exif_imagetype( $temp_file );
+			if ( $image_type ) {
+				$extension = image_type_to_extension( $image_type );
+			}
+		} elseif ( function_exists( 'getimagesize' ) && function_exists( 'image_type_to_extension' ) ) {
+			// Open with gd.
+			$file_size = getimagesize( $temp_file );
+			if ( isset( $file_size[2] ) ) {
+				$extension = image_type_to_extension( $file_size[2] );
+			}
+		} elseif ( function_exists( 'finfo_open' ) ) {
+			// Open with fileinfo.
+			$resource = finfo_open( FILEINFO_MIME_TYPE );
+			$mimetype = finfo_file( $resource, $temp_file );
+			finfo_close( $resource );
+			if ( $mimetype ) {
+				$mimetype_array = explode( '/', $mimetype );
+				$extension = '.' . $mimetype_array[1];
+			}
+		}
+
+		// If we were able to determine the extension, move it
+		// to the Media Library.
+		if ( $extension ) {
+
+			$filename = ! empty( $filename ) ? sanitize_file_name( $filename ) : 'ccb_' . crc32( $image_url );
+
+			$file_array = array(
+				'name' => $filename . $extension,
+				'tmp_name' => $temp_file,
+			);
+
+			add_filter( 'upload_dir', [ $this, 'custom_uploads_directory' ] );
+			$media_id = media_handle_sideload( $file_array, $post_id );
+			remove_filter( 'upload_dir', [ $this, 'custom_uploads_directory' ] );
+
+			if ( $post_id ) {
+				set_post_thumbnail( $post_id, $media_id );
+			}
+
+			@unlink( $temp_file );
+
+			if ( ! is_wp_error( $media_id ) ) {
+				return $media_id;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Override the default uploads directory location
+	 * for CCB images. Allows for a convenient was to
+	 * isolate the CCB uploads so they are not mixed in
+	 * with other media assets.
+	 *
+	 * @param    array $upload An array of upload paths.
+	 * @return   array
+	 */
+	public function custom_uploads_directory( $upload ) {
+		// Allow for the ability to enable / disable custom upload path.
+		if ( apply_filters( 'ccb_core_allow_custom_upload_directory', true ) ) {
+			$upload['path'] = trailingslashit( $upload['basedir'] ) . 'ccb';
+			$upload['url'] = $upload['baseurl'] . '/ccb';
+			$upload['subdir'] = '/ccb';
+		}
+		return $upload;
 	}
 
 }

@@ -30,7 +30,7 @@ class CCB_Core_Calendar_Event_Type extends CCB_Core_Taxonomy {
 	 *
 	 * @var   array
 	 */
-	public $object_types = array( 'ccb-core-calendar' );
+	public $object_types = array( 'ccb_core_calendar' );
 
 	/**
 	 * Setup the default taxonomy mappings
@@ -38,7 +38,7 @@ class CCB_Core_Calendar_Event_Type extends CCB_Core_Taxonomy {
 	 * @since    1.0.0
 	 * @return   array   Default options for register_taxonomy
 	 */
-	public static function get_taxonomy_mapping() {
+	public static function get_taxonomy_args() {
 		return array(
 			'labels' => array(
 				'name' => __( 'Types', 'ccb-core' ),

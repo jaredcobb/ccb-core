@@ -1,9 +1,9 @@
 <?php
 /**
- * Synchronize CCB API data
+ * Communicate with the CCB API
  *
  * @link       https://www.wpccb.com
- * @since      0.9.0
+ * @since      1.0.0
  *
  * @package    CCB_Core
  * @subpackage CCB_Core/admin
@@ -18,12 +18,12 @@
  * @subpackage CCB_Core/includes
  * @author     Jared Cobb <wordpress@jaredcobb.com>
  */
-class CCB_Core_Sync {
+class CCB_Core_API {
 
 	/**
 	 * The subdomain of the ccb church installation
 	 *
-	 * @since    0.9.0
+	 * @since    1.0.0
 	 * @access   protected
 	 * @var      string    $subdomain
 	 */
@@ -32,7 +32,7 @@ class CCB_Core_Sync {
 	/**
 	 * The ccb api username
 	 *
-	 * @since    0.9.0
+	 * @since    1.0.0
 	 * @access   protected
 	 * @var      string    $username
 	 */
@@ -41,7 +41,7 @@ class CCB_Core_Sync {
 	/**
 	 * The ccb api password
 	 *
-	 * @since    0.9.0
+	 * @since    1.0.0
 	 * @access   protected
 	 * @var      string    $password
 	 */
@@ -50,7 +50,7 @@ class CCB_Core_Sync {
 	/**
 	 * The CCB APIs we want to sync with
 	 *
-	 * @since    0.9.0
+	 * @since    1.0.0
 	 * @access   protected
 	 * @var      array    $enabled_apis
 	 */
@@ -59,7 +59,7 @@ class CCB_Core_Sync {
 	/**
 	 * The start date range for calendar events
 	 *
-	 * @since    0.9.0
+	 * @since    1.0.0
 	 * @access   protected
 	 * @var      string    $calendar_start_date
 	 */
@@ -68,7 +68,7 @@ class CCB_Core_Sync {
 	/**
 	 * The end date range for calendar events
 	 *
-	 * @since    0.9.0
+	 * @since    1.0.0
 	 * @access   protected
 	 * @var      string    $calendar_end_date
 	 */
@@ -77,7 +77,7 @@ class CCB_Core_Sync {
 	/**
 	 * Any valid service that the core API might integrate with
 	 *
-	 * @since    0.9.0
+	 * @since    1.0.0
 	 * @access   protected
 	 * @var      array    $valid_services
 	 */
@@ -86,7 +86,7 @@ class CCB_Core_Sync {
 	/**
 	 * Whether or not to additionally import group images
 	 *
-	 * @since    0.9.5
+	 * @since    1.0.0
 	 * @access   protected
 	 * @var      array    $valid_services
 	 */
@@ -95,11 +95,9 @@ class CCB_Core_Sync {
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @since    0.9.0
+	 * @since    1.0.0
 	 */
 	public function __construct() {
-
-		parent::__construct();
 
 		$settings = get_option( $this->plugin_settings_name );
 
@@ -107,11 +105,11 @@ class CCB_Core_Sync {
 		$this->username = $settings['credentials']['username'];
 		$this->password = $this->decrypt( $settings['credentials']['password'] );
 
-		if ( isset( $settings['groups-enabled'] ) && $settings['groups-enabled'] == 1 ) {
+		if ( isset( $settings['groups_enabled'] ) && $settings['groups_enabled'] == 1 ) {
 
 			$this->enabled_apis['group_profiles'] = true;
 
-			if ( isset( $settings['groups-import-images'] ) && $settings['groups-import-images'] == 'yes' ) {
+			if ( isset( $settings['groups_import_images'] ) && $settings['groups_import_images'] == 'yes' ) {
 				$this->import_group_images = true;
 			}
 			else {
@@ -119,31 +117,31 @@ class CCB_Core_Sync {
 			}
 
 		}
-		if ( isset( $settings['calendar-enabled'] ) && $settings['calendar-enabled'] == 1 ) {
+		if ( isset( $settings['calendar_enabled'] ) && $settings['calendar_enabled'] == 1 ) {
 
 			$this->enabled_apis['public_calendar_listing'] = true;
 
 			// use sane defaults if this advanced setting isn't set
-			if ( ! isset( $settings['calendar-date-range-type'] ) ) {
+			if ( ! isset( $settings['calendar_date_range_type'] ) ) {
 
 				$this->calendar_start_date = date( 'Y-m-d', strtotime( '1 weeks ago') );
 				$this->calendar_end_date = date( 'Y-m-d', strtotime( '+16 weeks' ) );
 
 			}
-			elseif ( $settings['calendar-date-range-type'] == 'relative' ) {
+			elseif ( $settings['calendar_date_range_type'] == 'relative' ) {
 
-				$this->calendar_start_date = date( 'Y-m-d', strtotime( $settings['calendar-relative-weeks-past'] . ' weeks ago') );
-				$this->calendar_end_date = date( 'Y-m-d', strtotime( '+' . $settings['calendar-relative-weeks-future'] . ' weeks' ) );
+				$this->calendar_start_date = date( 'Y-m-d', strtotime( $settings['calendar_relative_weeks_past'] . ' weeks ago') );
+				$this->calendar_end_date = date( 'Y-m-d', strtotime( '+' . $settings['calendar_relative_weeks_future'] . ' weeks' ) );
 
 			}
-			elseif ( $settings['calendar-date-range-type'] == 'specific' ) {
+			elseif ( $settings['calendar_date_range_type'] == 'specific' ) {
 
 				// TODO: Use localization for date formats other than U.S.
 
-				if ( $settings['calendar-specific-start'] ) {
+				if ( $settings['calendar_specific_start'] ) {
 
 					$last_year = strtotime( '1 year ago' );
-					$start_timestamp = strtotime( $settings['calendar-specific-start'] );
+					$start_timestamp = strtotime( $settings['calendar_specific_start'] );
 
 					if ( abs( $start_timestamp - $last_year ) > 0 ) {
 						$this->calendar_start_date = date( 'Y-m-d', $start_timestamp );
@@ -157,10 +155,10 @@ class CCB_Core_Sync {
 					$this->calendar_start_date = date( 'Y-m-d' );
 				}
 
-				if ( $settings['calendar-specific-end'] ) {
+				if ( $settings['calendar_specific_end'] ) {
 
 					$next_year = strtotime( '+1 year' );
-					$end_timestamp = strtotime( $settings['calendar-specific-end'] );
+					$end_timestamp = strtotime( $settings['calendar_specific_end'] );
 
 					if ( abs( $next_year - $end_timestamp ) > 0 ) {
 						$this->calendar_end_date = date( 'Y-m-d', $end_timestamp );
@@ -220,7 +218,7 @@ class CCB_Core_Sync {
 	 *	 ),
 	 * )
 	 *
-	 * @since     0.9.0
+	 * @since     1.0.0
 	 * @param     array    $services    An array of services and parameters to call
 	 * @access    protected
 	 * @return    void
@@ -343,7 +341,7 @@ class CCB_Core_Sync {
 	 * Perform a synchronization
 	 *
 	 * @access    public
-	 * @since     0.9.0
+	 * @since     1.0.0
 	 * @return    void
 	 */
 	public function sync() {
@@ -448,7 +446,7 @@ class CCB_Core_Sync {
 	 * as defined in the constructor
 	 *
 	 * @access    public
-	 * @since     0.9.0
+	 * @since     1.0.0
 	 * @return    string
 	 */
 	public function test_api_credentials() {
@@ -465,7 +463,7 @@ class CCB_Core_Sync {
 	 *
 	 * @param     mixed    $full_response
 	 * @access    protected
-	 * @since     0.9.0
+	 * @since     1.0.0
 	 * @return    array
 	 */
 	protected function validate_response( $full_response ) {
@@ -529,7 +527,7 @@ class CCB_Core_Sync {
 	 * Parses the XML response, deletes existing CPTs, and imports CCB data
 	 *
 	 * @param     mixed    $full_response
-	 * @since     0.9.0
+	 * @since     1.0.0
 	 * @access    protected
 	 * @return    void
 	 */
@@ -737,7 +735,7 @@ class CCB_Core_Sync {
 	 * @param     mixed    $post_data
 	 * @param     array    $taxonomy_map
 	 * @access    protected
-	 * @since     0.9.0
+	 * @since     1.0.0
 	 * @return    void
 	 */
 	protected function get_taxonomy_atts( $post_data, $taxonomy_map ) {
@@ -801,7 +799,7 @@ class CCB_Core_Sync {
 	 * @param     array     $custom_fields_map
 	 * @param     string    $parent_field_name
 	 * @access    protected
-	 * @since     0.9.0
+	 * @since     1.0.0
 	 * @return    void
 	 */
 	protected function get_custom_fields_atts( $post_data, $custom_fields_map, $parent_field_name = '' ) {

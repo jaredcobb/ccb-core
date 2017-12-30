@@ -30,7 +30,7 @@ class CCB_Core_Group_Tag extends CCB_Core_Taxonomy {
 	 *
 	 * @var   array
 	 */
-	public $object_types = array( 'ccb-core-groups' );
+	public $object_types = array( 'ccb_core_groups' );
 
 	/**
 	 * Setup the default taxonomy mappings
@@ -38,7 +38,7 @@ class CCB_Core_Group_Tag extends CCB_Core_Taxonomy {
 	 * @since    1.0.0
 	 * @return   array   Default options for register_taxonomy
 	 */
-	public static function get_taxonomy_mapping() {
+	public static function get_taxonomy_args() {
 		return array(
 			'labels' => array(
 				'name' => __( 'Group Tags', 'ccb-core' ),
@@ -56,7 +56,9 @@ class CCB_Core_Group_Tag extends CCB_Core_Taxonomy {
 			'show_admin_column' => true,
 			'show_ui' => true,
 			'query_var' => true,
-			'api_mapping' => array( 'childcare_provided' => __( 'Childcare Provided' ) ), // The field key from the CCB API.
+			'api_mapping' => array(
+				'childcare_provided' => __( 'Childcare Provided', 'ccb-core' ), // The field key from the CCB API.
+			),
 		);
 	}
 

@@ -57,6 +57,7 @@ class CCB_Core_Settings_Page {
 
 				<?php settings_fields( $this->page_id ); ?>
 				<?php do_settings_sections( $this->page_id ); ?>
+				<?php wp_nonce_field( 'update_settings', 'ccb_core_nonce' ); ?>
 
 				<?php
 				if ( 'ccb_core_settings' !== $this->page_id ) {

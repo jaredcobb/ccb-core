@@ -301,7 +301,7 @@ class CCB_Core_Settings_Field {
 
 		echo sprintf(
 			'<div class="sync-wrapper">
-				<input type="button" name="manual_sync" id="manual-sync" class="button %1$s" value="%2$s" />
+				<input type="button" name="manual_sync" id="manual_sync" class="button %1$s" value="%2$s" />
 				<div class="spinner %3$s"></div>
 				<div class="in-progress-message ajax-message updated">%4$s</div>
 			</div>',
@@ -320,7 +320,7 @@ class CCB_Core_Settings_Field {
 	 * @return    void
 	 */
 	protected function render_latest_results() {
-		echo '<div class="ajax-message ccb-core-latest-results">
+		echo '<div class="ajax-message ccb-core-latest_results">
 				<div class="spinner is-active" style="float:left;margin-top:-8px;"></div>
 			</div>';
 	}

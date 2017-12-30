@@ -89,7 +89,7 @@
 
       var data = {
         'action': 'get_latest_sync',
-        'nextNonce': CCB_CORE_SETTINGS.nextNonce
+        'nonce': CCB_CORE_SETTINGS.nonce
       };
 
       $.post(ajaxurl, data, function(response) {
@@ -108,7 +108,7 @@
 
       var data = {
         'action': 'poll_sync',
-        'nextNonce': CCB_CORE_SETTINGS.nextNonce
+        'nonce': CCB_CORE_SETTINGS.nonce
       };
 
       $.post(ajaxurl, data, function(response) {
@@ -145,7 +145,7 @@
 
       var data = {
         'action': 'test_credentials',
-        'nextNonce': CCB_CORE_SETTINGS.nextNonce
+        'nonce': CCB_CORE_SETTINGS.nonce
       };
 
       $.post(ajaxurl, data, function(response) {
@@ -154,7 +154,7 @@
         $spinner.removeClass('is-active');
 
         if (response.success === false) {
-          $testLoginWrapper.append('<div class="ajax-message error">' + response.message + '</div>');
+          $testLoginWrapper.append('<div class="ajax-message error">' + response.data + '</div>');
         }
         else if (typeof response.services !== 'undefined' && response.services.length > 0) {
 
@@ -187,7 +187,7 @@
 
       var data = {
         'action': 'sync',
-        'nextNonce': CCB_CORE_SETTINGS.nextNonce
+        'nonce': CCB_CORE_SETTINGS.nonce
       };
 
       $.post(ajaxurl, data, function(response) {

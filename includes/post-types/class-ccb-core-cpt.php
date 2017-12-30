@@ -26,75 +26,24 @@ abstract class CCB_Core_CPT {
 	public $name;
 
 	/**
-	 * The specific custom post type options
+	 * Whether or not this post type is enabled. (Set by child class).
 	 *
-	 * @var   array
+	 * @var bool
 	 */
-	protected $cpt_options = array();
+	public $enabled;
 
 	/**
 	 * Initialize the class
 	 */
 	public function __construct() {
 
-		$plugin_options = CCB_Core_Helpers::instance()->get_options();
+		add_filter( 'ccb_core_post_type_settings_definitions', array( $this, 'get_post_settings_definitions' ) );
 
-		// If this CPT is enabled, merge the defaults and set the registration hook.
-		if ( ! empty( $plugin_options[ $this->name ]['enabled'] ) ) {
-			$this->cpt_options = wp_parse_args( $this->get_user_cpt_options( $plugin_options ), $this->get_cpt_defaults() );
+		// If this custom post type is enabled, merge the defaults and set the registration hook.
+		if ( $this->enabled ) {
 			add_action( 'init', array( $this, 'register_post_type' ) );
+			add_filter( 'ccb_core_post_type_map', array( $this, 'get_post_type_map' ) );
 		}
-
-	}
-
-	/**
-	 * Get the dynamic CPT options based on
-	 * what the user may have set
-	 *
-	 * @param    array $plugin_options The entire options array.
-	 * @return   array
-	 */
-	protected function get_user_cpt_options( $plugin_options ) {
-
-		$user_cpt_options = array();
-
-		if ( ! empty( $plugin_options[ $this->name ]['cpt_options']['name'] ) ) {
-			$user_cpt_options['labels']['name'] = $plugin_options[ $this->name ]['cpt_options']['name'];
-			$user_cpt_options['labels']['all_items'] = sprintf( __( 'All %s', 'ccb-core' ), $plugin_options[ $this->name ]['cpt_options']['name'] );
-			$user_cpt_options['labels']['search_items'] = sprintf( __( 'Search %s', 'ccb-core' ), $plugin_options[ $this->name ]['cpt_options']['name'] );
-		}
-
-		if ( ! empty( $plugin_options[ $this->name ]['cpt_options']['singular_name'] ) ) {
-			$user_cpt_options['labels']['singular_name'] = $plugin_options[ $this->name ]['cpt_options']['singular_name'];
-			$user_cpt_options['labels']['add_new_item'] = sprintf( __( 'Add New %s', 'ccb-core' ), $plugin_options[ $this->name ]['cpt_options']['singular_name'] );
-			$user_cpt_options['labels']['edit_item'] = sprintf( __( 'Edit %s', 'ccb-core' ), $plugin_options[ $this->name ]['cpt_options']['singular_name'] );
-			$user_cpt_options['labels']['new_item'] = sprintf( __( 'New %s', 'ccb-core' ), $plugin_options[ $this->name ]['cpt_options']['singular_name'] );
-			$user_cpt_options['labels']['view_item'] = sprintf( __( 'View %s', 'ccb-core' ), $plugin_options[ $this->name ]['cpt_options']['singular_name'] );
-		}
-
-		if ( ! empty( $plugin_options[ $this->name ]['cpt_options']['slug'] ) ) {
-			$user_cpt_options['rewrite'] = array( 'slug' => $plugin_options[ $this->name ]['cpt_options']['slug'] );
-			$user_cpt_options['has_archive'] = $plugin_options[ $this->name ]['cpt_options']['slug'];
-		}
-
-		// The remaining options are boolean, so directly set their values if the option is set.
-		if ( isset( $plugin_options[ $this->name ]['cpt_options']['publicly_queryable'] ) ) {
-			$user_cpt_options['publicly_queryable'] = $plugin_options[ $this->name ]['cpt_options']['publicly_queryable'];
-		}
-
-		if ( isset( $plugin_options[ $this->name ]['cpt_options']['exclude_from_search'] ) ) {
-			$user_cpt_options['exclude_from_search'] = $plugin_options[ $this->name ]['cpt_options']['exclude_from_search'];
-		}
-
-		if ( isset( $plugin_options[ $this->name ]['cpt_options']['show_ui'] ) ) {
-			$user_cpt_options['show_ui'] = $plugin_options[ $this->name ]['cpt_options']['show_ui'];
-		}
-
-		if ( isset( $plugin_options[ $this->name ]['cpt_options']['show_in_nav_menus'] ) ) {
-			$user_cpt_options['show_in_nav_menus'] = $plugin_options[ $this->name ]['cpt_options']['show_in_nav_menus'];
-		}
-
-		return $user_cpt_options;
 
 	}
 
@@ -106,7 +55,7 @@ abstract class CCB_Core_CPT {
 	 * @return    void
 	 */
 	public function register_post_type() {
-		register_post_type( $this->name, $this->cpt_options );
+		register_post_type( $this->name, $this->get_post_args() );
 	}
 
 	/**
@@ -119,11 +68,29 @@ abstract class CCB_Core_CPT {
 	}
 
 	/**
+	 * Setup the custom post type $args
+	 *
+	 * @since    1.0.0
+	 * @return   array   $args for register_post_type
+	 */
+	abstract public function get_post_args();
+
+	/**
 	 * Setup the default CPT options
 	 *
 	 * @since    1.0.0
-	 * @return   array   Default options for register_post_type
+	 * @param    array $settings The settings definitions.
+	 * @return   array The configuration for the options settable by the user
 	 */
-	abstract public function get_cpt_defaults();
+	abstract public function get_post_settings_definitions( $settings );
+
+	/**
+	 * Define the mapping of CCB API fields to the Post fields
+	 *
+	 * @since    1.0.0
+	 * @param    array $map A collection of mappings from the API to WordPress.
+	 * @return   array
+	 */
+	abstract public function get_post_type_map( $map );
 
 }

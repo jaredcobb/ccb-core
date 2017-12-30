@@ -114,16 +114,20 @@ class CCB_Core_Vendor_Encryption {
 	 * @returns array An array of keys ( a cipher key, a mac key, and a IV )
 	 */
 	protected function get_keys( $salt, $key ) {
-		$iv_size = mcrypt_get_iv_size( $this->cipher, $this->mode );
-		$key_size = mcrypt_get_key_size( $this->cipher, $this->mode );
-		$length = 2 * $key_size + $iv_size;
+		if ( function_exists( 'mcrypt_get_iv_size' ) ) {
+			$iv_size = mcrypt_get_iv_size( $this->cipher, $this->mode );
+			$key_size = mcrypt_get_key_size( $this->cipher, $this->mode );
+			$length = 2 * $key_size + $iv_size;
 
-		$key = $this->pbkdf2( 'sha512', $key, $salt, $this->rounds, $length );
+			$key = $this->pbkdf2( 'sha512', $key, $salt, $this->rounds, $length );
 
-		$cipher_key = substr( $key, 0, $key_size );
-		$mac_key = substr( $key, $key_size, $key_size );
-		$iv = substr( $key, 2 * $key_size );
-		return array( $cipher_key, $mac_key, $iv );
+			$cipher_key = substr( $key, 0, $key_size );
+			$mac_key = substr( $key, $key_size, $key_size );
+			$iv = substr( $key, 2 * $key_size );
+			return array( $cipher_key, $mac_key, $iv );
+		} else {
+			return false;
+		}
 	}
 
 	/**

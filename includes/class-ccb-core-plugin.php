@@ -84,35 +84,6 @@ class CCB_Core_Plugin {
 	}
 
 	/**
-	 * Responds to the client with a json response
-	 * but allows the script to continue
-	 *
-	 * @param     array    $response
-	 * @access    protected
-	 * @since     0.9.0
-	 * @return    bool
-	 */
-	protected function send_non_blocking_json_response( $response ) {
-
-		ignore_user_abort(true);
-		ob_start();
-
-		header( 'Content-Type: application/json' );
-
-		echo json_encode( $response );
-
-		header( 'Connection: close' );
-		header( 'Content-Length: ' . ob_get_length() );
-
-		ob_end_flush();
-		ob_flush();
-		flush();
-
-		return true;
-
-	}
-
-	/**
 	 * Helper function to check if a date is valid
 	 *
 	 * @param     string $date The date.

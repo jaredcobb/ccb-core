@@ -59,8 +59,11 @@ class CCB_Core {
 		require_once CCB_CORE_PATH . 'includes/class-ccb-core-settings-section.php';
 		require_once CCB_CORE_PATH . 'includes/class-ccb-core-settings-field.php';
 
-		// The class that handles data synchronization between CCB and the local cache.
-		require_once CCB_CORE_PATH . 'includes/class-ccb-core-sync.php';
+		// The class that handles communication with the CCB API.
+		require_once CCB_CORE_PATH . 'includes/class-ccb-core-api.php';
+
+		// The class that handles synchronization logic.
+		require_once CCB_CORE_PATH . 'includes/class-ccb-core-synchronizer.php';
 
 		// Custom Post Type classes.
 		require_once CCB_CORE_PATH . 'includes/post-types/class-ccb-core-cpt.php';
@@ -78,6 +81,9 @@ class CCB_Core {
 		require_once CCB_CORE_PATH . 'includes/taxonomies/class-ccb-core-group-tag.php';
 		require_once CCB_CORE_PATH . 'includes/taxonomies/class-ccb-core-group-time.php';
 		require_once CCB_CORE_PATH . 'includes/taxonomies/class-ccb-core-group-type.php';
+
+		// Admin AJAX methods.
+		require_once CCB_CORE_PATH . 'includes/class-ccb-core-admin-ajax.php';
 
 	}
 
@@ -100,22 +106,11 @@ class CCB_Core {
 		add_action( 'admin_menu', array( $this, 'initialize_settings_menu' ) );
 		add_action( 'admin_init', array( $this, 'initialize_settings' ) );
 
+		// Callback for after the options are saved.
+		add_action( 'update_option_ccb_core_settings', array( $this, 'updated_options' ), 10, 2 );
+
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-
-		/*// Cron related hooks.
-		$this->loader->add_action( 'schedule_auto_refresh', $plugin_admin, 'auto_sync' );
-		$this->loader->add_action( 'wp_loaded', $plugin_admin, 'check_auto_refresh' );
-
-		// User initiated actions.
-		$this->loader->add_action( 'pre_update_option_' . $this->plugin_settings_name, $plugin_admin, 'update_settings_callback', 10, 2 );
-		$this->loader->add_action( 'schedule_flush_rewrite_rules', $plugin_admin, 'flush_rewrite_rules_event' );
-
-		// All backend ajax hooks.
-		$this->loader->add_action( 'wp_ajax_sync', $plugin_admin, 'ajax_sync' );
-		$this->loader->add_action( 'wp_ajax_poll_sync', $plugin_admin, 'ajax_poll_sync' );
-		$this->loader->add_action( 'wp_ajax_test_credentials', $plugin_admin, 'ajax_test_credentials' );
-		$this->loader->add_action( 'wp_ajax_get_latest_sync', $plugin_admin, 'ajax_get_latest_sync' );*/
 
 	}
 
@@ -238,6 +233,39 @@ class CCB_Core {
 	}
 
 	/**
+	 * After the options are saved, check to see if we
+	 * should flush the rewrite rules.
+	 *
+	 * @param    array $old_value The previous option value.
+	 * @param    array $value The new option value.
+	 * @access   public
+	 * @since    1.0.0
+	 * @return   void
+	 */
+	public function updated_options( $old_value, $value ) {
+
+		// Create a collection of settings that, if they change, should
+		// trigger a flush_rewrite_rules event.
+		$setting_array = array(
+			'groups_enabled',
+			'groups_slug',
+			'calendar_enabled',
+			'calendar_slug',
+		);
+
+		foreach ( $setting_array as $setting ) {
+			if ( isset( $value[ $setting ] ) ) {
+				if ( ! isset( $old_value[ $setting ] ) || $value[ $setting ] !== $old_value[ $setting ] ) {
+					// At least one option requires a flush, so do it once and return.
+					flush_rewrite_rules();
+					return;
+				}
+			}
+		}
+
+	}
+
+	/**
 	 * Register the stylesheets for the dashboard.
 	 *
 	 * @param string $hook Current admin page.
@@ -271,8 +299,11 @@ class CCB_Core {
 			wp_enqueue_script( 'picker', CCB_CORE_URL . 'js/vendor/picker.js', array( 'jquery' ), CCB_CORE_VERSION, false );
 			wp_enqueue_script( 'picker-date', CCB_CORE_URL . 'js/vendor/picker.date.js', array( 'picker' ), CCB_CORE_VERSION, false );
 			wp_enqueue_script( 'tipr', CCB_CORE_URL . 'js/vendor/tipr.min.js', array( 'jquery' ), CCB_CORE_VERSION, false );
-			wp_localize_script( 'ccb-core', 'CCB_CORE_SETTINGS', array(
-					'nextNonce' => wp_create_nonce( 'ccb-core-nonce' ),
+			wp_localize_script(
+				'ccb-core',
+				'CCB_CORE_SETTINGS',
+				array(
+					'nonce' => wp_create_nonce( 'ccb_core_nonce' ),
 				)
 			);
 		}
