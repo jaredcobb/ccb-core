@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<ruleset name="CCB Core Coding Standards Configuration">
+	<!-- Set a description for this ruleset. -->
+	<description>Code standard rules to check against a WordPress Plugin.</description>
+
+	<exclude-pattern>tests/*</exclude-pattern>
+	<exclude-pattern>lib/*</exclude-pattern>
+
+	<!-- Include the WordPress ruleset, with exclusions. -->
+	<rule ref="WordPress">
+		<!-- These may need to be excluded if they throw too many false positives -->
+		<!-- <exclude name="Generic.WhiteSpace.ScopeIndent.Incorrect" /> -->
+		<!-- <exclude name="Generic.WhiteSpace.ScopeIndent.IncorrectExact" /> -->
+		<exclude name="PEAR.Functions.FunctionCallSignature.Indent" />
+		<exclude name="WordPress.WhiteSpace.ControlStructureSpacing.BlankLineAfterEnd" />
+    <exclude name="Generic.Formatting.MultipleStatementAlignment" />
+    <exclude name="WordPress.Arrays.MultipleStatementAlignment" />
+    <exclude name="WordPress.WP.I18n.MissingTranslatorsComment" />
+	</rule>
+
+	<rule ref="Generic.WhiteSpace.ScopeIndent.IncorrectExact">
+		<type>warning</type>
+	</rule>
+
+	<rule ref="WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid">
+		<type>warning</type>
+	</rule>
+
+	<!-- Tweak the VIP rules -->
+	<rule ref="WordPress.XSS.EscapeOutput.OutputNotEscaped">
+		<type>warning</type>
+	</rule>
+	<rule ref="WordPress.XSS.EscapeOutput.OutputNotSanitized">
+		<type>warning</type>
+	</rule>
+	<rule ref="WordPress.XSS.EscapeOutput.">
+		<type>warning</type>
+	</rule>
+	<rule ref="WordPress.VIP.DirectDatabaseQuery.NoCaching">
+		<type>warning</type>
+	</rule>
+</ruleset>
