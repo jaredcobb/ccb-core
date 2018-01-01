@@ -37,7 +37,7 @@ abstract class CCB_Core_Taxonomy {
 	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'register_taxonomy' ) );
-		add_filter( 'ccb_core_taxonomy_map', [ $this, 'get_taxonomy_map' ] );
+		add_filter( 'ccb_core_synchronizer_taxonomy_api_map', [ $this, 'get_taxonomy_map' ] );
 	}
 
 	/**

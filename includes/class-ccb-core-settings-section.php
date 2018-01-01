@@ -6,14 +6,14 @@
  * @since      0.9.0
  *
  * @package    CCB_Core
- * @subpackage CCB_Core/admin
+ * @subpackage CCB_Core/includes
  */
 
 /**
  * Object to manage the plugin settings sections
  *
  * @package    CCB_Core
- * @subpackage CCB_Core/admin
+ * @subpackage CCB_Core/includes
  * @author     Jared Cobb <wordpress@jaredcobb.com>
  */
 class CCB_Core_Settings_Section {
@@ -125,17 +125,17 @@ class CCB_Core_Settings_Section {
 
 		echo '
 			<blockquote>
-				You\'ll need to ensure your <a href="https://support.churchcommunitybuilder.com/customer/portal/articles/361764-editing-groups" target="_blank">group settings</a>
-				allow the group to be publicly listed. A great way to cross reference if your group is publicly visible is to visit ';
+				You\'ll need to ensure your <a href="https://churchcommunitybuilder.force.com/s/article/2102903" target="_blank">group settings</a>
+				have <strong>Public Search</strong> enabled (see the Options tab). A great way to cross reference if your group is publicly visible is to visit ';
 
 		// If the user has set their subdomain, use it for the url to w_group_list.php.
 		$options = CCB_Core_Helpers::instance()->get_options();
 		if ( ! empty( $options['subdomain'] ) ) {
 			echo sprintf(
 				'<em style="white-space:nowrap;">
-					<a href="https://%1$s.ccbchurch.com/w_group_list.php target="_blank">%1$s</a>
+					<a href="%s" target="_blank">your public search page</a>
 				</em>',
-				esc_url( $options['subdomain'] )
+				esc_url( "https://{$options['subdomain']}.ccbchurch.com/w_group_list.php" )
 			);
 		} else {
 			echo '<em style="white-space:nowrap;">https://[yoursite].ccbchurch.com/w_group_list.php</em>';

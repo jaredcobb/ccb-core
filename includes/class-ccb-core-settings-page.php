@@ -6,14 +6,14 @@
  * @since      0.9.0
  *
  * @package    CCB_Core
- * @subpackage CCB_Core/admin
+ * @subpackage CCB_Core/includes
  */
 
 /**
  * Object to manage the plugin settings pages
  *
  * @package    CCB_Core
- * @subpackage CCB_Core/admin
+ * @subpackage CCB_Core/includes
  * @author     Jared Cobb <wordpress@jaredcobb.com>
  */
 class CCB_Core_Settings_Page {

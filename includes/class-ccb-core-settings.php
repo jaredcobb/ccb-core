@@ -6,14 +6,14 @@
  * @since      0.9.0
  *
  * @package    CCB_Core
- * @subpackage CCB_Core/admin
+ * @subpackage CCB_Core/includes
  */
 
 /**
  * Object to manage the plugin settings
  *
  * @package    CCB_Core
- * @subpackage CCB_Core/admin
+ * @subpackage CCB_Core/includes
  * @author     Jared Cobb <wordpress@jaredcobb.com>
  */
 class CCB_Core_Settings {
@@ -38,7 +38,6 @@ class CCB_Core_Settings {
 				switch ( $validation['field_validation'] ) {
 
 					case 'alphanumeric':
-
 						if ( empty( $input[ $field_id ] ) || ctype_alnum( $input[ $field_id ] ) ) {
 							$current_options[ $field_id ] = $input[ $field_id ];
 						} else {
@@ -57,7 +56,6 @@ class CCB_Core_Settings {
 						break;
 
 					case 'numeric':
-
 						if ( empty( $input[ $field_id ] ) || ctype_digit( $input[ $field_id ] ) ) {
 							$current_options[ $field_id ] = $input[ $field_id ];
 						} else {
@@ -76,12 +74,9 @@ class CCB_Core_Settings {
 						break;
 
 					case 'slug':
-
-							// Continue onto alphanumeric_extended validation.
 							$input[ $field_id ] = sanitize_key( $input[ $field_id ] );
-
+							// Continue onto alphanumeric_extended validation because these are essentially the same.
 					case 'alphanumeric_extended':
-
 						if ( empty( $input[ $field_id ] ) || ! preg_match( '/[^\w\s-_]/', $input[ $field_id ] ) ) {
 							$current_options[ $field_id ] = $input[ $field_id ];
 						} else {
@@ -100,7 +95,6 @@ class CCB_Core_Settings {
 						break;
 
 					case 'encrypt':
-
 						if ( ! empty( $input[ $field_id ]['password'] ) ) {
 							$encrypted_password = CCB_Core_Helpers::instance()->encrypt( $input[ $field_id ]['password'] );
 							if ( $encrypted_password ) {
@@ -118,7 +112,6 @@ class CCB_Core_Settings {
 						break;
 
 					case 'switch':
-
 						$current_options[ $field_id ] = ( isset( $input[ $field_id ] ) && '1' === $input[ $field_id ] ? '1' : '' );
 						break;
 
@@ -194,7 +187,7 @@ class CCB_Core_Settings {
 		 *
 		 * @param  array  $settings The current array of settings definitions.
 		 */
-		$settings = apply_filters( 'ccb_core_post_type_settings_definitions', $settings );
+		$settings = apply_filters( 'ccb_core_settings_post_definitions', $settings );
 
 		// Add a syncronization settings page.
 		$settings['ccb_core_settings_sync'] = array(

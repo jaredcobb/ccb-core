@@ -29,8 +29,8 @@ class CCB_Core_Group extends CCB_Core_CPT {
 	 * Initialize the class
 	 */
 	public function __construct() {
-		add_filter( 'ccb_core_entity_insert_allowed', [ $this, 'entity_insert_update_allowed' ], 10, 4 );
-		add_filter( 'ccb_core_entity_update_allowed', [ $this, 'entity_insert_update_allowed' ], 10, 4 );
+		add_filter( 'ccb_core_synchronizer_entity_insert_allowed', [ $this, 'entity_insert_update_allowed' ], 10, 4 );
+		add_filter( 'ccb_core_synchronizer_entity_update_allowed', [ $this, 'entity_insert_update_allowed' ], 10, 4 );
 		add_filter( 'ccb_core_after_insert_update_post', [ $this, 'attach_group_image' ], 10, 5 );
 
 		$options = CCB_Core_Helpers::instance()->get_options();
@@ -42,7 +42,7 @@ class CCB_Core_Group extends CCB_Core_CPT {
 	 * Setup the custom post type args
 	 *
 	 * @since    1.0.0
-	 * @return   array   $args for register_post_type
+	 * @return   array $args for register_post_type
 	 */
 	public function get_post_args() {
 
@@ -218,7 +218,7 @@ class CCB_Core_Group extends CCB_Core_CPT {
 	 * @param    array $map A collection of mappings from the API to WordPress.
 	 * @return   array
 	 */
-	public function get_post_type_map( $map ) {
+	public function get_post_api_map( $map ) {
 		if ( $this->enabled ) {
 			$options = CCB_Core_Helpers::instance()->get_options();
 			$include_image_link = ! empty( $options['groups_import_images'] ) && 'yes' === $options['groups_import_images'] ? true : false;
@@ -244,7 +244,20 @@ class CCB_Core_Group extends CCB_Core_CPT {
 		return $map;
 	}
 
-	public function entity_insert_update_allowed( $allowed, $entity_id, $entity, $post_type ) {
+	/**
+	 * Callback function for `ccb_core_synchronizer_entity_insert_allowed` and
+	 * `ccb_core_synchronizer_entity_update_allowed` so that we can filter OUT
+	 * inactive and non-public groups from an import.
+	 *
+	 * @since    1.0.0
+	 *
+	 * @param    bool      $allowed Whether an insert/update is allowed.
+	 * @param    SimpleXML $entity The specific entity object.
+	 * @param    mixed     $entity_id A unique entity id.
+	 * @param    string    $post_type The current post type.
+	 * @return   bool
+	 */
+	public function entity_insert_update_allowed( $allowed, $entity, $entity_id, $post_type ) {
 		if ( $this->name === $post_type ) {
 			// Only allow active, publicly listed groups to be imported.
 			if ( 'true' === (string) $entity->inactive || 'false' === (string) $entity->public_search_listed ) {
@@ -254,6 +267,20 @@ class CCB_Core_Group extends CCB_Core_CPT {
 		return $allowed;
 	}
 
+	/**
+	 * Checks whether downloading group images is enabled
+	 * and an entity has an image attachment, then attaches
+	 * the image as a featured image.
+	 *
+	 * @since    1.0.0
+	 *
+	 * @param    SimpleXML $entity The entity object.
+	 * @param    array     $settings The settings array for the import.
+	 * @param    array     $args The `wp_insert_post` args.
+	 * @param    string    $post_type The current post type.
+	 * @param    int       $post_id The WordPress post id of this post.
+	 * @return   void
+	 */
 	public function attach_group_image( $entity, $settings, $args, $post_type, $post_id ) {
 		if ( $this->name === $post_type && $settings['data']['include_image_link'] ) {
 			$image_url = (string) $entity->image;

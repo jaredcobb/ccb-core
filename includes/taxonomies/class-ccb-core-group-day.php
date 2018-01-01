@@ -61,3 +61,5 @@ class CCB_Core_Group_Day extends CCB_Core_Taxonomy {
 	}
 
 }
+
+new CCB_Core_Group_Day();

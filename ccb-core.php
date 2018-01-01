@@ -19,7 +19,7 @@
  * Domain Path:       /languages
  */
 
-// do not allow direct access to this file.
+// Do not allow direct access to this file.
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
@@ -29,11 +29,12 @@ define( 'CCB_CORE_URL', plugin_dir_url( __FILE__ ) );
 define( 'CCB_CORE_BASENAME', plugin_basename( __FILE__ ) );
 define( 'CCB_CORE_VERSION', '1.0.0' );
 
-// code that runs during plugin activation.
+// Code that runs during plugin activation and deactivation.
 require_once CCB_CORE_PATH . 'includes/class-ccb-core-activator.php';
 register_activation_hook( __FILE__, array( 'CCB_Core_Activator', 'activate' ) );
+register_deactivation_hook( __FILE__, array( 'CCB_Core_Activator', 'deactivate' ) );
 
-// internationalization, dashboard-specific hooks, and public-facing site hooks.
+// Internationalization, dashboard-specific hooks, and public-facing site hooks.
 require_once CCB_CORE_PATH . 'includes/class-ccb-core.php';
 
 /**

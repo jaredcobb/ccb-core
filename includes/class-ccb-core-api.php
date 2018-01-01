@@ -29,38 +29,73 @@ class CCB_Core_API {
 	public $initialized = false;
 
 	/**
+	 * Instance of the class
+	 *
+	 * @var      CCB_Core_API
+	 * @access   private
+	 * @static
+	 */
+	private static $instance;
+
+	/**
 	 * The subdomain of the ccb church installation
 	 *
 	 * @since    1.0.0
-	 * @access   protected
+	 * @access   private
 	 * @var      string    $subdomain
 	 */
-	protected $subdomain;
+	private $subdomain;
 
 	/**
 	 * The ccb api username
 	 *
 	 * @since    1.0.0
-	 * @access   protected
+	 * @access   private
 	 * @var      string    $username
 	 */
-	protected $username;
+	private $username;
 
 	/**
 	 * The ccb api password
 	 *
 	 * @since    1.0.0
-	 * @access   protected
+	 * @access   private
 	 * @var      string    $password
 	 */
-	protected $password;
+	private $password;
 
 	/**
-	 * Initialize the class and set its properties.
+	 * Unused constructor in the singleton pattern
 	 *
-	 * @since    1.0.0
+	 * @access   public
+	 * @return   void
 	 */
 	public function __construct() {
+		// Initialize this class with the instance() method.
+	}
+
+	/**
+	 * Returns the instance of the class
+	 *
+	 * @access   public
+	 * @static
+	 * @return   CCB_Core_API
+	 */
+	public static function instance() {
+		if ( ! isset( static::$instance ) ) {
+			static::$instance = new CCB_Core_API();
+			static::$instance->setup();
+		}
+		return static::$instance;
+	}
+
+	/**
+	 * Initial setup of the singleton
+	 *
+	 * @access   private
+	 * @return   void
+	 */
+	private function setup() {
 		// Wait to initialize the API credentials until after WordPress
 		// has loaded pluggable.php because we are using some WordPress helper functions.
 		add_action( 'plugins_loaded', [ $this, 'initialize_credentials' ] );
@@ -209,6 +244,7 @@ class CCB_Core_API {
 			return $result;
 		}
 
+		// Serialize the response XML into a SimpleXML object.
 		try {
 			libxml_use_internal_errors( true );
 			$parsed_response = simplexml_load_string( $result['xml'] );
@@ -241,3 +277,5 @@ class CCB_Core_API {
 	}
 
 }
+
+CCB_Core_API::instance();

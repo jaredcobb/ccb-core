@@ -1,6 +1,6 @@
 <?php
 /**
- * Custom post types used in this plugin
+ * Calendar Custom Post Type
  *
  * @link       https://www.wpccb.com
  * @since      1.0.0
@@ -38,7 +38,7 @@ class CCB_Core_Calendar extends CCB_Core_CPT {
 	 * Setup the custom post type args
 	 *
 	 * @since    1.0.0
-	 * @return   array   $args for register_post_type
+	 * @return   array $args for register_post_type
 	 */
 	public function get_post_args() {
 
@@ -145,7 +145,10 @@ class CCB_Core_Calendar extends CCB_Core_CPT {
 							),
 							'field_validation' => '',
 							'field_default' => 'relative',
-							'field_attributes' => array( 'class' => 'date-range-type', 'data-requires' => '{"calendar_enabled":1,"calendar_advanced":1}' ),
+							'field_attributes' => array(
+								'class' => 'date-range-type',
+								'data-requires' => '{"calendar_enabled":1,"calendar_advanced":1}',
+							),
 							'field_tooltip' => sprintf(
 								esc_html__(
 									'Relative: For example, always get the events from "One week ago", up to "Eight weeks from now".%1$s
@@ -269,10 +272,9 @@ class CCB_Core_Calendar extends CCB_Core_CPT {
 	 * @param    array $map A collection of mappings from the API to WordPress.
 	 * @return   array
 	 */
-	public function get_post_type_map( $map ) {
+	public function get_post_api_map( $map ) {
 		if ( $this->enabled ) {
-			$options = CCB_Core_Helpers::instance()->get_options();
-			$calendar_options = $this->get_calendar_options( $options );
+			$calendar_options = $this->get_calendar_options();
 
 			$map[ $this->name ] = [
 				'service' => 'public_calendar_listing',
@@ -295,11 +297,19 @@ class CCB_Core_Calendar extends CCB_Core_CPT {
 		return $map;
 	}
 
-	private function get_calendar_options( $options ) {
+	/**
+	 * Returns a standardized configuration array of
+	 * start and end dates to be used by the API call.
+	 *
+	 * @return array
+	 */
+	private function get_calendar_options() {
+		$options = CCB_Core_Helpers::instance()->get_options();
+
 		// By default, set some sane limits.
 		$calendar_options = [
 			'date_start' => date( 'Y-m-d', strtotime( '1 weeks ago' ) ),
-			'date_end' => date( 'Y-m-d', strtotime( '+16 weeks' ) ),
+			'date_end' => date( 'Y-m-d', strtotime( '+8 weeks' ) ),
 		];
 
 		// If the user has set a preferred date range type.

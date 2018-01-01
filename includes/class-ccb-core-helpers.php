@@ -20,13 +20,13 @@
  */
 class CCB_Core_Helpers {
 
-	const SYNC_STATUS_KEY = 'ccb-core-sync-in-progress';
+	const SYNC_STATUS_KEY = 'ccb_core_sync_in_progress';
 
 	/**
 	 * Instance of the Helper class
 	 *
-	 * @var CCB_Core_Helpers
-	 * @access protected
+	 * @var      CCB_Core_Helpers
+	 * @access   private
 	 * @static
 	 */
 	private static $instance;
@@ -34,15 +34,15 @@ class CCB_Core_Helpers {
 	/**
 	 * The options set by the user
 	 *
-	 * @var array
+	 * @var   array
 	 */
 	private $plugin_options = array();
 
 	/**
 	 * Unused constructor in the singleton pattern
 	 *
-	 * @access public
-	 * @return void
+	 * @access   public
+	 * @return   void
 	 */
 	public function __construct() {
 		// Initialize this class with the instance() method.
@@ -51,9 +51,9 @@ class CCB_Core_Helpers {
 	/**
 	 * Returns the instance of the class
 	 *
-	 * @access public
+	 * @access   public
 	 * @static
-	 * @return CCB_Core_Helpers
+	 * @return   CCB_Core_Helpers
 	 */
 	public static function instance() {
 		if ( ! isset( static::$instance ) ) {
@@ -66,8 +66,8 @@ class CCB_Core_Helpers {
 	/**
 	 * Initial setup of the singleton
 	 *
-	 * @access private
-	 * @return void
+	 * @access   private
+	 * @return   void
 	 */
 	private function setup() {
 		// Get any options the user may have set.
@@ -77,7 +77,7 @@ class CCB_Core_Helpers {
 	/**
 	 * Get any options stored by the user
 	 *
-	 * @return array
+	 * @return   array
 	 */
 	public function get_options() {
 		return $this->plugin_options;
@@ -141,9 +141,10 @@ class CCB_Core_Helpers {
 	 *
 	 * @access   public
 	 * @since    1.0.0
+	 * @param    array $data Optional data to send back.
 	 * @return   bool
 	 */
-	public function send_non_blocking_json_success() {
+	public function send_non_blocking_json_success( $data = array() ) {
 
 		ignore_user_abort( true );
 		ob_start();
@@ -151,7 +152,10 @@ class CCB_Core_Helpers {
 		header( 'Content-Type: application/json' );
 		header( 'Content-Encoding: none' );
 
-		echo wp_json_encode( [ 'success' => true ] );
+		echo wp_json_encode( [
+			'success' => true,
+			'data' => $data,
+		] );
 
 		header( 'Connection: close' );
 		header( 'Content-Length: ' . ob_get_length() );
@@ -237,6 +241,7 @@ class CCB_Core_Helpers {
 				set_post_thumbnail( $post_id, $media_id );
 			}
 
+			// phpcs:ignore
 			@unlink( $temp_file );
 
 			if ( ! is_wp_error( $media_id ) ) {
@@ -257,8 +262,14 @@ class CCB_Core_Helpers {
 	 * @return   array
 	 */
 	public function custom_uploads_directory( $upload ) {
-		// Allow for the ability to enable / disable custom upload path.
-		if ( apply_filters( 'ccb_core_allow_custom_upload_directory', true ) ) {
+		/**
+		 * Allow for the ability to enable / disable custom upload path.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param   bool $allowed Whether this plugin is allowed to use custom upload paths.
+		 */
+		if ( apply_filters( 'ccb_core_allow_custom_uploads_directory', true ) ) {
 			$upload['path'] = trailingslashit( $upload['basedir'] ) . 'ccb';
 			$upload['url'] = $upload['baseurl'] . '/ccb';
 			$upload['subdir'] = '/ccb';

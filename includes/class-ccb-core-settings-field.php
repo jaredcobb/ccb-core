@@ -6,14 +6,14 @@
  * @since      0.9.0
  *
  * @package    CCB_Core
- * @subpackage CCB_Core/admin
+ * @subpackage CCB_Core/includes
  */
 
 /**
  * Object to manage the plugin settings fields
  *
  * @package    CCB_Core
- * @subpackage CCB_Core/admin
+ * @subpackage CCB_Core/includes
  * @author     Jared Cobb <wordpress@jaredcobb.com>
  */
 class CCB_Core_Settings_Field {
@@ -276,9 +276,8 @@ class CCB_Core_Settings_Field {
 			);
 		} else {
 			echo sprintf(
-				'<div class="test-login-wrapper">
-					<input type="button" name="test_login" id="test-login" class="button" value="%s" />
-					<div class="spinner"></div>
+				'<div class="test-credentials-wrapper">
+					<input type="button" name="test_credentials" id="test-credentials" class="button" value="%s" />
 				</div>',
 				esc_attr__( 'Test Credentials', 'ccb-core' )
 			);
@@ -293,22 +292,11 @@ class CCB_Core_Settings_Field {
 	 * @return    void
 	 */
 	protected function render_manual_sync() {
-		$sync_in_progress = get_transient( CCB_Core_Helpers::SYNC_STATUS_KEY );
-
-		$sync_message = $sync_in_progress ? __( 'Syncronization in progress... You can safely navigate away from this page while we work hard in the background. (It should be just a moment).' ) : '';
-		$button_disabled = $sync_in_progress ? 'disabled' : '';
-		$spinner_active = $sync_in_progress ? 'is-active' :'';
-
 		echo sprintf(
 			'<div class="sync-wrapper">
-				<input type="button" name="manual_sync" id="manual_sync" class="button %1$s" value="%2$s" />
-				<div class="spinner %3$s"></div>
-				<div class="in-progress-message ajax-message updated">%4$s</div>
+				<input type="button" name="manual_sync" id="manual_sync" class="button" value="%s" />
 			</div>',
-			esc_attr( $button_disabled ),
-			esc_attr__( 'Synchronize', 'ccb-core' ),
-			esc_attr( $spinner_active ),
-			esc_html( $sync_message )
+			esc_attr__( 'Synchronize', 'ccb-core' )
 		);
 	}
 
@@ -320,8 +308,8 @@ class CCB_Core_Settings_Field {
 	 * @return    void
 	 */
 	protected function render_latest_results() {
-		echo '<div class="ajax-message ccb-core-latest_results">
-				<div class="spinner is-active" style="float:left;margin-top:-8px;"></div>
+		echo '<div class="ajax-message ccb-core-latest-results">
+				<span class="spinner is-active"></span>
 			</div>';
 	}
 

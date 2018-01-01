@@ -6,14 +6,14 @@
  * @since      1.0.0
  *
  * @package    CCB_Core
- * @subpackage CCB_Core/admin
+ * @subpackage CCB_Core/includes/post-types
  */
 
 /**
  * Abstract custom post type used help define all CPTs
  *
  * @package    CCB_Core
- * @subpackage CCB_Core/admin
+ * @subpackage CCB_Core/includes/post-types
  * @author     Jared Cobb <wordpress@jaredcobb.com>
  */
 abstract class CCB_Core_CPT {
@@ -26,23 +26,23 @@ abstract class CCB_Core_CPT {
 	public $name;
 
 	/**
-	 * Whether or not this post type is enabled. (Set by child class).
+	 * Whether or not this post type is enabled. (Overriden by child class).
 	 *
 	 * @var bool
 	 */
-	public $enabled;
+	public $enabled = false;
 
 	/**
 	 * Initialize the class
 	 */
 	public function __construct() {
 
-		add_filter( 'ccb_core_post_type_settings_definitions', array( $this, 'get_post_settings_definitions' ) );
+		add_filter( 'ccb_core_settings_post_definitions', array( $this, 'get_post_settings_definitions' ) );
 
 		// If this custom post type is enabled, merge the defaults and set the registration hook.
 		if ( $this->enabled ) {
 			add_action( 'init', array( $this, 'register_post_type' ) );
-			add_filter( 'ccb_core_post_type_map', array( $this, 'get_post_type_map' ) );
+			add_filter( 'ccb_core_synchronizer_post_api_map', array( $this, 'get_post_api_map' ) );
 		}
 
 	}
@@ -91,6 +91,6 @@ abstract class CCB_Core_CPT {
 	 * @param    array $map A collection of mappings from the API to WordPress.
 	 * @return   array
 	 */
-	abstract public function get_post_type_map( $map );
+	abstract public function get_post_api_map( $map );
 
 }

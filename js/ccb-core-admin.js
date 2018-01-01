@@ -2,16 +2,17 @@
 
   'use strict';
 
-  var ccbCoreAdmin = {
+  var CCBCoreAdmin = {
 
-    syncPollId : '',
+    syncPollId : null,
+    spinner : '<span class="spinner is-active"></span>',
 
     initialize : function() {
 
       this.syncPollId = setInterval(this.pollForActiveSync, 10000);
       this.pollForActiveSync();
 
-      $('.test-login-wrapper .button').on('click', window.event, this.testCredentials);
+      $('.test-credentials-wrapper .button').on('click', window.event, this.testCredentials);
 
       $('.sync-wrapper .button').on('click', window.event, this.syncData);
 
@@ -93,13 +94,18 @@
       };
 
       $.post(ajaxurl, data, function(response) {
+        if (true === response.success) {
+          var $resultsWrapper = $('.ccb-core-latest-results');
+          var $syncButton = $('.sync-wrapper .button');
+          var className = response.data.success ? 'notice-info' : 'notice-error';
+          var $content = $('<div class="notice ' + className + '"></div>');
 
-        var $latestSyncMessageWrapper = $('.ccb-core-latest-results');
-        var labelContent = '<b>Latest Sync Results</b><br>' + response.description;
+          $content.append('<p>' + response.data.message + '</p>');
+          $resultsWrapper.append($content);
 
-        $latestSyncMessageWrapper.removeClass('error notice updated').addClass(response.style);
-        $latestSyncMessageWrapper.empty().append(labelContent);
-
+          $resultsWrapper.find('.spinner').remove();
+          $syncButton.removeClass('disabled');
+        }
       });
 
     },
@@ -111,20 +117,41 @@
         'nonce': CCB_CORE_SETTINGS.nonce
       };
 
+      CCBCoreAdmin.disableUI();
+
       $.post(ajaxurl, data, function(response) {
-        if ( response.syncInProgress == false ) {
-          clearInterval(ccbCoreAdmin.syncPollId);
-          ccbCoreAdmin.updateLatestSync();
-
-          var $spinner = $('.sync-wrapper .spinner');
-          var $syncButtons = $('.sync-wrapper .button');
-          var $syncMessages = $('div.in-progress-message');
-
-          $spinner.removeClass('is-active');
-          $syncButtons.removeClass('disabled');
-          $syncMessages.remove();
-
+        if (true === response.success) {
+          if (false === response.data) {
+            // A sync is not currently in progress.
+            clearInterval(CCBCoreAdmin.syncPollId);
+            CCBCoreAdmin.updateLatestSync();
+          } else {
+            CCBCoreAdmin.adminNotice( CCB_CORE_SETTINGS.translations.syncInProgress, 'warning' );
+          }
         }
+      });
+
+    },
+
+    syncData : function(event) {
+
+      event.preventDefault();
+      var $syncButton = $('.sync-wrapper .button');
+
+      if ( $syncButton.hasClass('disabled') ) {
+        return false;
+      }
+
+      CCBCoreAdmin.disableUI();
+
+      var data = {
+        'action': 'sync',
+        'nonce': CCB_CORE_SETTINGS.nonce
+      };
+
+      $.post(ajaxurl, data, function(response) {
+        CCBCoreAdmin.adminNotice( CCB_CORE_SETTINGS.translations.syncInProgress, 'warning' );
+        CCBCoreAdmin.syncPollId = setInterval(CCBCoreAdmin.pollForActiveSync, 10000);
       });
 
     },
@@ -136,12 +163,10 @@
         return false;
       }
 
-      var $spinner = $('.test-login-wrapper .spinner');
-      var $testLoginWrapper = $('.test-login-wrapper');
+      var $testCredentialsWrapper = $('.test-credentials-wrapper');
 
       $clickedButton.addClass('disabled');
-      $spinner.addClass('is-active');
-      $testLoginWrapper.find('.ajax-message').remove();
+      CCBCoreAdmin.removeNotice();
 
       var data = {
         'action': 'test_credentials',
@@ -150,58 +175,56 @@
 
       $.post(ajaxurl, data, function(response) {
 
+        if (true === response.success) {
+          CCBCoreAdmin.adminNotice( CCB_CORE_SETTINGS.translations.credentialsSuccessful );
+        } else {
+          CCBCoreAdmin.adminNotice( CCB_CORE_SETTINGS.translations.credentialsFailed + ': ' + response.data, 'error' );
+        }
+
         $clickedButton.removeClass('disabled');
-        $spinner.removeClass('is-active');
-
-        if (response.success === false) {
-          $testLoginWrapper.append('<div class="ajax-message error">' + response.data + '</div>');
-        }
-        else if (typeof response.services !== 'undefined' && response.services.length > 0) {
-
-          $.each(response.services, function( index, value ){
-
-            var divClass = (value.success === true ? 'updated' : 'error');
-            $testLoginWrapper.append('<div class="ajax-message ' + divClass + '"><strong>' + value.label + '</strong>: ' + value.message + '</div>');
-
-          });
-
-        }
 
       });
     },
 
-    syncData : function(event) {
+    disableUI : function() {
+      var $resultsWrapper = $('.ccb-core-latest-results');
+      var $syncButton = $('.sync-wrapper .button');
+      CCBCoreAdmin.removeNotice();
+      $syncButton.addClass('disabled');
+      $resultsWrapper.empty().append(CCBCoreAdmin.spinner);
+    },
 
-      event.preventDefault();
-      var $clickedButton = $(this);
+    /**
+     * Helper method to insert an admin notice on the page
+     */
+    adminNotice : function(message, type = 'info', className = '') {
+      var $notice = $('<div class="notice ' + className + '"></div>');
+      var $content = $('<p></p>');
+      $notice.addClass('notice-' + type);
+      $content.text(message);
+      $notice.append($content);
+      $('.ccb_core_settings-wrapper > h2 ').after( $notice );
+    },
 
-      if ( $clickedButton.hasClass('disabled') ) {
-        return false;
+    /**
+     * Helper method to remove all or some notices
+     */
+    removeNotice : function(className = '') {
+      var noticeSelector;
+      if (className.length) {
+        noticeSelector = '.notice.' + className;
+      } else {
+        noticeSelector = '.notice';
       }
 
-      var $syncWrapper = $clickedButton.parents('.sync-wrapper');
-      var $spinner = $syncWrapper.find('.spinner');
-
-      $clickedButton.addClass('disabled');
-      $spinner.addClass('is-active');
-
-      var data = {
-        'action': 'sync',
-        'nonce': CCB_CORE_SETTINGS.nonce
-      };
-
-      $.post(ajaxurl, data, function(response) {
-        $syncWrapper.append('<div class="in-progress-message ajax-message updated">Syncronization in progress... You can safely navigate away from this page while we work hard in the background. (It should be just a moment).</div>');
-        ccbCoreAdmin.syncPollId = setInterval(ccbCoreAdmin.pollForActiveSync, 10000);
-      });
-
+      $(noticeSelector).remove();
     }
 
   };
 
   $(function() {
 
-    ccbCoreAdmin.initialize();
+    CCBCoreAdmin.initialize();
 
   });
 

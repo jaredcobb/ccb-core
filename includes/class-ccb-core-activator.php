@@ -30,4 +30,17 @@ class CCB_Core_Activator {
 		// TODO: check dependencies like mcrypt and memory limits.
 	}
 
+	/**
+	 * Deactivation code
+	 *
+	 * @since    1.0.0
+	 */
+	public static function deactivate() {
+		// Ensure we do not have a scheduled hook.
+		$timestamp = wp_next_scheduled( 'ccb_core_auto_sync_hook' );
+		if ( $timestamp ) {
+			wp_unschedule_event( $timestamp, 'ccb_core_auto_sync_hook' );
+		}
+	}
+
 }

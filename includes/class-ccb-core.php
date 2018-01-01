@@ -85,6 +85,9 @@ class CCB_Core {
 		// Admin AJAX methods.
 		require_once CCB_CORE_PATH . 'includes/class-ccb-core-admin-ajax.php';
 
+		// Cron Management.
+		require_once CCB_CORE_PATH . 'includes/class-ccb-core-cron.php';
+
 	}
 
 	/**
@@ -304,6 +307,11 @@ class CCB_Core {
 				'CCB_CORE_SETTINGS',
 				array(
 					'nonce' => wp_create_nonce( 'ccb_core_nonce' ),
+					'translations' => [
+						'credentialsSuccessful' => esc_html__( 'The credentials were successfully authenticated.', 'ccb-core' ),
+						'credentialsFailed' => esc_html__( 'The credentials failed authentication', 'ccb-core' ),
+						'syncInProgress' => esc_html__( 'Syncronization in progress... You can safely navigate away from this page while we work in the background.', 'ccb-core' ),
+					],
 				)
 			);
 		}
