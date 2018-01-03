@@ -43,7 +43,7 @@ class Test_Synchronizer_Calendar extends WP_UnitTestCase {
 			],
 		];
 
-		$this->assertEqualSets( $expected_result, $result );
+		$this->assertEqualSetsWithIndex( $expected_result, $result );
 	}
 
 	/**
@@ -80,7 +80,7 @@ class Test_Synchronizer_Calendar extends WP_UnitTestCase {
 			],
 		];
 
-		$this->assertEqualSets( $expected_result, $result );
+		$this->assertEqualSetsWithIndex( $expected_result, $result );
 	}
 
 	/**
@@ -114,7 +114,7 @@ class Test_Synchronizer_Calendar extends WP_UnitTestCase {
 			],
 		];
 
-		$this->assertEqualSets( $expected_result, $result );
+		$this->assertEqualSetsWithIndex( $expected_result, $result );
 	}
 
 	/**
@@ -148,7 +148,7 @@ class Test_Synchronizer_Calendar extends WP_UnitTestCase {
 			],
 		];
 
-		$this->assertEqualSets( $expected_result, $result );
+		$this->assertEqualSetsWithIndex( $expected_result, $result );
 	}
 
 	public function tearDown() {

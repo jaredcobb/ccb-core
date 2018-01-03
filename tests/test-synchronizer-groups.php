@@ -43,7 +43,7 @@ class Test_Synchronizer_Groups extends WP_UnitTestCase {
 			],
 		];
 
-		$this->assertEqualSets( $expected_result, $result );
+		$this->assertEqualSetsWithIndex( $expected_result, $result );
 	}
 
 	/**
@@ -77,7 +77,7 @@ class Test_Synchronizer_Groups extends WP_UnitTestCase {
 			],
 		];
 
-		$this->assertEqualSets( $expected_result, $result );
+		$this->assertEqualSetsWithIndex( $expected_result, $result );
 
 	}
 
@@ -112,7 +112,7 @@ class Test_Synchronizer_Groups extends WP_UnitTestCase {
 			],
 		];
 
-		$this->assertEqualSets( $expected_result, $result );
+		$this->assertEqualSetsWithIndex( $expected_result, $result );
 
 	}
 
@@ -147,7 +147,7 @@ class Test_Synchronizer_Groups extends WP_UnitTestCase {
 			],
 		];
 
-		$this->assertEqualSets( $expected_result, $result );
+		$this->assertEqualSetsWithIndex( $expected_result, $result );
 
 	}
 

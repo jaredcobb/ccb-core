@@ -343,7 +343,7 @@ Street</line_1>
                 <user_defined_fields/>
                 <listed>true</listed>
                 <public_search_listed>true</public_search_listed>
-                <inactive>false</inactive>
+                <inactive>true</inactive>
                 <creator id="1">Jean Luc Picard</creator>
                 <modifier id="1">Jean Luc Picard</modifier>
                 <created>2016-08-17 04:02:53</created>
@@ -394,7 +394,7 @@ Street</line_1>
                 <user_defined_fields/>
                 <listed>true</listed>
                 <public_search_listed>true</public_search_listed>
-                <inactive>false</inactive>
+                <inactive>true</inactive>
                 <creator id="1">Jean Luc Picard</creator>
                 <modifier id="1">Jean Luc Picard</modifier>
                 <created>2016-08-17 04:02:53</created>
