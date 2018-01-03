@@ -67,9 +67,4 @@ abstract class CCB_Core_Taxonomy {
 		return $map;
 	}
 
-	/**
-	 * Register the taxonomy.
-	 */
-	abstract public static function get_taxonomy_args();
-
 }
