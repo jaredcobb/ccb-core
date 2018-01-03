@@ -68,8 +68,8 @@ class CCB_Core_Settings_Field {
 	 * @return   void
 	 */
 	public function render_field() {
-		if ( isset( $this->field['field_render_function'] ) && is_callable( array( $this, $this->field['field_render_function'] ) ) ) {
-			call_user_func( array( $this, $this->field['field_render_function'] ) );
+		if ( isset( $this->field['field_render_function'] ) && is_callable( [ $this, $this->field['field_render_function'] ] ) ) {
+			call_user_func( [ $this, $this->field['field_render_function'] ] );
 			if ( isset( $this->field['field_tooltip'] ) ) {
 				echo '<span class="ccb-core-tooltip dashicons dashicons-editor-help" data-tip="' .
 					esc_html( $this->field['field_tooltip'] ) .
@@ -233,7 +233,7 @@ class CCB_Core_Settings_Field {
 	 * @return    void
 	 */
 	protected function render_credentials() {
-		$value = array();
+		$value = [];
 		if ( isset( $this->existing_settings[ $this->field_id ] ) ) {
 			$value['username'] = $this->existing_settings[ $this->field_id ]['username'];
 			$value['password'] = CCB_Core_Helpers::instance()->decrypt( $this->existing_settings[ $this->field_id ]['password'] );

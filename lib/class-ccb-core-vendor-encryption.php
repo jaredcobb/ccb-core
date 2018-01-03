@@ -124,7 +124,7 @@ class CCB_Core_Vendor_Encryption {
 			$cipher_key = substr( $key, 0, $key_size );
 			$mac_key = substr( $key, $key_size, $key_size );
 			$iv = substr( $key, 2 * $key_size );
-			return array( $cipher_key, $mac_key, $iv );
+			return [ $cipher_key, $mac_key, $iv ];
 		} else {
 			return false;
 		}

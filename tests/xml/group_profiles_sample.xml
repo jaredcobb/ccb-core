@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ccb_api>
+    <request>
+        <parameters>
+            <argument value="group_profiles" name="srv"/>
+            <argument value="false" name="include_participants"/>
+            <argument value="true" name="include_image_link"/>
+        </parameters>
+    </request>
+    <response>
+        <service>group_profiles</service>
+        <service_action>execute</service_action>
+        <availability>public</availability>
+        <groups count="6">
+            <group id="1">
+                <name>Test Group One</name>
+                <description>This is a public_search_listed false example and should not be imported</description>
+                <image></image>
+                <campus id="1">Campus One</campus>
+                <main_leader id="1">
+                    <first_name>Jean Luc</first_name>
+                    <last_name>Picard</last_name>
+                    <full_name>Jean Luc Picard</full_name>
+                    <email>jeanluc@enterprise.com</email>
+                    <phones>
+                        <phone type="contact"></phone>
+                    </phones>
+                </main_leader>
+                <coach id="2">
+                    <first_name>William</first_name>
+                    <last_name>Riker</last_name>
+                    <full_name>William Riker</full_name>
+                    <email></email>
+                    <phones type="contact">
+                        <phone></phone>
+                    </phones>
+                </coach>
+                <director id="3">
+                    <first_name>Data</first_name>
+                    <last_name></last_name>
+                    <full_name>Data</full_name>
+                    <email></email>
+                    <phones type="contact">
+                        <phone></phone>
+                    </phones>
+                </director>
+                <group_type id="1">Group Type One</group_type>
+                <department id="0"></department>
+                <area id="1">Area One</area>
+                <calendar_feed>webcal://starfleet.ccbchurch.com/group_calendar.ics?id=1&amp;tk=57395EF2EECB102CAABD00B0D0E1CF3B</calendar_feed>
+                <registration_forms/>
+                <current_members>3300</current_members>
+                <group_capacity>Unlimited</group_capacity>
+                <addresses>
+                    <address type="meeting">
+                        <name></name>
+                        <street_address>Meeting Address
+Street</street_address>
+                        <city>City</city>
+                        <state></state>
+                        <zip></zip>
+                        <longitude>-112.076814</longitude>
+                        <latitude>33.447549</latitude>
+                        <line_1>Meeting Address
+Street</line_1>
+                        <line_2>City</line_2>
+                    </address>
+                </addresses>
+                <meeting_day id="0"></meeting_day>
+                <meeting_time id="0"></meeting_time>
+                <childcare_provided>false</childcare_provided>
+                <interaction_type>Announcement Only</interaction_type>
+                <membership_type>Open to All</membership_type>
+                <notification>true</notification>
+                <user_defined_fields/>
+                <listed>true</listed>
+                <public_search_listed>false</public_search_listed>
+                <inactive>false</inactive>
+                <creator id="1">Jean Luc Picard</creator>
+                <modifier id="1">Jean Luc Picard</modifier>
+                <created>2016-06-17 04:02:53</created>
+                <modified>2017-04-30 16:36:38</modified>
+            </group>
+            <group id="2">
+                <name>Test Group Two</name>
+                <description>This is an inactive example and should not be imported</description>
+                <image></image>
+                <campus id="1">Campus One</campus>
+                <main_leader id="1">
+                    <first_name>Jean Luc</first_name>
+                    <last_name>Picard</last_name>
+                    <full_name>Jean Luc Picard</full_name>
+                    <email>jeanluc@enterprise.com</email>
+                    <phones>
+                        <phone type="contact"></phone>
+                    </phones>
+                </main_leader>
+                <coach id="2">
+                    <first_name>William</first_name>
+                    <last_name>Riker</last_name>
+                    <full_name>William Riker</full_name>
+                    <email></email>
+                    <phones type="contact">
+                        <phone></phone>
+                    </phones>
+                </coach>
+                <director id="3">
+                    <first_name>Data</first_name>
+                    <last_name></last_name>
+                    <full_name>Data</full_name>
+                    <email></email>
+                    <phones type="contact">
+                        <phone></phone>
+                    </phones>
+                </director>
+                <group_type id="1">Group Type One</group_type>
+                <department id="0"></department>
+                <area id="1">Area One</area>
+                <calendar_feed>webcal://starfleet.ccbchurch.com/group_calendar.ics?id=1&amp;tk=57395EF2EECB102CAABD00B0D0E1CF3B</calendar_feed>
+                <registration_forms/>
+                <current_members>3300</current_members>
+                <group_capacity>Unlimited</group_capacity>
+                <addresses>
+                    <address type="meeting">
+                        <name>Ten Forward</name>
+                        <street_address>Deck 10, Forward</street_address>
+                        <city>Enterprise</city>
+                        <state>C0</state>
+                        <zip>80129</zip>
+                        <longitude>-117.322031</longitude>
+                        <latitude>33.229150</latitude>
+                        <line_1>Deck 10, Forward</line_1>
+                        <line_2>Enterprise, CO 80129</line_2>
+                    </address>
+                </addresses>
+                <meeting_day id="0"></meeting_day>
+                <meeting_time id="0"></meeting_time>
+                <childcare_provided>false</childcare_provided>
+                <interaction_type>Announcement Only</interaction_type>
+                <membership_type>Invitation or Request Required</membership_type>
+                <notification>false</notification>
+                <user_defined_fields/>
+                <listed>true</listed>
+                <public_search_listed>true</public_search_listed>
+                <inactive>true</inactive>
+                <creator id="1">Jean Luc Picard</creator>
+                <modifier id="1">Jean Luc Picard</modifier>
+                <created>2016-07-17 04:02:53</created>
+                <modified>2017-05-30 16:36:38</modified>
+            </group>
+            <group id="3">
+                <name>Test Group Three</name>
+                <description>This is a group with all properties set</description>
+                <image>https://i.imgur.com/penLEu9.jpg</image>
+                <campus id="2">Campus Two</campus>
+                <main_leader id="4">
+                    <first_name>Geordi</first_name>
+                    <last_name>La Forge</last_name>
+                    <full_name>Geordi La Forge</full_name>
+                    <email>geordi@enterprise.com</email>
+                    <phones>
+                        <phone type="contact"></phone>
+                    </phones>
+                </main_leader>
+                <coach id="2">
+                    <first_name>William</first_name>
+                    <last_name>Riker</last_name>
+                    <full_name>William Riker</full_name>
+                    <email></email>
+                    <phones type="contact">
+                        <phone></phone>
+                    </phones>
+                </coach>
+                <director id="3">
+                    <first_name>Data</first_name>
+                    <last_name></last_name>
+                    <full_name>Data</full_name>
+                    <email></email>
+                    <phones type="contact">
+                        <phone></phone>
+                    </phones>
+                </director>
+                <group_type id="1">Group Type One</group_type>
+                <department id="1">Department One</department>
+                <area id="1">Area One</area>
+                <calendar_feed>webcal://starfleet.ccbchurch.com/group_calendar.ics?id=1&amp;tk=57395EF2EECB102CAABD00B0D0E1CF3B</calendar_feed>
+                <registration_forms/>
+                <current_members>100</current_members>
+                <group_capacity>Unlimited</group_capacity>
+                <addresses>
+                    <address type="meeting">
+                        <name>Ten Forward</name>
+                        <street_address>Deck 10, Forward</street_address>
+                        <city>Enterprise</city>
+                        <state>C0</state>
+                        <zip>80129</zip>
+                        <longitude>-117.322031</longitude>
+                        <latitude>33.229150</latitude>
+                        <line_1>Deck 10, Forward</line_1>
+                        <line_2>Enterprise, CO 80129</line_2>
+                    </address>
+                </addresses>
+                <meeting_day id="1">Weekdays</meeting_day>
+                <meeting_time id="1">Morning</meeting_time>
+                <childcare_provided>true</childcare_provided>
+                <interaction_type>Members Interact</interaction_type>
+                <membership_type>Invitation or Request Required</membership_type>
+                <notification>false</notification>
+                <user_defined_fields/>
+                <listed>true</listed>
+                <public_search_listed>true</public_search_listed>
+                <inactive>false</inactive>
+                <creator id="1">Jean Luc Picard</creator>
+                <modifier id="1">Jean Luc Picard</modifier>
+                <created>2016-07-17 04:02:53</created>
+                <modified>2017-05-30 16:36:38</modified>
+            </group>
+            <group id="4">
+                <name>Test Group Four</name>
+                <description>This is the same as Test Group Three but different name and ID</description>
+                <image>https://i.imgur.com/penLEu9.jpg</image>
+                <campus id="2">Campus Two</campus>
+                <main_leader id="4">
+                    <first_name>Geordi</first_name>
+                    <last_name>La Forge</last_name>
+                    <full_name>Geordi La Forge</full_name>
+                    <email>geordi@enterprise.com</email>
+                    <phones>
+                        <phone type="contact"></phone>
+                    </phones>
+                </main_leader>
+                <coach id="2">
+                    <first_name>William</first_name>
+                    <last_name>Riker</last_name>
+                    <full_name>William Riker</full_name>
+                    <email></email>
+                    <phones type="contact">
+                        <phone></phone>
+                    </phones>
+                </coach>
+                <director id="3">
+                    <first_name>Data</first_name>
+                    <last_name></last_name>
+                    <full_name>Data</full_name>
+                    <email></email>
+                    <phones type="contact">
+                        <phone></phone>
+                    </phones>
+                </director>
+                <group_type id="1">Group Type One</group_type>
+                <department id="1">Department One</department>
+                <area id="1">Area One</area>
+                <calendar_feed>webcal://starfleet.ccbchurch.com/group_calendar.ics?id=1&amp;tk=57395EF2EECB102CAABD00B0D0E1CF3B</calendar_feed>
+                <registration_forms/>
+                <current_members>100</current_members>
+                <group_capacity>Unlimited</group_capacity>
+                <addresses>
+                    <address type="meeting">
+                        <name>Ten Forward</name>
+                        <street_address>Deck 10, Forward</street_address>
+                        <city>Enterprise</city>
+                        <state>C0</state>
+                        <zip>80129</zip>
+                        <longitude>-117.322031</longitude>
+                        <latitude>33.229150</latitude>
+                        <line_1>Deck 10, Forward</line_1>
+                        <line_2>Enterprise, CO 80129</line_2>
+                    </address>
+                </addresses>
+                <meeting_day id="1">Weekdays</meeting_day>
+                <meeting_time id="1">Morning</meeting_time>
+                <childcare_provided>true</childcare_provided>
+                <interaction_type>Members Interact</interaction_type>
+                <membership_type>Invitation or Request Required</membership_type>
+                <notification>false</notification>
+                <user_defined_fields/>
+                <listed>true</listed>
+                <public_search_listed>true</public_search_listed>
+                <inactive>false</inactive>
+                <creator id="1">Jean Luc Picard</creator>
+                <modifier id="1">Jean Luc Picard</modifier>
+                <created>2016-07-17 04:02:53</created>
+                <modified>2017-05-30 16:36:38</modified>
+            </group>
+            <group id="5">
+                <name>Test Group Five</name>
+                <description>This has all properties but different than Test Group Three and Four</description>
+                <image>https://i.imgur.com/MZ9itik.png</image>
+                <campus id="3">Campus Three</campus>
+                <main_leader id="5">
+                    <first_name>Worf</first_name>
+                    <last_name>Rozhenko</last_name>
+                    <full_name>Worf Rozhenko</full_name>
+                    <email>worf@enterprise.com</email>
+                    <phones>
+                        <phone type="contact">123-456-7890</phone>
+                    </phones>
+                </main_leader>
+                <coach id="6">
+                    <first_name>Beverly</first_name>
+                    <last_name>Crusher</last_name>
+                    <full_name>Beverly Crusher</full_name>
+                    <email>beverly@enterprise.com</email>
+                    <phones type="contact">
+                        <phone>123-123-1234</phone>
+                    </phones>
+                </coach>
+                <director id="7">
+                    <first_name>Deanna</first_name>
+                    <last_name>Troi</last_name>
+                    <full_name>Deanna Troi</full_name>
+                    <email>deanna@enterprise.com</email>
+                    <phones type="contact">
+                        <phone>246-810-1214</phone>
+                    </phones>
+                </director>
+                <group_type id="2">Group Type Two</group_type>
+                <department id="2">Department Two</department>
+                <area id="2">Area Two</area>
+                <calendar_feed>webcal://starfleet.ccbchurch.com/group_calendar.ics?id=1&amp;tk=57395EF2EECB102CAABD00B0D0E1CF3B</calendar_feed>
+                <registration_forms/>
+                <current_members>10</current_members>
+                <group_capacity>Unlimited</group_capacity>
+                <addresses>
+                    <address type="meeting">
+                        <name>Main Bridge</name>
+                        <street_address>Deck 1, Forward</street_address>
+                        <city>Enterprise</city>
+                        <state>C0</state>
+                        <zip>80129</zip>
+                        <longitude>-117.322031</longitude>
+                        <latitude>33.229150</latitude>
+                        <line_1>Deck 1, Forward</line_1>
+                        <line_2>Enterprise, CO 80129</line_2>
+                    </address>
+                </addresses>
+                <meeting_day id="2">Sundays</meeting_day>
+                <meeting_time id="2">Nights</meeting_time>
+                <childcare_provided>false</childcare_provided>
+                <interaction_type>Members Interact</interaction_type>
+                <membership_type>Invitation or Request Required</membership_type>
+                <notification>true</notification>
+                <user_defined_fields/>
+                <listed>true</listed>
+                <public_search_listed>true</public_search_listed>
+                <inactive>false</inactive>
+                <creator id="1">Jean Luc Picard</creator>
+                <modifier id="1">Jean Luc Picard</modifier>
+                <created>2016-08-17 04:02:53</created>
+                <modified>2017-08-30 16:36:38</modified>
+            </group>
+            <group id="6">
+                <name>Test Group Six</name>
+                <description>Similar to Test Group Five but missing some properties</description>
+                <image>https://i.imgur.com/MZ9itik.png</image>
+                <campus id="3">Campus Three</campus>
+                <main_leader id="5">
+                    <first_name>Worf</first_name>
+                    <last_name>Rozhenko</last_name>
+                    <full_name>Worf Rozhenko</full_name>
+                    <email>worf@enterprise.com</email>
+                    <phones>
+                        <phone type="contact">123-456-7890</phone>
+                    </phones>
+                </main_leader>
+                <coach/>
+                <director/>
+                <group_type id="2">Group Type Two</group_type>
+                <department/>
+                <area/>
+                <calendar_feed/>
+                <registration_forms/>
+                <current_members>10</current_members>
+                <group_capacity>Unlimited</group_capacity>
+                <addresses>
+                    <address type="meeting">
+                        <name>Main Bridge</name>
+                        <street_address>Deck 1, Forward</street_address>
+                        <city>Enterprise</city>
+                        <state>C0</state>
+                        <zip>80129</zip>
+                        <longitude>-117.322031</longitude>
+                        <latitude>33.229150</latitude>
+                        <line_1>Deck 1, Forward</line_1>
+                        <line_2>Enterprise, CO 80129</line_2>
+                    </address>
+                </addresses>
+                <meeting_day id="3">Mondays</meeting_day>
+                <meeting_time/>
+                <childcare_provided>true</childcare_provided>
+                <interaction_type>Members Interact</interaction_type>
+                <membership_type>Invitation or Request Required</membership_type>
+                <notification>true</notification>
+                <user_defined_fields/>
+                <listed>true</listed>
+                <public_search_listed>true</public_search_listed>
+                <inactive>false</inactive>
+                <creator id="1">Jean Luc Picard</creator>
+                <modifier id="1">Jean Luc Picard</modifier>
+                <created>2016-08-17 04:02:53</created>
+                <modified>2017-08-30 16:36:38</modified>
+            </group>
+        </groups>
+    </response>
+</ccb_api>

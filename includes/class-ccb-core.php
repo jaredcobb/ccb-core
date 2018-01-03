@@ -100,20 +100,20 @@ class CCB_Core {
 	private function define_hooks() {
 
 		// Internationalization.
-		add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain' ) );
+		add_action( 'plugins_loaded', [ $this, 'load_plugin_textdomain' ] );
 
 		// Plugin settings, menus, options.
-		add_filter( 'plugin_action_links_' . CCB_CORE_BASENAME, array( $this, 'add_settings_link' ) );
+		add_filter( 'plugin_action_links_' . CCB_CORE_BASENAME, [ $this, 'add_settings_link' ] );
 
 		// Setup settings pages.
-		add_action( 'admin_menu', array( $this, 'initialize_settings_menu' ) );
-		add_action( 'admin_init', array( $this, 'initialize_settings' ) );
+		add_action( 'admin_menu', [ $this, 'initialize_settings_menu' ] );
+		add_action( 'admin_init', [ $this, 'initialize_settings' ] );
 
 		// Callback for after the options are saved.
-		add_action( 'update_option_ccb_core_settings', array( $this, 'updated_options' ), 10, 2 );
+		add_action( 'update_option_ccb_core_settings', [ $this, 'updated_options' ], 10, 2 );
 
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_styles' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 
 	}
 
@@ -175,10 +175,10 @@ class CCB_Core {
 				$page['page_title'],
 				'manage_options',
 				$page_id,
-				array(
+				[
 					$settings_page,
 					'render_page',
-				)
+				]
 			);
 		}
 	}
@@ -196,7 +196,7 @@ class CCB_Core {
 
 		foreach ( $settings->get_settings_definitions() as $page_id => $page ) {
 
-			register_setting( $page_id, 'ccb_core_settings', array( $settings, 'validate_settings' ) );
+			register_setting( $page_id, 'ccb_core_settings', [ $settings, 'validate_settings' ] );
 
 			foreach ( $page['sections'] as $section_id => $section ) {
 
@@ -204,10 +204,10 @@ class CCB_Core {
 				add_settings_section(
 					$section_id,
 					$section['section_title'],
-					array(
+					[
 						$settings_section,
 						'render_section',
-					),
+					],
 					$page_id
 				);
 
@@ -218,10 +218,10 @@ class CCB_Core {
 						add_settings_field(
 							$field_id,
 							$field['field_title'],
-							array(
+							[
 								$settings_field,
 								'render_field',
-							),
+							],
 							$page_id,
 							$section_id
 						);
@@ -249,12 +249,12 @@ class CCB_Core {
 
 		// Create a collection of settings that, if they change, should
 		// trigger a flush_rewrite_rules event.
-		$setting_array = array(
+		$setting_array = [
 			'groups_enabled',
 			'groups_slug',
 			'calendar_enabled',
 			'calendar_slug',
-		);
+		];
 
 		foreach ( $setting_array as $setting ) {
 			if ( isset( $value[ $setting ] ) ) {
@@ -277,12 +277,12 @@ class CCB_Core {
 	public function enqueue_styles( $hook ) {
 
 		if ( false !== stristr( $hook, 'ccb_core_settings' ) ) {
-			wp_enqueue_style( 'ccb-core', CCB_CORE_URL . 'css/ccb-core-admin.css', array(), CCB_CORE_VERSION, 'all' );
-			wp_enqueue_style( 'switchery', CCB_CORE_URL . 'css/vendor/switchery.min.css', array(), CCB_CORE_VERSION, 'all' );
-			wp_enqueue_style( 'powerange', CCB_CORE_URL . 'css/vendor/powerange.min.css', array(), CCB_CORE_VERSION, 'all' );
-			wp_enqueue_style( 'picker', CCB_CORE_URL . 'css/vendor/default.css', array(), CCB_CORE_VERSION, 'all' );
-			wp_enqueue_style( 'picker-date', CCB_CORE_URL . 'css/vendor/default.date.css', array(), CCB_CORE_VERSION, 'all' );
-			wp_enqueue_style( 'tipr', CCB_CORE_URL . 'css/vendor/tipr.css', array(), CCB_CORE_VERSION, 'all' );
+			wp_enqueue_style( 'ccb-core', CCB_CORE_URL . 'css/ccb-core-admin.css', [], CCB_CORE_VERSION, 'all' );
+			wp_enqueue_style( 'switchery', CCB_CORE_URL . 'css/vendor/switchery.min.css', [], CCB_CORE_VERSION, 'all' );
+			wp_enqueue_style( 'powerange', CCB_CORE_URL . 'css/vendor/powerange.min.css', [], CCB_CORE_VERSION, 'all' );
+			wp_enqueue_style( 'picker', CCB_CORE_URL . 'css/vendor/default.css', [], CCB_CORE_VERSION, 'all' );
+			wp_enqueue_style( 'picker-date', CCB_CORE_URL . 'css/vendor/default.date.css', [], CCB_CORE_VERSION, 'all' );
+			wp_enqueue_style( 'tipr', CCB_CORE_URL . 'css/vendor/tipr.css', [], CCB_CORE_VERSION, 'all' );
 		}
 
 	}
@@ -296,23 +296,23 @@ class CCB_Core {
 	public function enqueue_scripts( $hook ) {
 
 		if ( false !== stristr( $hook, 'ccb_core_settings' ) ) {
-			wp_enqueue_script( 'ccb-core', CCB_CORE_URL . 'js/ccb-core-admin.js', array( 'jquery' ), CCB_CORE_VERSION, false );
-			wp_enqueue_script( 'switchery', CCB_CORE_URL . 'js/vendor/switchery.min.js', array( 'jquery' ), CCB_CORE_VERSION, false );
-			wp_enqueue_script( 'powerange', CCB_CORE_URL . 'js/vendor/powerange.min.js', array( 'jquery' ), CCB_CORE_VERSION, false );
-			wp_enqueue_script( 'picker', CCB_CORE_URL . 'js/vendor/picker.js', array( 'jquery' ), CCB_CORE_VERSION, false );
-			wp_enqueue_script( 'picker-date', CCB_CORE_URL . 'js/vendor/picker.date.js', array( 'picker' ), CCB_CORE_VERSION, false );
-			wp_enqueue_script( 'tipr', CCB_CORE_URL . 'js/vendor/tipr.min.js', array( 'jquery' ), CCB_CORE_VERSION, false );
+			wp_enqueue_script( 'ccb-core', CCB_CORE_URL . 'js/ccb-core-admin.js', [ 'jquery' ], CCB_CORE_VERSION, false );
+			wp_enqueue_script( 'switchery', CCB_CORE_URL . 'js/vendor/switchery.min.js', [ 'jquery' ], CCB_CORE_VERSION, false );
+			wp_enqueue_script( 'powerange', CCB_CORE_URL . 'js/vendor/powerange.min.js', [ 'jquery' ], CCB_CORE_VERSION, false );
+			wp_enqueue_script( 'picker', CCB_CORE_URL . 'js/vendor/picker.js', [ 'jquery' ], CCB_CORE_VERSION, false );
+			wp_enqueue_script( 'picker-date', CCB_CORE_URL . 'js/vendor/picker.date.js', [ 'picker' ], CCB_CORE_VERSION, false );
+			wp_enqueue_script( 'tipr', CCB_CORE_URL . 'js/vendor/tipr.min.js', [ 'jquery' ], CCB_CORE_VERSION, false );
 			wp_localize_script(
 				'ccb-core',
 				'CCB_CORE_SETTINGS',
-				array(
+				[
 					'nonce' => wp_create_nonce( 'ccb_core_nonce' ),
 					'translations' => [
 						'credentialsSuccessful' => esc_html__( 'The credentials were successfully authenticated.', 'ccb-core' ),
 						'credentialsFailed' => esc_html__( 'The credentials failed authentication', 'ccb-core' ),
 						'syncInProgress' => esc_html__( 'Syncronization in progress... You can safely navigate away from this page while we work in the background.', 'ccb-core' ),
 					],
-				)
+				]
 			);
 		}
 

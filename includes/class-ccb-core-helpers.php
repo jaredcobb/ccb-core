@@ -36,7 +36,7 @@ class CCB_Core_Helpers {
 	 *
 	 * @var   array
 	 */
-	private $plugin_options = array();
+	private $plugin_options = [];
 
 	/**
 	 * Unused constructor in the singleton pattern
@@ -144,7 +144,7 @@ class CCB_Core_Helpers {
 	 * @param    array $data Optional data to send back.
 	 * @return   bool
 	 */
-	public function send_non_blocking_json_success( $data = array() ) {
+	public function send_non_blocking_json_success( $data = [] ) {
 
 		ignore_user_abort( true );
 		ob_start();
@@ -228,10 +228,10 @@ class CCB_Core_Helpers {
 
 			$filename = ! empty( $filename ) ? sanitize_file_name( $filename ) : 'ccb_' . crc32( $image_url );
 
-			$file_array = array(
+			$file_array = [
 				'name' => $filename . $extension,
 				'tmp_name' => $temp_file,
-			);
+			];
 
 			add_filter( 'upload_dir', [ $this, 'custom_uploads_directory' ] );
 			$media_id = media_handle_sideload( $file_array, $post_id );

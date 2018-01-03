@@ -31,8 +31,8 @@ define( 'CCB_CORE_VERSION', '1.0.0' );
 
 // Code that runs during plugin activation and deactivation.
 require_once CCB_CORE_PATH . 'includes/class-ccb-core-activator.php';
-register_activation_hook( __FILE__, array( 'CCB_Core_Activator', 'activate' ) );
-register_deactivation_hook( __FILE__, array( 'CCB_Core_Activator', 'deactivate' ) );
+register_activation_hook( __FILE__, [ 'CCB_Core_Activator', 'activate' ] );
+register_deactivation_hook( __FILE__, [ 'CCB_Core_Activator', 'deactivate' ] );
 
 // Internationalization, dashboard-specific hooks, and public-facing site hooks.
 require_once CCB_CORE_PATH . 'includes/class-ccb-core.php';

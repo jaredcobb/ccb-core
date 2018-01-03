@@ -23,14 +23,14 @@ class CCB_Core_Group_Time extends CCB_Core_Taxonomy {
 	 *
 	 * @var   string
 	 */
-	public $name = 'group_times';
+	public $name = 'ccb_core_group_time';
 
 	/**
 	 * Object types for this taxonomy
 	 *
 	 * @var   array
 	 */
-	public $object_types = array( 'ccb_core_groups' );
+	public $object_types = [ 'ccb_core_group' ];
 
 	/**
 	 * Setup the default taxonomy mappings
@@ -39,8 +39,8 @@ class CCB_Core_Group_Time extends CCB_Core_Taxonomy {
 	 * @return   array   Default options for register_taxonomy
 	 */
 	public static function get_taxonomy_args() {
-		return array(
-			'labels' => array(
+		return [
+			'labels' => [
 				'name' => __( 'Times', 'ccb-core' ),
 				'singular_name' => __( 'Time', 'ccb-core' ),
 				'search_items' => __( 'Search Times', 'ccb-core' ),
@@ -51,13 +51,13 @@ class CCB_Core_Group_Time extends CCB_Core_Taxonomy {
 				'update_item' => __( 'Update Time', 'ccb-core' ),
 				'add_new_item' => __( 'Add New Time', 'ccb-core' ),
 				'new_item_name' => __( 'New Time', 'ccb-core' ),
-			),
+			],
 			'hierarchical' => true,
 			'show_admin_column' => true,
 			'show_ui' => true,
 			'query_var' => true,
 			'api_mapping' => 'meeting_time', // The field key from the CCB API.
-		);
+		];
 	}
 
 }

@@ -20,6 +20,13 @@
 class CCB_Core_Synchronizer {
 
 	/**
+	 * A complete mapping of CCB API data to post types and taxonomies
+	 *
+	 * @var   array
+	 */
+	public $map;
+
+	/**
 	 * Instance of the class
 	 *
 	 * @var      CCB_Core_Synchronizer
@@ -27,13 +34,6 @@ class CCB_Core_Synchronizer {
 	 * @static
 	 */
 	private static $instance;
-
-	/**
-	 * A complete mapping of CCB API data to post types and taxonomies
-	 *
-	 * @var   array
-	 */
-	private $map;
 
 	/**
 	 * An instance of the CCB_Core_API class
@@ -227,7 +227,7 @@ class CCB_Core_Synchronizer {
 	 * @param    string $post_type The post type being updated.
 	 * @return   array
 	 */
-	private function update_content( $response, $settings, $post_type ) {
+	public function update_content( $response, $settings, $post_type ) {
 
 		$result = [
 			'success' => true,
@@ -314,7 +314,7 @@ class CCB_Core_Synchronizer {
 	 *
 	 * @return   SimpleXML A collection of entities.
 	 */
-	private function get_entities( $response, $nodes ) {
+	public function get_entities( $response, $nodes ) {
 		if ( ! empty( $nodes ) ) {
 			$depth = count( $nodes ) - 1;
 			$collection = $response['body']->response;
@@ -340,7 +340,7 @@ class CCB_Core_Synchronizer {
 	 * @param    string $post_type The post type mapped to the CCB entitiy.
 	 * @return   array
 	 */
-	private function get_existing_post_data( $post_type ) {
+	public function get_existing_post_data( $post_type ) {
 		// Batch the WP_Query for performance.
 		$posts_per_page = 100;
 		$offset = 0;
@@ -399,7 +399,7 @@ class CCB_Core_Synchronizer {
 	 * @param    string    $post_type The post type to map to the entities.
 	 * @return   array
 	 */
-	private function organize_entities( $entities, $post_data, $post_type ) {
+	public function organize_entities( $entities, $post_data, $post_type ) {
 
 		$collection = [
 			'insert_update' => [],
@@ -528,7 +528,7 @@ class CCB_Core_Synchronizer {
 	 * @param    SimpleXML $entity A single entity object.
 	 * @return   mixed An integer id or string hash.
 	 */
-	private function get_entity_id( $entity ) {
+	public function get_entity_id( $entity ) {
 		$entity_id = '';
 		// As part of the insert / update process we sometimes append
 		// a post_id to the entitiy. Ensure we remove it before hashing
@@ -578,7 +578,7 @@ class CCB_Core_Synchronizer {
 	 * @param    string $post_type The current post type.
 	 * @return   array
 	 */
-	private function insert_update_entities( $entities, $settings, $post_type ) {
+	public function insert_update_entities( $entities, $settings, $post_type ) {
 
 		// Allow this script to run longer.
 		set_time_limit( MINUTE_IN_SECONDS * 10 );
@@ -719,7 +719,7 @@ class CCB_Core_Synchronizer {
 	 * @param    array $post_ids A collection of post ids to delete.
 	 * @return   array
 	 */
-	private function delete_posts( $post_ids ) {
+	public function delete_posts( $post_ids ) {
 		$result = [
 			'success' => true,
 			'processed' => 0,
@@ -744,7 +744,7 @@ class CCB_Core_Synchronizer {
 	 * @param    array $settings Definitions of taxonomies.
 	 * @return   void
 	 */
-	private function delete_empty_terms( $settings ) {
+	public function delete_empty_terms( $settings ) {
 		// Ensure we get empty terms.
 		$args = [
 			'hide_empty' => false,
@@ -779,7 +779,7 @@ class CCB_Core_Synchronizer {
 	 * @param    array     $settings The taxonomy settings.
 	 * @return   array
 	 */
-	private function prepare_terms( $entity, $settings ) {
+	public function prepare_terms( $entity, $settings ) {
 		$categories = [];
 		$tags = [];
 
@@ -820,7 +820,7 @@ class CCB_Core_Synchronizer {
 	 * @param    SimpleXML $node A single node on the entitiy.
 	 * @return   mixed
 	 */
-	private function auto_cast( $node ) {
+	public function auto_cast( $node ) {
 		// If the node has children, convert it to an array
 		// and recursively process the child nodes.
 		if ( $node->children()->count() ) {
@@ -861,8 +861,6 @@ class CCB_Core_Synchronizer {
 	 * @return void
 	 */
 	private function enable_optimizations() {
-		global $wpdb;
-
 		// Remove expensive unneeded actions.
 		remove_action( 'do_pings', 'do_all_pings', 10, 1 );
 
@@ -871,8 +869,13 @@ class CCB_Core_Synchronizer {
 		wp_defer_comment_counting( true );
 		wp_suspend_cache_addition( true );
 
-		// Temporarily disable autocommit.
-		$wpdb->query( 'SET autocommit = 0;' ); // db call ok; no cache ok.
+		// Unit tests rollback database transactions, do not
+		// alter commit settings for unit tests.
+		if ( ! defined( 'IS_UNIT_TEST' ) ) {
+			global $wpdb;
+			// Temporarily disable autocommit.
+			$wpdb->query( 'SET autocommit = 0;' ); // db call ok; no cache ok.
+		}
 	}
 
 	/**
@@ -881,12 +884,16 @@ class CCB_Core_Synchronizer {
 	 * @return void
 	 */
 	private function disable_optimizations() {
-		global $wpdb;
 
-		// Commit the database operations now.
-		$wpdb->query( 'COMMIT;' ); // db call ok; no cache ok.
-		// Re-enable autocommit.
-		$wpdb->query( 'SET autocommit = 1;' ); // db call ok; no cache ok.
+		// Unit tests rollback database transactions, do not
+		// alter commit settings for unit tests.
+		if ( ! defined( 'IS_UNIT_TEST' ) ) {
+			global $wpdb;
+			// Commit the database operations now.
+			$wpdb->query( 'COMMIT;' ); // db call ok; no cache ok.
+			// Re-enable autocommit.
+			$wpdb->query( 'SET autocommit = 1;' ); // db call ok; no cache ok.
+		}
 
 		// Re-enable counting.
 		wp_suspend_cache_addition( false );
@@ -898,5 +905,3 @@ class CCB_Core_Synchronizer {
 	}
 
 }
-
-CCB_Core_Synchronizer::instance();

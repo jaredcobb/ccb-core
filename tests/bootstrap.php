@@ -2,8 +2,10 @@
 /**
  * PHPUnit bootstrap file
  *
- * @package Sample_Plugin
+ * @package CCB_Core
  */
+
+define( 'IS_UNIT_TEST', true );
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 

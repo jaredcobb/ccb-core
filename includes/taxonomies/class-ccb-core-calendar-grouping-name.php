@@ -23,14 +23,14 @@ class CCB_Core_Calendar_Grouping_Name extends CCB_Core_Taxonomy {
 	 *
 	 * @var   string
 	 */
-	public $name = 'calendar_grouping_name';
+	public $name = 'ccb_core_calendar_grouping_name';
 
 	/**
 	 * Object types for this taxonomy
 	 *
 	 * @var   array
 	 */
-	public $object_types = array( 'ccb_core_calendar' );
+	public $object_types = [ 'ccb_core_calendar' ];
 
 	/**
 	 * Setup the default taxonomy mappings
@@ -39,8 +39,8 @@ class CCB_Core_Calendar_Grouping_Name extends CCB_Core_Taxonomy {
 	 * @return   array   Default options for register_taxonomy
 	 */
 	public static function get_taxonomy_args() {
-		return array(
-			'labels' => array(
+		return [
+			'labels' => [
 				'name' => __( 'Grouping Names', 'ccb-core' ),
 				'singular_name' => __( 'Grouping Name', 'ccb-core' ),
 				'search_items' => __( 'Search Grouping Names', 'ccb-core' ),
@@ -51,13 +51,13 @@ class CCB_Core_Calendar_Grouping_Name extends CCB_Core_Taxonomy {
 				'update_item' => __( 'Update Grouping Name', 'ccb-core' ),
 				'add_new_item' => __( 'Add New Grouping Name', 'ccb-core' ),
 				'new_item_name' => __( 'New Grouping Name', 'ccb-core' ),
-			),
+			],
 			'hierarchical' => true,
 			'show_admin_column' => true,
 			'show_ui' => true,
 			'query_var' => true,
 			'api_mapping' => 'grouping_name', // The field key from the CCB API.
-		);
+		];
 	}
 
 }

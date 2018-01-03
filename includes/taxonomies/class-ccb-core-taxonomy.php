@@ -30,13 +30,13 @@ abstract class CCB_Core_Taxonomy {
 	 *
 	 * @var   array
 	 */
-	public $object_types = array();
+	public $object_types = [];
 
 	/**
 	 * Initialize the class
 	 */
 	public function __construct() {
-		add_action( 'init', array( $this, 'register_taxonomy' ) );
+		add_action( 'init', [ $this, 'register_taxonomy' ] );
 		add_filter( 'ccb_core_synchronizer_taxonomy_api_map', [ $this, 'get_taxonomy_map' ] );
 	}
 

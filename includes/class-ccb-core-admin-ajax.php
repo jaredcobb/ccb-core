@@ -38,10 +38,10 @@ class CCB_Core_Admin_AJAX {
 	 * @since    1.0.0
 	 */
 	public function __construct() {
-		add_action( 'wp_ajax_sync', array( $this, 'ajax_sync' ) );
-		add_action( 'wp_ajax_poll_sync', array( $this, 'ajax_poll_sync' ) );
-		add_action( 'wp_ajax_get_latest_sync', array( $this, 'ajax_get_latest_sync' ) );
-		add_action( 'wp_ajax_test_credentials', array( $this, 'ajax_test_credentials' ) );
+		add_action( 'wp_ajax_sync', [ $this, 'ajax_sync' ] );
+		add_action( 'wp_ajax_poll_sync', [ $this, 'ajax_poll_sync' ] );
+		add_action( 'wp_ajax_get_latest_sync', [ $this, 'ajax_get_latest_sync' ] );
+		add_action( 'wp_ajax_test_credentials', [ $this, 'ajax_test_credentials' ] );
 
 		$this->api = CCB_Core_API::instance();
 		$this->synchronizer = CCB_Core_Synchronizer::instance();

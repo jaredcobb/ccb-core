@@ -37,12 +37,12 @@ abstract class CCB_Core_CPT {
 	 */
 	public function __construct() {
 
-		add_filter( 'ccb_core_settings_post_definitions', array( $this, 'get_post_settings_definitions' ) );
+		add_filter( 'ccb_core_settings_post_definitions', [ $this, 'get_post_settings_definitions' ] );
 
 		// If this custom post type is enabled, merge the defaults and set the registration hook.
 		if ( $this->enabled ) {
-			add_action( 'init', array( $this, 'register_post_type' ) );
-			add_filter( 'ccb_core_synchronizer_post_api_map', array( $this, 'get_post_api_map' ) );
+			add_action( 'init', [ $this, 'register_post_type' ] );
+			add_filter( 'ccb_core_synchronizer_post_api_map', [ $this, 'get_post_api_map' ] );
 		}
 
 	}

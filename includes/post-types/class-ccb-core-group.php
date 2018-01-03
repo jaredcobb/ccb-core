@@ -23,7 +23,7 @@ class CCB_Core_Group extends CCB_Core_CPT {
 	 *
 	 * @var   string
 	 */
-	public $name = 'ccb_core_groups';
+	public $name = 'ccb_core_group';
 
 	/**
 	 * Initialize the class
@@ -56,8 +56,8 @@ class CCB_Core_Group extends CCB_Core_CPT {
 		$show_ui = ! empty( $options['groups_show_ui'] ) && 'no' === $options['groups_show_ui'] ? false : true;
 		$show_in_nav_menus = ! empty( $options['groups_show_in_nav_menus'] ) && 'yes' === $options['groups_show_in_nav_menus'] ? true : false;
 
-		return array(
-			'labels' => array(
+		return [
+			'labels' => [
 				'name' => $plural,
 				'singular_name' => $singular,
 				'all_items' => sprintf( __( 'All %s', 'ccb-core' ), $plural ),
@@ -71,7 +71,7 @@ class CCB_Core_Group extends CCB_Core_CPT {
 				'not_found' => __( 'Nothing found in the Database.', 'ccb-core' ),
 				'not_found_in_trash' => __( 'Nothing found in Trash', 'ccb-core' ),
 				'parent_item_colon' => '',
-			),
+			],
 			'description' => sprintf( __( 'These are the %s that are synchronized with your Church Community Builder software.', 'ccb-core' ), $plural ),
 			'public' => true,
 			'publicly_queryable' => $publicly_queryable,
@@ -85,8 +85,8 @@ class CCB_Core_Group extends CCB_Core_CPT {
 			'has_archive' => $has_archive,
 			'capability_type' => 'post',
 			'hierarchical' => false,
-			'supports' => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields', 'sticky' ),
-		);
+			'supports' => [ 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields', 'sticky' ],
+		];
 
 	}
 
@@ -99,51 +99,51 @@ class CCB_Core_Group extends CCB_Core_CPT {
 	 */
 	public function get_post_settings_definitions( $settings ) {
 
-		$settings['ccb_core_settings_groups'] = array(
+		$settings['ccb_core_settings_groups'] = [
 			'page_title' => esc_html__( 'Groups', 'ccb-core' ),
-			'sections' => array(
-				'groups' => array(
+			'sections' => [
+				'groups' => [
 					'section_title' => esc_html__( 'Groups', 'ccb-core' ),
-					'fields' => array(
-						'groups_enabled' => array(
+					'fields' => [
+						'groups_enabled' => [
 							'field_title' => esc_html__( 'Enable Groups', 'ccb-core' ),
 							'field_render_function' => 'render_switch',
 							'field_validation' => 'switch',
-						),
-						'groups_name' => array(
+						],
+						'groups_name' => [
 							'field_title' => esc_html__( 'Groups Display Name (Plural)', 'ccb-core' ),
 							'field_render_function' => 'render_text',
 							'field_placeholder' => esc_html__( 'Groups', 'ccb-core' ),
 							'field_validation' => 'alphanumeric_extended',
-							'field_attributes' => array( 'data-requires' => '{"groups_enabled":1}' ),
+							'field_attributes' => [ 'data-requires' => '{"groups_enabled":1}' ],
 							'field_tooltip' => esc_html__( 'This is what you call the groups in your church (i.e. Home Groups, Connections, Life Groups, etc.).', 'ccb-core' ),
-						),
-						'groups_name_singular' => array(
+						],
+						'groups_name_singular' => [
 							'field_title' => esc_html__( 'Groups Display Name (Singular)', 'ccb-core' ),
 							'field_render_function' => 'render_text',
 							'field_placeholder' => esc_html__( 'Group', 'ccb-core' ),
 							'field_validation' => 'alphanumeric_extended',
-							'field_attributes' => array( 'data-requires' => '{"groups_enabled":1}' ),
+							'field_attributes' => [ 'data-requires' => '{"groups_enabled":1}' ],
 							'field_tooltip' => esc_html__( 'This is the singular name of what you call the groups in your church (i.e. Home Group, Connection, Life Group, etc.).', 'ccb-core' ),
-						),
-						'groups_slug' => array(
+						],
+						'groups_slug' => [
 							'field_title' => esc_html__( 'Groups URL Name', 'ccb-core' ),
 							'field_render_function' => 'render_text',
 							'field_placeholder' => 'groups',
 							'field_validation' => 'slug',
-							'field_attributes' => array( 'data-requires' => '{"groups_enabled":1}' ),
+							'field_attributes' => [ 'data-requires' => '{"groups_enabled":1}' ],
 							'field_tooltip' => esc_html__( 'This is typically where your theme will display all the groups. WordPress calls this a "slug".', 'ccb-core' ),
-						),
-						'groups_import_images' => array(
+						],
+						'groups_import_images' => [
 							'field_title' => esc_html__( 'Also Import Group Images?', 'ccb-core' ),
 							'field_render_function' => 'render_radio',
-							'field_options' => array(
+							'field_options' => [
 								'yes' => esc_html__( 'Yes', 'ccb-core' ),
 								'no' => esc_html__( 'No', 'ccb-core' ),
-							),
+							],
 							'field_validation' => '',
 							'field_default' => 'no',
-							'field_attributes' => array( 'data-requires' => '{"groups_enabled":1}' ),
+							'field_attributes' => [ 'data-requires' => '{"groups_enabled":1}' ],
 							'field_tooltip' => sprintf(
 								esc_html__(
 									'This will download the CCB Group Image and attach it as a Featured Image.%s
@@ -151,61 +151,61 @@ class CCB_Core_Group extends CCB_Core_CPT {
 								'ccb-core' ),
 								'<br>'
 							),
-						),
-						'groups_advanced' => array(
+						],
+						'groups_advanced' => [
 							'field_title' => esc_html__( 'Enable Advanced Settings (Optional)', 'ccb-core' ),
 							'field_render_function' => 'render_switch',
 							'field_validation' => 'switch',
-							'field_attributes' => array( 'data-requires' => '{"groups_enabled":1}' ),
-						),
-						'groups_exclude_from_search' => array(
+							'field_attributes' => [ 'data-requires' => '{"groups_enabled":1}' ],
+						],
+						'groups_exclude_from_search' => [
 							'field_title' => esc_html__( 'Exclude From Search?', 'ccb-core' ),
 							'field_render_function' => 'render_radio',
-							'field_options' => array(
+							'field_options' => [
 								'yes' => esc_html__( 'Yes', 'ccb-core' ),
 								'no' => esc_html__( 'No', 'ccb-core' ),
-							),
+							],
 							'field_validation' => '',
 							'field_default' => 'no',
-							'field_attributes' => array( 'data-requires' => '{"groups_enabled":1,"groups_advanced":1}' ),
-						),
-						'groups_publicly_queryable' => array(
+							'field_attributes' => [ 'data-requires' => '{"groups_enabled":1,"groups_advanced":1}' ],
+						],
+						'groups_publicly_queryable' => [
 							'field_title' => esc_html__( 'Publicly Queryable?', 'ccb-core' ),
 							'field_render_function' => 'render_radio',
-							'field_options' => array(
+							'field_options' => [
 								'yes' => esc_html__( 'Yes', 'ccb-core' ),
 								'no' => esc_html__( 'No', 'ccb-core' ),
-							),
+							],
 							'field_validation' => '',
 							'field_default' => 'yes',
-							'field_attributes' => array( 'data-requires' => '{"groups_enabled":1,"groups_advanced":1}' ),
-						),
-						'groups_show_ui' => array(
+							'field_attributes' => [ 'data-requires' => '{"groups_enabled":1,"groups_advanced":1}' ],
+						],
+						'groups_show_ui' => [
 							'field_title' => esc_html__( 'Show In Admin UI?', 'ccb-core' ),
 							'field_render_function' => 'render_radio',
-							'field_options' => array(
+							'field_options' => [
 								'yes' => esc_html__( 'Yes', 'ccb-core' ),
 								'no' => esc_html__( 'No', 'ccb-core' ),
-							),
+							],
 							'field_validation' => '',
 							'field_default' => 'yes',
-							'field_attributes' => array( 'data-requires' => '{"groups_enabled":1,"groups_advanced":1}' ),
-						),
-						'groups_show_in_nav_menus' => array(
+							'field_attributes' => [ 'data-requires' => '{"groups_enabled":1,"groups_advanced":1}' ],
+						],
+						'groups_show_in_nav_menus' => [
 							'field_title' => esc_html__( 'Show In Navigation Menus?', 'ccb-core' ),
 							'field_render_function' => 'render_radio',
-							'field_options' => array(
+							'field_options' => [
 								'yes' => esc_html__( 'Yes', 'ccb-core' ),
 								'no' => esc_html__( 'No', 'ccb-core' ),
-							),
+							],
 							'field_validation' => '',
 							'field_default' => 'no',
-							'field_attributes' => array( 'data-requires' => '{"groups_enabled":1,"groups_advanced":1}' ),
-						),
-					),
-				),
-			),
-		);
+							'field_attributes' => [ 'data-requires' => '{"groups_enabled":1,"groups_advanced":1}' ],
+						],
+					],
+				],
+			],
+		];
 
 		return $settings;
 

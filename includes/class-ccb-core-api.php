@@ -133,7 +133,7 @@ class CCB_Core_API {
 	 * @access   public
 	 * @return   array The API response data.
 	 */
-	public function get( $service, $data = array() ) {
+	public function get( $service, $data = [] ) {
 		// Get the API response for the service.
 		return $this->request( 'GET', $service, $data );
 	}
@@ -148,7 +148,7 @@ class CCB_Core_API {
 	 * @access   public
 	 * @return   array The API response data.
 	 */
-	public function post( $service, $data = array() ) {
+	public function post( $service, $data = [] ) {
 		// Get the API response for the service.
 		return $this->request( 'POST', $service, $data );
 	}
@@ -164,29 +164,29 @@ class CCB_Core_API {
 	 * @access   private
 	 * @return   array
 	 */
-	private function request( $method, $service, $data = array() ) {
+	private function request( $method, $service, $data = [] ) {
 
 		if ( ! $this->initialized ) {
-			return array(
+			return [
 				'code' => 401,
 				'error' => esc_html__( 'You are missing a subdomain, username, or password in the settings.', 'ccb-core' ),
 				'status' => 'ERROR',
-			);
+			];
 		}
 
 		$url = esc_url_raw( sprintf( 'https://%s.ccbchurch.com/api.php?srv=%s', $this->subdomain, $service ) );
 		if ( empty( $url ) ) {
-			return array(
+			return [
 				'code' => 404,
 				'error' => esc_html__( 'Invalid API URL.', 'ccb-core' ),
 				'status' => 'ERROR',
-			);
+			];
 		}
 
 		// Add authentication header to the request object.
-		$request = array(
+		$request = [
 			'timeout' => 60,
-			'headers' => array(
+			'headers' => [
 				'Authorization' => 'Basic ' . base64_encode(
 					sprintf(
 						'%s:%s',
@@ -194,8 +194,8 @@ class CCB_Core_API {
 						sanitize_text_field( $this->password )
 					)
 				),
-			),
-		);
+			],
+		];
 
 		if ( 'POST' === $method ) {
 			$request['body'] = $data;
@@ -211,11 +211,11 @@ class CCB_Core_API {
 				$response = wp_safe_remote_post( $url, $request );
 				break;
 			default:
-				return array(
+				return [
 					'code' => 403,
 					'error' => esc_html__( 'Invalid request method.', 'ccb-core' ),
 					'status' => 'ERROR',
-				);
+				];
 		}
 
 		// Check for WordPress HTTP errors.
@@ -228,11 +228,11 @@ class CCB_Core_API {
 		}
 
 		// Build result object.
-		$result = array(
+		$result = [
 			'xml' => wp_remote_retrieve_body( $response ),
 			'code' => absint( wp_remote_retrieve_response_code( $response ) ),
 			'headers' => wp_remote_retrieve_headers( $response ),
-		);
+		];
 
 		// Verify there are no HTTP errors.
 		if ( empty( $response )
@@ -277,5 +277,3 @@ class CCB_Core_API {
 	}
 
 }
-
-CCB_Core_API::instance();
