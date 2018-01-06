@@ -292,12 +292,16 @@ class CCB_Core_Settings_Field {
 	 * @return    void
 	 */
 	protected function render_manual_sync() {
-		echo sprintf(
-			'<div class="sync-wrapper">
-				<input type="button" name="manual_sync" id="manual_sync" class="button" value="%s" />
-			</div>',
-			esc_attr__( 'Synchronize', 'ccb-core' )
-		);
+		if ( CCB_Core_API::instance()->initialized ) {
+			echo sprintf(
+				'<div class="sync-wrapper">
+					<input type="button" name="manual_sync" id="manual_sync" class="button" value="%s" />
+				</div>',
+				esc_attr__( 'Synchronize', 'ccb-core' )
+			);
+		} else {
+			echo '<p>' . esc_html__( 'Please enter your credentials under the API Settings page', 'ccb-core' ) . '</p>';
+		}
 	}
 
 	/**

@@ -77,12 +77,16 @@ class CCB_Core_Cron {
 	public function cron_settings_changed( $old_value, $new_value ) {
 		// If the cron was enabled OR the timeout was changed.
 		if (
-			( '' === $old_value['auto_sync'] && '1' === $new_value['auto_sync'] )
-			|| ( $old_value['auto_sync_timeout'] !== $new_value['auto_sync_timeout'] )
+			( empty( $old_value['auto_sync'] ) && ! empty( $new_value['auto_sync'] ) )
+			|| (
+				! empty( $old_value['auto_sync_timeout'] )
+				&& ! empty( $new_value['auto_sync_timeout'] )
+				&& $old_value['auto_sync_timeout'] !== $new_value['auto_sync_timeout']
+			)
 		) {
 			$this->remove_existing_cron_events();
 			wp_schedule_event( time(), 'ccb_core_schedule', 'ccb_core_auto_sync_hook' );
-		} elseif ( '1' === $old_value['auto_sync'] && '' === $new_value['auto_sync'] ) {
+		} elseif ( ! empty( $old_value['auto_sync'] ) && empty( $new_value['auto_sync'] ) ) {
 			$this->remove_existing_cron_events();
 		}
 	}

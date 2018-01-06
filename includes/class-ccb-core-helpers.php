@@ -72,6 +72,9 @@ class CCB_Core_Helpers {
 	private function setup() {
 		// Get any options the user may have set.
 		$this->plugin_options = get_option( 'ccb_core_settings' );
+		// Ensure we refresh this singleton's options whenever the options
+		// get updated (so that other callbacks have accurate values).
+		add_action( 'update_option_ccb_core_settings', [ $this, 'refresh_options' ], 5, 2 );
 	}
 
 	/**
@@ -81,6 +84,20 @@ class CCB_Core_Helpers {
 	 */
 	public function get_options() {
 		return $this->plugin_options;
+	}
+
+	/**
+	 * Callback method to detect when the settings have changed.
+	 *
+	 * Ensures that this singleton's `get_options()` method always
+	 * returns accurate settings based on the latest changes.
+	 *
+	 * @param    array $old_value The old settings array.
+	 * @param    array $new_value The new settings array.
+	 * @return   void
+	 */
+	public function refresh_options( $old_value, $new_value ) {
+		$this->plugin_options = $new_value;
 	}
 
 	/**
