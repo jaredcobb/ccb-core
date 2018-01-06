@@ -88,9 +88,9 @@ abstract class CCB_Core_CPT {
 	 * Define the mapping of CCB API fields to the Post fields
 	 *
 	 * @since    1.0.0
-	 * @param    array $map A collection of mappings from the API to WordPress.
+	 * @param    array $maps A collection of mappings from the API to WordPress.
 	 * @return   array
 	 */
-	abstract public function get_post_api_map( $map );
+	abstract public function get_post_api_map( $maps );
 
 }

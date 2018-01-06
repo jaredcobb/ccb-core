@@ -269,14 +269,14 @@ class CCB_Core_Calendar extends CCB_Core_CPT {
 	 * Define the mapping of CCB API fields to the Post fields
 	 *
 	 * @since    1.0.0
-	 * @param    array $map A collection of mappings from the API to WordPress.
+	 * @param    array $maps A collection of mappings from the API to WordPress.
 	 * @return   array
 	 */
-	public function get_post_api_map( $map ) {
+	public function get_post_api_map( $maps ) {
 		if ( $this->enabled ) {
 			$calendar_options = $this->get_calendar_options();
 
-			$map[ $this->name ] = [
+			$maps[ $this->name ] = [
 				'service' => 'public_calendar_listing',
 				'data' => [
 					'date_start' => $calendar_options['date_start'],
@@ -294,7 +294,7 @@ class CCB_Core_Calendar extends CCB_Core_CPT {
 				],
 			];
 		}
-		return $map;
+		return $maps;
 	}
 
 	/**

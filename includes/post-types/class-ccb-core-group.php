@@ -31,7 +31,7 @@ class CCB_Core_Group extends CCB_Core_CPT {
 	public function __construct() {
 		add_filter( 'ccb_core_synchronizer_entity_insert_allowed', [ $this, 'entity_insert_update_allowed' ], 10, 4 );
 		add_filter( 'ccb_core_synchronizer_entity_update_allowed', [ $this, 'entity_insert_update_allowed' ], 10, 4 );
-		add_filter( 'ccb_core_after_insert_update_post', [ $this, 'attach_group_image' ], 10, 5 );
+		add_action( 'ccb_core_after_insert_update_post', [ $this, 'attach_group_image' ], 10, 5 );
 
 		$options = CCB_Core_Helpers::instance()->get_options();
 		$this->enabled = ! empty( $options['groups_enabled'] ) ? true : false;
@@ -215,15 +215,15 @@ class CCB_Core_Group extends CCB_Core_CPT {
 	 * Define the mapping of CCB API fields to the Post fields
 	 *
 	 * @since    1.0.0
-	 * @param    array $map A collection of mappings from the API to WordPress.
+	 * @param    array $maps A collection of mappings from the API to WordPress.
 	 * @return   array
 	 */
-	public function get_post_api_map( $map ) {
+	public function get_post_api_map( $maps ) {
 		if ( $this->enabled ) {
 			$options = CCB_Core_Helpers::instance()->get_options();
 			$include_image_link = ! empty( $options['groups_import_images'] ) && 'yes' === $options['groups_import_images'] ? true : false;
 
-			$map[ $this->name ] = [
+			$maps[ $this->name ] = [
 				'service' => 'group_profiles',
 				'data' => [
 					'include_participants' => false,
@@ -241,7 +241,7 @@ class CCB_Core_Group extends CCB_Core_CPT {
 				],
 			];
 		}
-		return $map;
+		return $maps;
 	}
 
 	/**
