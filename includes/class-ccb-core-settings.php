@@ -29,6 +29,10 @@ class CCB_Core_Settings {
 	public function validate_settings( $input ) {
 
 		$current_options = CCB_Core_Helpers::instance()->get_options();
+		if ( empty( $current_options ) ) {
+			$current_options = [];
+		}
+
 		$validation_hash = $this->generate_validation_hash();
 
 		foreach ( $validation_hash as $field_id => $validation ) {
@@ -96,7 +100,16 @@ class CCB_Core_Settings {
 
 					case 'encrypt':
 						if ( ! empty( $input[ $field_id ]['password'] ) ) {
-							$encrypted_password = CCB_Core_Helpers::instance()->encrypt( $input[ $field_id ]['password'] );
+							// For a brand new installation, if the option doesn't yet
+							// exist, sanitize callback is called twice.
+							// See https://core.trac.wordpress.org/ticket/21989.
+							if ( 200 < strlen( $input[ $field_id ]['password'] ) && ! isset( $current_options[ $field_id ]['password'] ) ) {
+								// Password was already encrypted on the previous sanitization call.
+								$encrypted_password = $input[ $field_id ]['password'];
+							} else {
+								$encrypted_password = CCB_Core_Helpers::instance()->encrypt( $input[ $field_id ]['password'] );
+							}
+
 							if ( $encrypted_password ) {
 								$current_options[ $field_id ]['password'] = $encrypted_password;
 							} else {

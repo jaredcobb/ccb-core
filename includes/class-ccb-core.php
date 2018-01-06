@@ -112,6 +112,9 @@ class CCB_Core {
 		// Callback for after the options are saved.
 		add_action( 'update_option_ccb_core_settings', [ $this, 'updated_options' ], 10, 2 );
 
+		// Determine if the rewrite rules need to be flushed.
+		add_action( 'init', [ $this, 'check_rewrite_rules' ] );
+
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_styles' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 
@@ -259,13 +262,26 @@ class CCB_Core {
 		foreach ( $setting_array as $setting ) {
 			if ( isset( $value[ $setting ] ) ) {
 				if ( ! isset( $old_value[ $setting ] ) || $value[ $setting ] !== $old_value[ $setting ] ) {
-					// At least one option requires a flush, so do it once and return.
-					flush_rewrite_rules();
+					// At least one option requires a flush, so set the transient and return.
+					set_transient( 'ccb_core_flush_rewrite_rules', true );
 					return;
 				}
 			}
 		}
 
+	}
+
+	/**
+	 * Checks for a flag that may have been previously
+	 * set in order to flush the rewrite rules.
+	 *
+	 * @return void
+	 */
+	public function check_rewrite_rules() {
+		if ( get_transient( 'ccb_core_flush_rewrite_rules' ) ) {
+			delete_transient( 'ccb_core_flush_rewrite_rules' );
+			flush_rewrite_rules();
+		}
 	}
 
 	/**
