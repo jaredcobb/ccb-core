@@ -13,9 +13,9 @@ Provides a core integration to the Church Community Builder API.
 
 Church Community Builder Core API *synchronizes* your church data to WordPress [custom post types](https://codex.wordpress.org/Custom_Post_Types).
 
-This plugin is geared toward developers (or advanced WordPress users who aren't afraid to get into a little bit of code).
+This plugin is geared toward Developers, Designers, and Site Administrators who aren't afraid to get into a little bit of code.
 
-Find out more at [https://www.wpccb.com](https://www.wpccb.com).
+Find out more at [https://www.wpccb.com](https://www.wpccb.com) and [https://github.com/jaredcobb/ccb-core](https://github.com/jaredcobb/ccb-core).
 
 = Why Use This Plugin? =
 

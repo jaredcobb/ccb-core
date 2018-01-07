@@ -45,7 +45,16 @@ class CCB_Core_Settings_Page {
 	 * @return    void
 	 */
 	public function render_page() {
-		if ( ! current_user_can( 'manage_options' ) ) {
+
+		/**
+		 * Defines the capability that is required for the user
+		 * to access the settings page.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param string $capability The capability required to access the page.
+		 */
+		if ( ! current_user_can( apply_filters( 'ccb_core_settings_capability', 'manage_options' ) ) ) {
 			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'ccb-core' ) );
 		}
 		?>

@@ -163,7 +163,15 @@ class CCB_Core {
 		add_menu_page(
 			__( 'Church Community Builder Core API', 'ccb-core' ),
 			__( 'CCB Core API', 'ccb-core' ),
-			'manage_options',
+			/**
+			 * Defines the capability that is required for the user
+			 * to access the settings page.
+			 *
+			 * @since 1.0.0
+			 *
+			 * @param string $capability The capability required to access the page.
+			 */
+			apply_filters( 'ccb_core_settings_capability', 'manage_options' ),
 			'ccb_core_settings',
 			'__return_null',
 			'dashicons-update',
@@ -176,7 +184,7 @@ class CCB_Core {
 				'ccb_core_settings',
 				$page['page_title'],
 				$page['page_title'],
-				'manage_options',
+				apply_filters( 'ccb_core_settings_capability', 'manage_options' ),
 				$page_id,
 				[
 					$settings_page,
