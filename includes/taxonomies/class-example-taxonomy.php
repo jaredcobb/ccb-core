@@ -18,7 +18,7 @@
  * @subpackage CCB_Core/includes/taxonomies
  * @author     Jared Cobb <wordpress@jaredcobb.com>
  */
-class Example extends CCB_Core_Taxonomy {
+class Example_Taxonomy extends CCB_Core_Taxonomy {
 
 	/**
 	 * Name of the taxonomy
@@ -66,4 +66,4 @@ class Example extends CCB_Core_Taxonomy {
 
 }
 
-new Example();
+new Example_Taxonomy();

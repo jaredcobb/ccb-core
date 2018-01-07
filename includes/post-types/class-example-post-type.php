@@ -18,7 +18,7 @@
  * @subpackage CCB_Core/includes/post-types
  * @author     Jared Cobb <wordpress@jaredcobb.com>
  */
-class Example extends CCB_Core_CPT {
+class Example_Post_Type extends CCB_Core_CPT {
 
 	/**
 	 * Name of the post type
@@ -143,4 +143,4 @@ class Example extends CCB_Core_CPT {
 	}
 }
 
-new Example();
+new Example_Post_Type();
