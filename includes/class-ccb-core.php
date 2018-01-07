@@ -102,6 +102,9 @@ class CCB_Core {
 		// Internationalization.
 		add_action( 'plugins_loaded', [ $this, 'load_plugin_textdomain' ] );
 
+		// Check the plugin / database version and run any required upgrades.
+		add_action( 'plugins_loaded', [ $this, 'check_version' ] );
+
 		// Plugin settings, menus, options.
 		add_filter( 'plugin_action_links_' . CCB_CORE_BASENAME, [ $this, 'add_settings_link' ] );
 
@@ -133,6 +136,28 @@ class CCB_Core {
 			dirname( CCB_CORE_BASENAME ) . '/languages/'
 		);
 
+	}
+
+	/**
+	 * Check the current plugin version and kick off any applicable upgrades.
+	 *
+	 * @return void
+	 */
+	public function check_version() {
+		$current_version = get_option( 'ccb_core_version' );
+
+		// We are currently up to date.
+		if ( version_compare( $current_version, CCB_CORE_VERSION, '>=' ) ) {
+			return;
+		}
+
+		// Upgrade to version 1.0.0.
+		if ( version_compare( $current_version, '1.0.0', '<' ) ) {
+			$this->upgrade_to_1_0_0();
+		}
+
+		// Update the DB version.
+		update_option( 'ccb_core_version', CCB_CORE_VERSION );
 	}
 
 	/**
@@ -342,5 +367,49 @@ class CCB_Core {
 
 	}
 
+	/**
+	 * Converts any legacy options to the new format
+	 *
+	 * @return void
+	 */
+	private function upgrade_to_1_0_0() {
+		$current_options = CCB_Core_Helpers::instance()->get_options();
+		$updated_options = [];
+		$options_hash = [
+			'subdomain' => 'subdomain',
+			'credentials' => 'credentials',
+			'groups-enabled' => 'groups_enabled',
+			'groups-name' => 'groups_name',
+			'groups-slug' => 'groups_slug',
+			'groups-import-images' => 'groups_import_images',
+			'groups-advanced' => 'groups_advanced',
+			'groups-exclude-from-search' => 'groups_exclude_from_search',
+			'groups-publicly-queryable' => 'groups_publicly_queryable',
+			'groups-show-ui' => 'groups_show_ui',
+			'groups-show-in-nav-menus' => 'groups_show_in_nav_menus',
+			'calendar-enabled' => 'calendar_enabled',
+			'calendar-name' => 'calendar_name',
+			'calendar-slug' => 'calendar_slug',
+			'calendar-advanced' => 'calendar_advanced',
+			'calendar-date-range-type' => 'calendar_date_range_type',
+			'calendar-relative-weeks-past' => 'calendar_relative_weeks_past',
+			'calendar-relative-weeks-future' => 'calendar_relative_weeks_future',
+			'calendar-specific-start' => 'calendar_specific_start',
+			'calendar-specific-end' => 'calendar_specific_end',
+			'calendar-exclude-from-search' => 'calendar_exclude_from_search',
+			'calendar-publicly-queryable' => 'calendar_publicly_queryable',
+			'calendar-show-ui' => 'calendar_show_ui',
+			'calendar-show-in-nav-menus' => 'calendar_show_in_nav_menus',
+		];
+
+		if ( ! empty( $current_options ) ) {
+			foreach ( $options_hash as $old => $new ) {
+				if ( isset( $current_options[ $old ] ) ) {
+					$updated_options[ $new ] = $current_options[ $old ];
+				}
+			}
+			update_option( 'ccb_core_settings', $updated_options );
+		}
+	}
 
 }
