@@ -180,7 +180,7 @@ class CCB_Core_Admin_AJAX {
 
 		/**
 		 * Filters the message that gets output to the user
-		 * after a synchonrization is finished.
+		 * after a synchronization is finished.
 		 *
 		 * @since 1.0.0
 		 *
