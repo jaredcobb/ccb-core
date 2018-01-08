@@ -1,21 +1,6 @@
-.test-login-wrapper .button, .test-login-wrapper .spinner, .sync-wrapper .button, .sync-wrapper .spinner {
-  float: left;
-  margin-bottom: 20px;
-}
-
-.ccb_core_settings-wrapper div.ajax-message {
-  width: 50%;
-  padding: 10px;
-  clear:both;
-  font-size: 13px;
-}
-
-.ccb_core_settings-wrapper code {
-  background: none;
-  padding: 0;
-  font-size: 12px;
-  font-weight: bold;
-  color: #666666;
+.ccb_core_settings-wrapper .spinner {
+	float: left;
+	margin-top: 5px;
 }
 
 .ccb_core_settings ul {

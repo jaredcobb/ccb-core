@@ -1,9 +1,9 @@
 === Church Community Builder Core API ===
 Contributors: jaredcobb
 Tags: ccb, church, api, chms
-Requires at least: 3.0.1
-Tested up to: 4.3.1
-Stable tag: 0.9.6
+Requires at least: 4.6.0
+Tested up to: 4.9.1
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,15 +12,14 @@ Provides a core integration to the Church Community Builder API.
 == Description ==
 
 Church Community Builder Core API *synchronizes* your church data to WordPress [custom post types](https://codex.wordpress.org/Custom_Post_Types).
-This plugin is geared toward developers (or advanced WordPress users who aren't afraid to get into a little bit of code).
 
-Find out more at [http://www.wpccb.com/](http://www.wpccb.com).
+This plugin is geared toward Developers, Designers, and Site Administrators who aren't afraid to get into a little bit of code.
+
+Find out more at [https://www.wpccb.com](https://www.wpccb.com) and [https://github.com/jaredcobb/ccb-core](https://github.com/jaredcobb/ccb-core).
 
 = Why Use This Plugin? =
 
-One of the biggest challenges with getting your Church Community Builder data onto your site is the actual API integration.
-This plugin does all of the heavy lifting for you. Once your church data is securely synchronized you can use it freely in
-your theme, widgets, or even your own plugins!
+One of the biggest challenges with getting your Church Community Builder data onto your site is the actual API integration.  This plugin does all of the heavy lifting for you. Once your church data is securely synchronized you can use it freely in your theme, widgets, or even your own plugins!
 
 = Features =
 
@@ -34,7 +33,7 @@ your theme, widgets, or even your own plugins!
 
 = Documentation =
 
-The [http://www.wpccb.com/documentation/](official documentation) has more information, including code samples, hooks, filters, and links to tutorials.
+Extensive developer documentation is available on the [GitHub wiki](https://github.com/jaredcobb/ccb-core/wiki).
 
 == Installation ==
 
@@ -49,15 +48,11 @@ The [http://www.wpccb.com/documentation/](official documentation) has more infor
 
 = I installed this plugin and my site doesn't look any different =
 
-This plugin has a very specific task: It gets some of your Church Community Builder data and imports it into your
-WordPress database (as custom post types). A developer (or advanced WordPress administrator) will need to
-alter your theme to *take advantage* of this data.
+This plugin has a very specific task: It gets some of your Church Community Builder data and imports it into your WordPress database (as custom post types). A developer (or advanced WordPress administrator) will need to alter your theme to *take advantage* of this data.
 
 = Some of my groups in Church Community Builder aren't being synchronized =
 
-You'll need to ensure your [group settings](https://support.churchcommunitybuilder.com/customer/portal/articles/361764-editing-groups)
-allow the group to be publicly listed. A great way to cross reference if your group is publicly visible is to visit
-*yoursubdomain*.ccbchurch.com/w_group_list.php and see if the missing group shows up there.
+You'll need to ensure your [group settings](https://churchcommunitybuilder.force.com/s/article/2102903) allow the group to be publicly listed. A great way to cross reference if your group is publicly visible is to visit *yoursubdomain*.ccbchurch.com/w_group_list.php and see if the missing group shows up there.
 
 == Screenshots ==
 
@@ -65,6 +60,12 @@ allow the group to be publicly listed. A great way to cross reference if your gr
 2. screenshot-2.png
 
 == Changelog ==
+
+= 1.0.0 =
+* Official stable release
+* *Breaking Changes* - Please note that post type and custom taxonomy names have changed (see [release notes](https://github.com/jaredcobb/ccb-core/wiki/1.0.0-Stable-Release) )
+* Fixed broken group images (CCB API query parameter `include_image_link=true`)
+* Refactored code to be faster, simpler, and easier to extend
 
 = 0.9.6 =
 * Added automatic flushing of rewrite rules when custom post type settings are changed
@@ -89,7 +90,7 @@ allow the group to be publicly listed. A great way to cross reference if your gr
 = 0.9.2 =
 * Added tooltips to some settings to help explain the functionality
 * Added better defaults for date ranges
-* Updated the plugin web site to http://www.wpccb.com
+* Updated the plugin web site to https://www.wpccb.com
 
 = 0.9.1 =
 * Fixed an issue where some web hosts were not saving encypted passwords

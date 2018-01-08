@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ccb_api>
+     <request>
+          <parameters>
+               <argument value="public_calendar_listing" name="srv"/>
+               <argument value="2018-01-01" name="date_start"/>
+               <argument value="2018-01-05" name="date_end"/>
+          </parameters>
+     </request>
+     <response>
+          <items count="10">
+               <item>
+                    <date>2018-01-03</date>
+                    <event_name ccb_id="1">Event One</event_name>
+                    <event_description>Event Description One</event_description>
+                    <start_time>08:00:00</start_time>
+                    <end_time>08:15:00</end_time>
+                    <event_duration>15</event_duration>
+                    <event_type>Open To All</event_type>
+                    <location>Room One</location>
+                    <group_name ccb_id="1">Group One</group_name>
+                    <group_type>Interest</group_type>
+                    <grouping_name>Department One</grouping_name>
+                    <leader_name ccb_id="1">Jean Luc Picard</leader_name>
+                    <leader_phone>123-456-7890</leader_phone>
+                    <leader_email>jeanluc@enterprise.com</leader_email>
+               </item>
+               <item>
+                    <date>2018-01-03</date>
+                    <event_name ccb_id="2">Event Two</event_name>
+                    <event_description>Event Description Two</event_description>
+                    <start_time>09:00:00</start_time>
+                    <end_time>10:00:00</end_time>
+                    <event_duration>60</event_duration>
+                    <event_type>Open To All</event_type>
+                    <location></location>
+                    <group_name ccb_id="1">Group One</group_name>
+                    <group_type>Interest</group_type>
+                    <grouping_name>Department One</grouping_name>
+                    <leader_name ccb_id="1">Jean Luc Picard</leader_name>
+                    <leader_phone>123-456-7890</leader_phone>
+                    <leader_email>jeanluc@enterprise.com</leader_email>
+               </item>
+               <item>
+                    <date>2018-01-03</date>
+                    <event_name ccb_id="3">Event Three</event_name>
+                    <event_description></event_description>
+                    <start_time>15:00:00</start_time>
+                    <end_time>17:45:00</end_time>
+                    <event_duration>160</event_duration>
+                    <event_type>Open To All</event_type>
+                    <location>Room Three</location>
+                    <group_name ccb_id="2">Group Two</group_name>
+                    <group_type>Interest</group_type>
+                    <grouping_name>Department Two</grouping_name>
+                    <leader_name ccb_id="2">William Riker</leader_name>
+                    <leader_phone>123-123-1234</leader_phone>
+                    <leader_email>william@enterprise.com</leader_email>
+               </item>
+               <item>
+                    <date>2018-01-03</date>
+                    <event_name ccb_id="4">Event Four</event_name>
+                    <event_description>Event Description Four</event_description>
+                    <start_time>19:00:00</start_time>
+                    <end_time>21:00:00</end_time>
+                    <event_duration>120</event_duration>
+                    <event_type>Open To All</event_type>
+                    <location>Room Four</location>
+                    <group_name ccb_id="3">Group Three</group_name>
+                    <group_type>Singles</group_type>
+                    <grouping_name>Singles Department</grouping_name>
+                    <leader_name ccb_id="3">Data</leader_name>
+                    <leader_phone></leader_phone>
+                    <leader_email></leader_email>
+               </item>
+               <item>
+                    <date>2018-01-04</date>
+                    <event_name ccb_id="1">Event One</event_name>
+                    <event_description>Event Description One</event_description>
+                    <start_time>08:00:00</start_time>
+                    <end_time>08:15:00</end_time>
+                    <event_duration>15</event_duration>
+                    <event_type>Open To All</event_type>
+                    <location>Room One</location>
+                    <group_name ccb_id="1">Group One</group_name>
+                    <group_type>Interest</group_type>
+                    <grouping_name>Department One</grouping_name>
+                    <leader_name ccb_id="1">Jean Luc Picard</leader_name>
+                    <leader_phone>123-456-7890</leader_phone>
+                    <leader_email>jeanluc@enterprise.com</leader_email>
+               </item>
+               <item>
+                    <date>2018-01-04</date>
+                    <event_name ccb_id="2">Event Two</event_name>
+                    <event_description>Event Description Two</event_description>
+                    <start_time>09:00:00</start_time>
+                    <end_time>10:00:00</end_time>
+                    <event_duration>60</event_duration>
+                    <event_type>Open To All</event_type>
+                    <location></location>
+                    <group_name ccb_id="1">Group One</group_name>
+                    <group_type>Interest</group_type>
+                    <grouping_name>Department One</grouping_name>
+                    <leader_name ccb_id="1">Jean Luc Picard</leader_name>
+                    <leader_phone>123-456-7890</leader_phone>
+                    <leader_email>jeanluc@enterprise.com</leader_email>
+               </item>
+               <item>
+                    <date>2018-01-04</date>
+                    <event_name ccb_id="5">Event Five</event_name>
+                    <event_description>Weekly Event Five</event_description>
+                    <start_time>19:00:00</start_time>
+                    <end_time>21:00:00</end_time>
+                    <event_duration>120</event_duration>
+                    <event_type>Open To All</event_type>
+                    <location>Main Bridge</location>
+                    <group_name ccb_id="1">Group One</group_name>
+                    <group_type>Interest</group_type>
+                    <grouping_name>Department One</grouping_name>
+                    <leader_name ccb_id="1">Jean Luc Picard</leader_name>
+                    <leader_phone>123-456-7890</leader_phone>
+                    <leader_email>jeanluc@enterprise.com</leader_email>
+               </item>
+               <item>
+                    <date>2018-01-04</date>
+                    <event_name ccb_id="4">Event Four</event_name>
+                    <event_description>Event Description Four</event_description>
+                    <start_time>19:00:00</start_time>
+                    <end_time>21:00:00</end_time>
+                    <event_duration>120</event_duration>
+                    <event_type>Open To All</event_type>
+                    <location>Room Four</location>
+                    <group_name ccb_id="3">Group Three</group_name>
+                    <group_type>Singles</group_type>
+                    <grouping_name>Singles Department</grouping_name>
+                    <leader_name ccb_id="3">Data</leader_name>
+                    <leader_phone></leader_phone>
+                    <leader_email></leader_email>
+               </item>
+               <item>
+                    <date>2018-01-05</date>
+                    <event_name ccb_id="1">Event One</event_name>
+                    <event_description>Event Description One</event_description>
+                    <start_time>08:00:00</start_time>
+                    <end_time>08:15:00</end_time>
+                    <event_duration>15</event_duration>
+                    <event_type>Open To All</event_type>
+                    <location>Room One</location>
+                    <group_name ccb_id="1">Group One</group_name>
+                    <group_type>Interest</group_type>
+                    <grouping_name>Department One</grouping_name>
+                    <leader_name ccb_id="1">Jean Luc Picard</leader_name>
+                    <leader_phone>123-456-7890</leader_phone>
+                    <leader_email>jeanluc@enterprise.com</leader_email>
+               </item>
+               <item>
+                    <date>2018-01-05</date>
+                    <event_name ccb_id="2">Event Two</event_name>
+                    <event_description>Event Description Two</event_description>
+                    <start_time>09:00:00</start_time>
+                    <end_time>10:00:00</end_time>
+                    <event_duration>60</event_duration>
+                    <event_type>Open To All</event_type>
+                    <location></location>
+                    <group_name ccb_id="1">Group One</group_name>
+                    <group_type>Interest</group_type>
+                    <grouping_name>Department One</grouping_name>
+                    <leader_name ccb_id="1">Jean Luc Picard</leader_name>
+                    <leader_phone>123-456-7890</leader_phone>
+                    <leader_email>jeanluc@enterprise.com</leader_email>
+               </item>
+          </items>
+     </response>
+</ccb_api>
+
