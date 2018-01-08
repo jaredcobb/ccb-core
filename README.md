@@ -1,5 +1,7 @@
 # Church Community Builder Core API
 
+[![Build Status](https://travis-ci.org/jaredcobb/ccb-core.svg?branch=master)](https://travis-ci.org/jaredcobb/ccb-core)
+
 ## A WordPress Plugin that syncs your church data
 
 CCB Core API is a WordPress plugin that has one simple job: It **synchronizes** your church data from [Church Community Builder](https://www.churchcommunitybuilder.com/) into your WordPress database as [Custom Post Types](https://codex.wordpress.org/Post_Types#Custom_Post_Types), [Custom Taxonomies](https://codex.wordpress.org/Taxonomies#Custom_Taxonomies), and [Post Meta](https://codex.wordpress.org/Custom_Fields).
