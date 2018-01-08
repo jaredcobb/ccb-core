@@ -33,7 +33,7 @@ This integration will synchronize all events from the Church Community Builder `
 * Write your own plugin that builds upon this one.
 * Customize the existing integrations (Groups & Events).
 
-<center>**[The Wiki](https://github.com/jaredcobb/ccb-core/wiki) has more information and code samples.**</center>
+**[The Wiki](https://github.com/jaredcobb/ccb-core/wiki) has more information and code samples.**
 
 ## General Usage
 
