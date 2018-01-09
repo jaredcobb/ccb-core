@@ -27,7 +27,6 @@ class CCB_Core_Activator {
 	 * @since    0.9.0
 	 */
 	public static function activate() {
-		// TODO: check dependencies like mcrypt and memory limits.
 	}
 
 	/**

@@ -3,7 +3,7 @@ Contributors: jaredcobb
 Tags: ccb, church, api, chms
 Requires at least: 4.6.0
 Tested up to: 4.9.1
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,6 +60,10 @@ You'll need to ensure your [group settings](https://churchcommunitybuilder.force
 2. screenshot-2.png
 
 == Changelog ==
+
+= 1.0.1 =
+* Fixed a bug where terms are not populated in some circumstances
+* Added checks for minimum PHP and WordPress versions to prevent crashes
 
 = 1.0.0 =
 * Official stable release

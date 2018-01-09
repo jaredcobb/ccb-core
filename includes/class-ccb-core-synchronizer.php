@@ -600,7 +600,6 @@ class CCB_Core_Synchronizer {
 				'post_status' => 'publish',
 				'post_type' => $post_type,
 				'meta_input' => [],
-				'tax_input' => [],
 			];
 
 			// Inspect each field defined in the settings. If it's a
@@ -621,30 +620,6 @@ class CCB_Core_Synchronizer {
 			$args['meta_input']['entity_id'] = $this->get_entity_id( $entity );
 			if ( isset( $entity->modified ) ) {
 				$args['meta_input']['ccb_modified_date'] = $this->auto_cast( $entity->modified );
-			}
-
-			// Prepare hierarchial taxonomies by ensuring the term id
-			// already exists and set terms ids.
-			$prepared_terms = $this->prepare_terms( $entity, $settings );
-			if ( ! empty( $prepared_terms ) ) {
-				$args['tax_input'] = $prepared_terms;
-			}
-
-			// If this is an update, we need to remove all term
-			// relationships in order to ensure we are in
-			// sync with the most recent entity. Otherwise if a
-			// relationship was removed by CCB, it'll be orphaned in WordPress.
-			if ( $args['ID'] ) {
-				if ( ! empty( $settings['taxonomies']['hierarchical'] ) ) {
-					foreach ( $settings['taxonomies']['hierarchical'] as $taxonomy => $node ) {
-						wp_delete_object_term_relationships( $args['ID'], $taxonomy );
-					}
-				}
-				if ( ! empty( $settings['taxonomies']['nonhierarchical'] ) ) {
-					foreach ( $settings['taxonomies']['nonhierarchical'] as $taxonomy => $node ) {
-						wp_delete_object_term_relationships( $args['ID'], $taxonomy );
-					}
-				}
 			}
 
 			/**
@@ -685,6 +660,15 @@ class CCB_Core_Synchronizer {
 				);
 				$this->disable_optimizations();
 				return $result;
+			}
+
+			// Prepare hierarchial taxonomies by ensuring the term id
+			// already exists and set terms ids.
+			$prepared_terms = $this->prepare_terms( $entity, $settings );
+			if ( ! empty( $prepared_terms ) ) {
+				foreach ( $prepared_terms as $taxonomy => $term_array ) {
+					$term_set_results = wp_set_object_terms( $post_id, $term_array, $taxonomy );
+				}
 			}
 
 			/**
@@ -793,8 +777,10 @@ class CCB_Core_Synchronizer {
 						$term = wp_insert_term( $term_name, $taxonomy );
 					}
 					if ( $term && ! is_wp_error( $term ) ) {
-						$categories[ $taxonomy ][] = $term['term_taxonomy_id'];
+						$categories[ $taxonomy ] = (int) $term['term_id'];
 					}
+				} else {
+					$categories[ $taxonomy ] = '';
 				}
 			}
 		}
@@ -805,6 +791,8 @@ class CCB_Core_Synchronizer {
 					$tag_is_set = $this->auto_cast( $entity->{$node} );
 					if ( $tag_is_set ) {
 						$tags[ $taxonomy ][] = $tag;
+					} else {
+						$tags[ $taxonomy ][] = '';
 					}
 				}
 			}
