@@ -170,7 +170,7 @@ class CCB_Core_Settings {
 								'field_title' => esc_html__( 'Software Subdomain', 'ccb-core' ),
 								'field_render_function' => 'render_text',
 								'field_placeholder' => 'subdomain',
-								'field_validation' => 'alphanumeric',
+								'field_validation' => 'slug',
 								'field_tooltip' => esc_html__( 'We just need the first part of your software URL (without "http://" and without ".ccbchurch.com").', 'ccb-core' ),
 							],
 							'credentials' => [
