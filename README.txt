@@ -2,8 +2,8 @@
 Contributors: jaredcobb
 Tags: ccb, church, api, chms
 Requires at least: 4.6.0
-Tested up to: 4.9.1
-Stable tag: 1.0.1
+Tested up to: 4.9.2
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,6 +60,10 @@ You'll need to ensure your [group settings](https://churchcommunitybuilder.force
 2. screenshot-2.png
 
 == Changelog ==
+
+= 1.0.2 =
+* Fixed a bug to allow subdomains with dashes
+* Remove PHP 5.4 array syntax from the main plugin file (prevent crashes on PHP < 5.4)
 
 = 1.0.1 =
 * Fixed a bug where terms are not populated in some circumstances
