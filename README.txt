@@ -64,7 +64,7 @@ You'll need to ensure your [group settings](https://churchcommunitybuilder.force
 = 1.0.3 =
 * Featured images associated with synchronized posts now also get deleted when the post is deleted
 * A new filter `ccb_core_synchronizer_delete_attachment` has been created to optionally overwrite the default behavior of deleting attachments when posts are deleted
-* Any images that are synchronized automatically get a post meta key of `ccb_core` with a value of `true` (in case you need to programatically query for CCB images in the future)
+* Any images that are synchronized automatically get a post meta key of `ccb_core` with a value of `true` (in case you need to programmatically query for CCB images in the future)
 
 = 1.0.2 =
 * Fixed a bug to allow subdomains with dashes
