@@ -2,8 +2,8 @@
 Contributors: jaredcobb
 Tags: ccb, church, api, chms
 Requires at least: 4.6.0
-Tested up to: 4.9.2
-Stable tag: 1.0.2
+Tested up to: 4.9.4
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,6 +60,11 @@ You'll need to ensure your [group settings](https://churchcommunitybuilder.force
 2. screenshot-2.png
 
 == Changelog ==
+
+= 1.0.3 =
+* Featured images associated with synchronized posts now also get deleted when the post is deleted
+* A new filter `ccb_core_synchronizer_delete_attachment` has been created to optionally overwrite the default behavior of deleting attachments when posts are deleted
+* Any images that are synchronized automatically get a post meta key of `ccb_core` with a value of `true` (in case you need to programatically query for CCB images in the future)
 
 = 1.0.2 =
 * Fixed a bug to allow subdomains with dashes

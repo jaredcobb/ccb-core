@@ -711,6 +711,23 @@ class CCB_Core_Synchronizer {
 		];
 
 		foreach ( $post_ids as $post_id ) {
+
+			/**
+			 * Filters whether or not the attachment for this post should
+			 * also be deleted.
+			 *
+			 * @since 1.0.3
+			 *
+			 * @param   bool  $delete  Whether or not the attachment should be deleted.
+			 * @param   int   $post_id The post id.
+			 */
+			if ( apply_filters( 'ccb_core_synchronizer_delete_attachment', true, $post_id ) ) {
+				$attachment_id = get_post_thumbnail_id( $post_id );
+				if ( $attachment_id ) {
+					wp_delete_attachment( $attachment_id, true );
+				}
+			}
+
 			$deleted = wp_delete_post( $post_id, true );
 			if ( ! $deleted ) {
 				$result['success'] = false;
@@ -718,6 +735,7 @@ class CCB_Core_Synchronizer {
 				return $result;
 			}
 			$result['processed'] += 1;
+
 		}
 		return $result;
 	}
