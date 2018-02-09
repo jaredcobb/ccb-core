@@ -254,16 +254,22 @@ class CCB_Core_Helpers {
 			$media_id = media_handle_sideload( $file_array, $post_id );
 			remove_filter( 'upload_dir', [ $this, 'custom_uploads_directory' ] );
 
-			if ( $post_id ) {
-				set_post_thumbnail( $post_id, $media_id );
-			}
-
 			// phpcs:ignore
 			@unlink( $temp_file );
 
 			if ( ! is_wp_error( $media_id ) ) {
+				// Also attach the media to the post if a post id exists.
+				if ( $post_id ) {
+					set_post_thumbnail( $post_id, $media_id );
+				}
+
+				// Set post meta on the image to allow anyone to
+				// query for ccb specific images in the future.
+				update_post_meta( $media_id, 'ccb_core', true );
+
 				return $media_id;
 			}
+
 		}
 
 		return false;
