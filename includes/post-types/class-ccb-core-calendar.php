@@ -29,6 +29,9 @@ class CCB_Core_Calendar extends CCB_Core_CPT {
 	 * Initialize the class
 	 */
 	public function __construct() {
+		// Add the CCB event id as post meta onto each instance of the event.
+		add_action( 'ccb_core_after_insert_update_post', [ $this, 'update_event_id' ], 10, 5 );
+
 		$options = CCB_Core_Helpers::instance()->get_options();
 		$this->enabled = ! empty( $options['calendar_enabled'] ) ? true : false;
 		parent::__construct();
@@ -295,6 +298,33 @@ class CCB_Core_Calendar extends CCB_Core_CPT {
 			];
 		}
 		return $maps;
+	}
+
+	/**
+	 * Parses the CCB event id from the `name` node and
+	 * saves it as post meta.
+	 *
+	 * @since    1.0.4
+	 *
+	 * @param    SimpleXML $entity The entity object.
+	 * @param    array     $settings The settings array for the import.
+	 * @param    array     $args The `wp_insert_post` args.
+	 * @param    string    $post_type The current post type.
+	 * @param    int       $post_id The WordPress post id of this post.
+	 * @return   bool
+	 */
+	public function update_event_id( $entity, $settings, $args, $post_type, $post_id ) {
+		if ( ! empty( $entity->event_name ) ) {
+			foreach ( $entity->event_name->attributes() as $key => $value ) {
+				if ( 'ccb_id' === $key ) {
+					$event_id = (int) $value;
+					if ( $event_id ) {
+						return update_post_meta( $post_id, 'event_id', $event_id );
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	/**

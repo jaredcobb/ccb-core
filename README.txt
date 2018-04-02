@@ -3,7 +3,7 @@ Contributors: jaredcobb
 Tags: ccb, church, api, chms
 Requires at least: 4.6.0
 Tested up to: 4.9.4
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,6 +60,9 @@ You'll need to ensure your [group settings](https://churchcommunitybuilder.force
 2. screenshot-2.png
 
 == Changelog ==
+
+= 1.0.4 =
+* Adds the CCB event id (as post meta) to each instance of a recurring event. This allows individual instances of a recurring event to be associated with each other in WordPress.
 
 = 1.0.3 =
 * Featured images associated with synchronized posts now also get deleted when the post is deleted
