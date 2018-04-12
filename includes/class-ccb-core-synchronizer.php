@@ -352,6 +352,7 @@ class CCB_Core_Synchronizer {
 				'post_status' => 'any',
 				'posts_per_page' => $posts_per_page,
 				'offset' => $offset,
+				'orderby' => 'ID',
 				'no_rows_found' => true,
 				'fields' => 'ids',
 			];
