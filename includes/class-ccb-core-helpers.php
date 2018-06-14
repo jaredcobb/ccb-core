@@ -207,6 +207,14 @@ class CCB_Core_Helpers {
 	 */
 	public function download_image( $image_url, $filename = '', $post_id = 0 ) {
 
+		// When in a WP Cron context these helper functions may not be loaded.
+		if ( ! function_exists( 'download_url' ) ) {
+			include_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+		if ( ! function_exists( 'media_handle_sideload' ) ) {
+			include_once ABSPATH . 'wp-admin/includes/media.php';
+		}
+
 		// Fetch the image and store temporarily.
 		$temp_file = download_url( $image_url );
 
