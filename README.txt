@@ -2,8 +2,8 @@
 Contributors: jaredcobb
 Tags: ccb, church, api, chms
 Requires at least: 4.6.0
-Tested up to: 4.9.5
-Stable tag: 1.0.5
+Tested up to: 4.9.6
+Stable tag: 1.0.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,6 +60,9 @@ You'll need to ensure your [group settings](https://churchcommunitybuilder.force
 2. screenshot-2.png
 
 == Changelog ==
+
+= 1.0.6 =
+* Fixes a bug where admin libraries may not be loaded under some cron contexts.
 
 = 1.0.5 =
 * Fixes a bug where events could be duplicated on subsequent synchronizations.
