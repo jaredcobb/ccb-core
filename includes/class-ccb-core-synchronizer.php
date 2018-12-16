@@ -904,3 +904,4 @@ class CCB_Core_Synchronizer {
 	}
 
 }
+CCB_Core_Synchronizer::instance();
