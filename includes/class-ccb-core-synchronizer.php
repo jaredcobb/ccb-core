@@ -36,13 +36,6 @@ class CCB_Core_Synchronizer {
 	private static $instance;
 
 	/**
-	 * An instance of the CCB_Core_API class
-	 *
-	 * @var   CCB_Core_API
-	 */
-	private $api;
-
-	/**
 	 * Unused constructor in the singleton pattern
 	 *
 	 * @access   public
@@ -76,7 +69,6 @@ class CCB_Core_Synchronizer {
 		// Wait to initialize the map until after the plugins / themes are fully
 		// loaded so that all post types, taxonomies, and theme hooks have been registered.
 		add_action( 'init', [ $this, 'initialize_map' ], 9, 1 ); // Cron runs on `init` priority `10`.
-		$this->api = CCB_Core_API::instance();
 	}
 
 	/**
@@ -175,7 +167,7 @@ class CCB_Core_Synchronizer {
 				 */
 				$response = apply_filters(
 					'ccb_core_synchronizer_api_response',
-					$this->api->get( $settings['service'], $data ),
+					CCB_Core_API::instance()->get( $settings['service'], $data ),
 					$settings,
 					$post_type
 				);

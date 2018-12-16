@@ -19,13 +19,6 @@
 class CCB_Core_Cron {
 
 	/**
-	 * An instance of the CCB_Core_Synchronizer class
-	 *
-	 * @var CCB_Core_Synchronizer
-	 */
-	private $synchronizer;
-
-	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -38,8 +31,6 @@ class CCB_Core_Cron {
 		add_action( 'ccb_core_auto_sync_hook', [ $this, 'auto_sync_callback' ] );
 		// When the cron settings are changed, configure the events.
 		add_action( 'update_option_ccb_core_settings', [ $this, 'cron_settings_changed' ], 10, 2 );
-
-		$this->synchronizer = CCB_Core_Synchronizer::instance();
 	}
 
 	/**
@@ -54,10 +45,12 @@ class CCB_Core_Cron {
 		if ( ! empty( $settings['auto_sync_timeout'] ) ) {
 			$schedules['ccb_core_schedule'] = [
 				'interval' => MINUTE_IN_SECONDS * absint( $settings['auto_sync_timeout'] ),
-				'display' => esc_html( sprintf(
-					__( 'Every %s Minutes' ),
-					absint( $settings['auto_sync_timeout'] )
-				) ),
+				'display' => esc_html(
+					sprintf(
+						__( 'Every %s Minutes' ),
+						absint( $settings['auto_sync_timeout'] )
+					)
+				),
 			];
 		}
 		return $schedules;
@@ -109,7 +102,7 @@ class CCB_Core_Cron {
 	 * @return   void
 	 */
 	public function auto_sync_callback() {
-		$this->synchronizer->synchronize();
+		CCB_Core_Synchronizer::instance()->synchronize();
 	}
 
 }

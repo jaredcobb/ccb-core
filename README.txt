@@ -2,8 +2,8 @@
 Contributors: jaredcobb
 Tags: ccb, church, api, chms
 Requires at least: 4.6.0
-Tested up to: 4.9.6
-Stable tag: 1.0.6
+Tested up to: 5.0.1
+Stable tag: 1.0.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,6 +60,13 @@ You'll need to ensure your [group settings](https://churchcommunitybuilder.force
 2. screenshot-2.png
 
 == Changelog ==
+
+= 1.0.7 =
+* Fix for a bug where auto-sync was failing when group images are enabled.
+* PHP 7.2 and above compatibility improvements.
+* Stronger encryption methods for PHP 7.2 and above.
+* Performance improvements in how the plugin loads and runs.
+* Compatible with Gutenberg, WordPress 5.0.
 
 = 1.0.6 =
 * Fixes a bug where admin libraries may not be loaded under some cron contexts.

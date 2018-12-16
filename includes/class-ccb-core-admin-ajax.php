@@ -19,20 +19,6 @@
 class CCB_Core_Admin_AJAX {
 
 	/**
-	 * An instance of the CCB_Core_API class
-	 *
-	 * @var CCB_Core_API
-	 */
-	private $api;
-
-	/**
-	 * An instance of the CCB_Core_Synchronizer class
-	 *
-	 * @var CCB_Core_Synchronizer
-	 */
-	private $synchronizer;
-
-	/**
 	 * Initialize the class and register hooks
 	 *
 	 * @since    1.0.0
@@ -42,9 +28,6 @@ class CCB_Core_Admin_AJAX {
 		add_action( 'wp_ajax_poll_sync', [ $this, 'ajax_poll_sync' ] );
 		add_action( 'wp_ajax_get_latest_sync', [ $this, 'ajax_get_latest_sync' ] );
 		add_action( 'wp_ajax_test_credentials', [ $this, 'ajax_test_credentials' ] );
-
-		$this->api = CCB_Core_API::instance();
-		$this->synchronizer = CCB_Core_Synchronizer::instance();
 	}
 
 	/**
@@ -61,7 +44,7 @@ class CCB_Core_Admin_AJAX {
 
 		// Tell the user to move along and go about their business...
 		CCB_Core_Helpers::instance()->send_non_blocking_json_success();
-		$result = $this->synchronizer->synchronize();
+		$result = CCB_Core_Synchronizer::instance()->synchronize();
 
 	}
 
@@ -201,7 +184,7 @@ class CCB_Core_Admin_AJAX {
 	 */
 	public function ajax_test_credentials() {
 		check_ajax_referer( 'ccb_core_nonce', 'nonce' );
-		$response = $this->api->get( 'api_status' );
+		$response = CCB_Core_API::instance()->get( 'api_status' );
 
 		if ( 'SUCCESS' === $response['status'] ) {
 			wp_send_json_success();
