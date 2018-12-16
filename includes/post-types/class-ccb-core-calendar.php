@@ -158,7 +158,8 @@ class CCB_Core_Calendar extends CCB_Core_CPT {
 									This is the best setting for most churches.%2$s
 									Specific: For example, only get events from "6/1/2018" to "12/1/2018".%3$s
 									This setting is best if you want to tightly manage the events that get published.',
-								'ccb-core' ),
+									'ccb-core'
+								),
 								'<br>',
 								'<br><br>',
 								'<br>'
@@ -199,7 +200,8 @@ class CCB_Core_Calendar extends CCB_Core_CPT {
 								esc_html__(
 									'When synchronizing, we should get events that start after this date.%s
 									(Leave empty to always start "today")',
-								'ccb-core' ),
+									'ccb-core'
+								),
 								'<br>'
 							),
 						],
@@ -212,7 +214,8 @@ class CCB_Core_Calendar extends CCB_Core_CPT {
 								esc_html__(
 									'When synchronizing, we should get events that start before this date.%s
 									(Setting this too far into the future may cause the API to timeout)',
-								'ccb-core' ),
+									'ccb-core'
+								),
 								'<br>'
 							),
 						],

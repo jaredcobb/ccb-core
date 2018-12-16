@@ -96,9 +96,7 @@ class CCB_Core_API {
 	 * @return   void
 	 */
 	private function setup() {
-		// Wait to initialize the API credentials until after WordPress
-		// has loaded pluggable.php because we are using some WordPress helper functions.
-		add_action( 'plugins_loaded', [ $this, 'initialize_credentials' ] );
+		$this->initialize_credentials();
 	}
 
 	/**
@@ -258,10 +256,12 @@ class CCB_Core_API {
 				// We successfully parsed the XML response, however the
 				// response may contain error messages from CCB.
 				if ( isset( $parsed_response->response->errors->error ) ) {
-					$result['error'] = esc_html( sprintf(
-						__( 'The CCB API replied with an error: %s', 'ccb-core' ),
-						$parsed_response->response->errors->error
-					) );
+					$result['error'] = esc_html(
+						sprintf(
+							__( 'The CCB API replied with an error: %s', 'ccb-core' ),
+							$parsed_response->response->errors->error
+						)
+					);
 					$result['status'] = 'ERROR';
 				} else {
 					$result['status'] = 'SUCCESS';

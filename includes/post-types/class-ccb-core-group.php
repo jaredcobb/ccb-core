@@ -148,7 +148,8 @@ class CCB_Core_Group extends CCB_Core_CPT {
 								esc_html__(
 									'This will download the CCB Group Image and attach it as a Featured Image.%s
 									If you don\'t need group images, then disabling this feature will speed up the synchronization.',
-								'ccb-core' ),
+									'ccb-core'
+								),
 								'<br>'
 							),
 						],

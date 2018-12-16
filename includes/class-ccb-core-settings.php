@@ -103,7 +103,7 @@ class CCB_Core_Settings {
 							// For a brand new installation, if the option doesn't yet
 							// exist, sanitize callback is called twice.
 							// See https://core.trac.wordpress.org/ticket/21989.
-							if ( 200 < strlen( $input[ $field_id ]['password'] ) && ! isset( $current_options[ $field_id ]['password'] ) ) {
+							if ( 76 < strlen( $input[ $field_id ]['password'] ) && ! isset( $current_options[ $field_id ]['password'] ) ) {
 								// Password was already encrypted on the previous sanitization call.
 								$encrypted_password = $input[ $field_id ]['password'];
 							} else {
@@ -230,7 +230,8 @@ class CCB_Core_Settings {
 									'We keep a local copy (cache) of your Church Community Builder data for the best performance.%1$s
 									How often (in minutes) should we check for new data?%2$s
 									(90 minutes is recommended).',
-								'ccb-core' ),
+									'ccb-core'
+								),
 								'<br>',
 								'<br>'
 							),

@@ -38,6 +38,13 @@ class CCB_Core_Requirements {
 	private $required_wordpress = '4.6.0';
 
 	/**
+	 * Required global constants defined in wp-config.php
+	 *
+	 * @var array
+	 */
+	private $required_keys = [ 'AUTH_KEY', 'AUTH_SALT' ];
+
+	/**
 	 * Any applicable error messages
 	 *
 	 * @var string
@@ -51,6 +58,8 @@ class CCB_Core_Requirements {
 	 */
 	public function __construct() {
 		$this->validate_versions();
+		$this->validate_keys();
+		$this->validate_encryption_methods();
 	}
 
 	/**
@@ -109,4 +118,48 @@ class CCB_Core_Requirements {
 		$this->register_disable_plugin();
 	}
 
+	/**
+	 * Ensure the site has configured the required keys.
+	 *
+	 * @return void
+	 */
+	private function validate_keys() {
+		foreach ( $this->required_keys as $key ) {
+			if ( ! defined( $key ) || 32 > strlen( constant( $key ) ) ) {
+				$this->requirements_met = false;
+				$this->error_message = sprintf(
+					'Church Community Builder Core API requires that you configure a random ' .
+					'value for the %s constant that is at least 32 characters long. See ' .
+					'https://codex.wordpress.org/Editing_wp-config.php#Security_Keys ' .
+					'for more information.',
+					$key
+				);
+				$this->register_disable_plugin();
+				return;
+			}
+		}
+	}
+
+	/**
+	 * Ensure the site has an encryption module installed.
+	 *
+	 * @return void
+	 */
+	private function validate_encryption_methods() {
+		if (
+			! function_exists( 'sodium_crypto_secretbox' )
+			&& ! function_exists( 'sodium_crypto_secretbox_open' )
+			&& ! function_exists( 'mcrypt_encrypt' )
+			&& ! function_exists( 'mcrypt_decrypt' )
+		) {
+			$this->requirements_met = false;
+			$this->error_message = 'Church Community Builder Core API requires that you ' .
+				'have an encryption library installed on your system. By default, ' .
+				'you should have the mcrypt module installed for PHP versions less than 7.2 ' .
+				'or the sodium module installed for PHP versions 7.2 or later. ' .
+				'Please contact your hosting provider for more information.';
+			$this->register_disable_plugin();
+			return;
+		}
+	}
 }

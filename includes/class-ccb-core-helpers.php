@@ -109,9 +109,47 @@ class CCB_Core_Helpers {
 	 * @return   string
 	 */
 	public function encrypt( $data ) {
+		if ( ! function_exists( 'sodium_crypto_secretbox' ) ) {
+			return $this->legacy_encrypt( $data );
+		}
 
 		$encrypted_value = false;
-		$key = wp_salt() . md5( 'ccb-core' );
+		if ( ! empty( $data ) ) {
+			try {
+				// Create a one-time random nonce and salt.
+				$nonce = random_bytes( SODIUM_CRYPTO_SECRETBOX_NONCEBYTES );
+				$salt = random_bytes( SODIUM_CRYPTO_PWHASH_SALTBYTES );
+				// Create a unique key that is seeded from the site's AUTH_KEY constant.
+				$key = sodium_crypto_pwhash(
+					SODIUM_CRYPTO_SECRETBOX_KEYBYTES,
+					AUTH_KEY,
+					$salt,
+					SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE,
+					SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE
+				);
+				// Encrypt the data with the nonce and salt prepended so that we can
+				// use them to decrypt the value later.
+				$encrypted_value = base64_encode( $nonce . $salt . sodium_crypto_secretbox( $data, $nonce, $key ) );
+			} catch ( Exception $ex ) {
+				return new WP_Error( 'encrypt_failure', __( 'The string could not be encrypted via Sodium', 'ccb-core' ) );
+			}
+
+		}
+
+		return $encrypted_value;
+	}
+
+	/**
+	 * Encrypts and base64_encodes a string safe for serialization in WordPress
+	 * when the Sodium functions are not available (typically below PHP 7.2)
+	 *
+	 * @param string $data The data to be encrypted.
+	 *
+	 * @return string
+	 */
+	private function legacy_encrypt( $data ) {
+		$encrypted_value = false;
+		$key = hash_hmac( 'sha512', AUTH_SALT, AUTH_KEY );
 
 		if ( ! empty( $data ) ) {
 			try {
@@ -135,9 +173,68 @@ class CCB_Core_Helpers {
 	 * @return   string
 	 */
 	public function decrypt( $data ) {
+		if ( ! function_exists( 'sodium_crypto_secretbox_open' ) ) {
+			return $this->legacy_decrypt( $data );
+		}
 
 		$decrypted_value = false;
-		$key = wp_salt() . md5( 'ccb-core' );
+		if ( ! empty( $data ) ) {
+			try {
+				// Decode the stored value.
+				$decoded_data = base64_decode( $data );
+				// Get the stored nonce from the beginning of the multibyte string.
+				$nonce = mb_substr(
+					$decoded_data,
+					0,
+					SODIUM_CRYPTO_SECRETBOX_NONCEBYTES,
+					'8bit'
+				);
+				// Get the stored salt from the middle of the multibyte string.
+				$salt = mb_substr(
+					$decoded_data,
+					SODIUM_CRYPTO_SECRETBOX_NONCEBYTES,
+					SODIUM_CRYPTO_PWHASH_SALTBYTES,
+					'8bit'
+				);
+				// Get the encrypted data from the end of the multibyte string.
+				$cipher = mb_substr(
+					$decoded_data,
+					SODIUM_CRYPTO_SECRETBOX_NONCEBYTES + SODIUM_CRYPTO_PWHASH_SALTBYTES,
+					null,
+					'8bit'
+				);
+				// Generate the known key from the stored salt and site's AUTH_KEY constant.
+				$key = sodium_crypto_pwhash(
+					SODIUM_CRYPTO_SECRETBOX_KEYBYTES,
+					AUTH_KEY,
+					$salt,
+					SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE,
+					SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE
+				);
+				// Decrypt the data using the stored nonce.
+				$decrypted_value = sodium_crypto_secretbox_open( $cipher, $nonce, $key );
+			} catch ( Exception $ex ) {
+				return new WP_Error( 'decrypt_failure', __( 'The string could not be decrypted', 'ccb-core' ) );
+			}
+
+		}
+
+		return $decrypted_value;
+	}
+
+	/**
+	 * Decrypts and base64_decodes a string when the Sodium functions
+	 * are not available (typically below PHP 7.2)
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 * @param    string $data The data to be decrypted.
+	 * @return   string
+	 */
+	public function legacy_decrypt( $data ) {
+
+		$decrypted_value = false;
+		$key = hash_hmac( 'sha512', AUTH_SALT, AUTH_KEY );
 
 		if ( ! empty( $data ) ) {
 			try {
@@ -169,10 +266,12 @@ class CCB_Core_Helpers {
 		header( 'Content-Type: application/json' );
 		header( 'Content-Encoding: none' );
 
-		echo wp_json_encode( [
-			'success' => true,
-			'data' => $data,
-		] );
+		echo wp_json_encode(
+			[
+				'success' => true,
+				'data' => $data,
+			]
+		);
 
 		header( 'Connection: close' );
 		header( 'Content-Length: ' . ob_get_length() );
@@ -210,6 +309,9 @@ class CCB_Core_Helpers {
 		// When in a WP Cron context these helper functions may not be loaded.
 		if ( ! function_exists( 'download_url' ) ) {
 			include_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+		if ( ! function_exists( 'wp_read_image_metadata' ) ) {
+			include_once ABSPATH . 'wp-admin/includes/image.php';
 		}
 		if ( ! function_exists( 'media_handle_sideload' ) ) {
 			include_once ABSPATH . 'wp-admin/includes/media.php';
