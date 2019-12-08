@@ -198,7 +198,7 @@
      * Helper method to insert an admin notice on the page
      */
     adminNotice : function(message, type = 'info', className = '') {
-      var $notice = $('<div class="notice ' + className + '"></div>');
+      var $notice = $('<div class="ccb-sync-notice notice ' + className + '"></div>');
       var $content = $('<p></p>');
       $notice.addClass('notice-' + type);
       $content.text(message);
@@ -212,9 +212,9 @@
     removeNotice : function(className = '') {
       var noticeSelector;
       if (className.length) {
-        noticeSelector = '.notice.' + className;
+        noticeSelector = '.ccb-sync-notice.notice.' + className;
       } else {
-        noticeSelector = '.notice';
+        noticeSelector = '.ccb-sync-notice.notice';
       }
 
       $(noticeSelector).remove();

@@ -45,7 +45,7 @@ class CCB_Core_Settings_Section {
 	 */
 	public function __construct( $section_id, $section ) {
 		$this->section_id = $section_id;
-		$this->section = $section;
+		$this->section    = $section;
 	}
 
 	/**

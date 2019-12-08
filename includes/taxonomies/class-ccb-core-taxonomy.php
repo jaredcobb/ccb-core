@@ -60,7 +60,7 @@ abstract class CCB_Core_Taxonomy {
 		if ( ! empty( $this->object_types ) ) {
 			foreach ( $this->object_types as $object_type ) {
 				$taxonomy_args = static::get_taxonomy_args();
-				$hierarchical = ! empty( $taxonomy_args['hierarchical'] ) ? 'hierarchical' : 'nonhierarchical';
+				$hierarchical  = ! empty( $taxonomy_args['hierarchical'] ) ? 'hierarchical' : 'nonhierarchical';
 				$map[ $object_type ]['taxonomies'][ $hierarchical ][ $this->name ] = $taxonomy_args['api_mapping'];
 			}
 		}

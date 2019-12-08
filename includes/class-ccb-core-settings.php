@@ -134,7 +134,6 @@ class CCB_Core_Settings {
 
 				}
 			}
-
 		}
 
 		return $current_options;
@@ -151,9 +150,9 @@ class CCB_Core_Settings {
 
 		// Initialize a settings array with an About page and Credentials page.
 		$settings = [
-			'ccb_core_settings' => [
+			'ccb_core_settings'              => [
 				'page_title' => esc_html__( 'About', 'ccb-core' ),
-				'sections' => [
+				'sections'   => [
 					'about' => [
 						'section_title' => esc_html__( 'About', 'ccb-core' ),
 						// No fields needed for the about page.
@@ -162,25 +161,25 @@ class CCB_Core_Settings {
 			],
 			'ccb_core_settings_api_settings' => [
 				'page_title' => esc_html__( 'API Settings', 'ccb-core' ),
-				'sections' => [
+				'sections'   => [
 					'api_settings' => [
 						'section_title' => esc_html__( 'API Settings', 'ccb-core' ),
-						'fields' => [
-							'subdomain' => [
-								'field_title' => esc_html__( 'Software Subdomain', 'ccb-core' ),
+						'fields'        => [
+							'subdomain'        => [
+								'field_title'           => esc_html__( 'Software Subdomain', 'ccb-core' ),
 								'field_render_function' => 'render_text',
-								'field_placeholder' => 'subdomain',
-								'field_validation' => 'slug',
-								'field_tooltip' => esc_html__( 'We just need the first part of your software URL (without "http://" and without ".ccbchurch.com").', 'ccb-core' ),
+								'field_placeholder'     => 'subdomain',
+								'field_validation'      => 'slug',
+								'field_tooltip'         => esc_html__( 'We just need the first part of your software URL (without "http://" and without ".ccbchurch.com").', 'ccb-core' ),
 							],
-							'credentials' => [
-								'field_title' => esc_html__( 'API Credentials', 'ccb-core' ),
+							'credentials'      => [
+								'field_title'           => esc_html__( 'API Credentials', 'ccb-core' ),
 								'field_render_function' => 'render_credentials',
-								'field_validation' => 'encrypt',
-								'field_tooltip' => esc_html__( 'This is the username and password for the API user in your Church Community Builder software.', 'ccb-core' ),
+								'field_validation'      => 'encrypt',
+								'field_tooltip'         => esc_html__( 'This is the username and password for the API user in your Church Community Builder software.', 'ccb-core' ),
 							],
 							'test_credentials' => [
-								'field_title' => esc_html__( 'Test Credentials', 'ccb-core' ),
+								'field_title'           => esc_html__( 'Test Credentials', 'ccb-core' ),
 								'field_render_function' => 'render_test_credentials',
 							],
 						],
@@ -205,27 +204,27 @@ class CCB_Core_Settings {
 		// Add a syncronization settings page.
 		$settings['ccb_core_settings_sync'] = [
 			'page_title' => esc_html__( 'Synchronize', 'ccb-core' ),
-			'sections' => [
+			'sections'   => [
 				'synchronize' => [
 					'section_title' => esc_html__( 'Synchronize', 'ccb-core' ),
-					'fields' => [
-						'auto_sync' => [
-							'field_title' => esc_html__( 'Enable Auto Sync', 'ccb-core' ),
+					'fields'        => [
+						'auto_sync'         => [
+							'field_title'           => esc_html__( 'Enable Auto Sync', 'ccb-core' ),
 							'field_render_function' => 'render_switch',
-							'field_validation' => 'switch',
+							'field_validation'      => 'switch',
 						],
 						'auto_sync_timeout' => [
-							'field_title' => esc_html__( 'Cache Expiration', 'ccb-core' ),
+							'field_title'           => esc_html__( 'Cache Expiration', 'ccb-core' ),
 							'field_render_function' => 'render_slider',
-							'field_options' => [
-								'min' => '10',
-								'max' => '180',
+							'field_options'         => [
+								'min'   => '10',
+								'max'   => '180',
 								'units' => 'minutes',
 							],
-							'field_default' => 90,
-							'field_validation' => '',
-							'field_attributes' => [ 'data-requires' => '{"auto_sync":1}' ],
-							'field_tooltip' => sprintf(
+							'field_default'         => 90,
+							'field_validation'      => '',
+							'field_attributes'      => [ 'data-requires' => '{"auto_sync":1}' ],
+							'field_tooltip'         => sprintf(
 								esc_html__(
 									'We keep a local copy (cache) of your Church Community Builder data for the best performance.%1$s
 									How often (in minutes) should we check for new data?%2$s
@@ -236,12 +235,12 @@ class CCB_Core_Settings {
 								'<br>'
 							),
 						],
-						'manual_sync' => [
-							'field_title' => esc_html__( 'Manual Sync', 'ccb-core' ),
+						'manual_sync'       => [
+							'field_title'           => esc_html__( 'Manual Sync', 'ccb-core' ),
 							'field_render_function' => 'render_manual_sync',
 						],
-						'latest_results' => [
-							'field_title' => esc_html__( 'Latest Sync Results', 'ccb-core' ),
+						'latest_results'    => [
+							'field_title'           => esc_html__( 'Latest Sync Results', 'ccb-core' ),
 							'field_render_function' => 'render_latest_results',
 						],
 					],
@@ -271,8 +270,8 @@ class CCB_Core_Settings {
 		// Verify the nonce before processing field data.
 		check_admin_referer( 'update_settings', 'ccb_core_nonce' );
 
-		$mapping = [];
-		$page_id = isset( $_POST['option_page'] ) ? sanitize_text_field( wp_unslash( $_POST['option_page'] ) ) : false; // Input var okay.
+		$mapping              = [];
+		$page_id              = isset( $_POST['option_page'] ) ? sanitize_text_field( wp_unslash( $_POST['option_page'] ) ) : false; // Input var okay.
 		$settings_definitions = $this->get_settings_definitions();
 
 		foreach ( $settings_definitions[ $page_id ]['sections'] as $section ) {
@@ -280,7 +279,7 @@ class CCB_Core_Settings {
 				foreach ( $section['fields'] as $field_id => $field ) {
 					if ( isset( $field['field_validation'] ) ) {
 						$mapping[ $field_id ] = [
-							'field_title' => $field['field_title'],
+							'field_title'      => $field['field_title'],
 							'field_validation' => $field['field_validation'],
 						];
 					} else {

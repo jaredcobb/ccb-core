@@ -40,23 +40,23 @@ class CCB_Core_Group_Area extends CCB_Core_Taxonomy {
 	 */
 	public static function get_taxonomy_args() {
 		return [
-			'labels' => [
-				'name' => __( 'Areas', 'ccb-core' ),
-				'singular_name' => __( 'Area', 'ccb-core' ),
-				'search_items' => __( 'Search Areas', 'ccb-core' ),
-				'all_items' => __( 'All Areas', 'ccb-core' ),
-				'parent_item' => __( 'Parent Area', 'ccb-core' ),
+			'labels'            => [
+				'name'              => __( 'Areas', 'ccb-core' ),
+				'singular_name'     => __( 'Area', 'ccb-core' ),
+				'search_items'      => __( 'Search Areas', 'ccb-core' ),
+				'all_items'         => __( 'All Areas', 'ccb-core' ),
+				'parent_item'       => __( 'Parent Area', 'ccb-core' ),
 				'parent_item_colon' => __( 'Parent Area:', 'ccb-core' ),
-				'edit_item' => __( 'Edit Area', 'ccb-core' ),
-				'update_item' => __( 'Update Area', 'ccb-core' ),
-				'add_new_item' => __( 'Add New Area', 'ccb-core' ),
-				'new_item_name' => __( 'New Area', 'ccb-core' ),
+				'edit_item'         => __( 'Edit Area', 'ccb-core' ),
+				'update_item'       => __( 'Update Area', 'ccb-core' ),
+				'add_new_item'      => __( 'Add New Area', 'ccb-core' ),
+				'new_item_name'     => __( 'New Area', 'ccb-core' ),
 			],
-			'hierarchical' => true,
+			'hierarchical'      => true,
 			'show_admin_column' => true,
-			'show_ui' => true,
-			'query_var' => true,
-			'api_mapping' => 'area', // The field key from the CCB API.
+			'show_ui'           => true,
+			'query_var'         => true,
+			'api_mapping'       => 'area', // The field key from the CCB API.
 		];
 	}
 

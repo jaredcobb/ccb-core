@@ -45,6 +45,13 @@ class CCB_Core_Requirements {
 	private $required_keys = [ 'AUTH_KEY', 'AUTH_SALT' ];
 
 	/**
+	 * Required PHP modules
+	 *
+	 * @var array
+	 */
+	private $required_modules = [ 'OpenSSL' => 'openssl' ];
+
+	/**
 	 * Any applicable error messages
 	 *
 	 * @var string
@@ -59,7 +66,8 @@ class CCB_Core_Requirements {
 	public function __construct() {
 		$this->validate_versions();
 		$this->validate_keys();
-		$this->validate_encryption_methods();
+		$this->validate_modules();
+		$this->validate_writable_files();
 	}
 
 	/**
@@ -87,7 +95,7 @@ class CCB_Core_Requirements {
 	 * @return   void
 	 */
 	public function send_error() {
-		echo '<div class="notice notice-error"><p>' . esc_html( $this->error_message ) . '</p></div>';
+		echo '<div class="notice notice-error"><p>' . wp_kses_post( $this->error_message ) . '</p></div>';
 	}
 
 	/**
@@ -100,17 +108,17 @@ class CCB_Core_Requirements {
 		global $wp_version;
 
 		if ( version_compare( PHP_VERSION, $this->required_php, '<' ) ) {
-			$issue = 'PHP';
+			$issue   = 'PHP';
 			$version = $this->required_php;
 		} elseif ( version_compare( $wp_version, $this->required_wordpress, '<' ) ) {
-			$issue = 'WordPress';
+			$issue   = 'WordPress';
 			$version = $this->required_wordpress;
 		} else {
 			return;
 		}
 
 		$this->requirements_met = false;
-		$this->error_message = sprintf(
+		$this->error_message    = sprintf(
 			'Church Community Builder Core API requires %1$s version %2$s or greater.',
 			$issue,
 			$version
@@ -127,7 +135,7 @@ class CCB_Core_Requirements {
 		foreach ( $this->required_keys as $key ) {
 			if ( ! defined( $key ) || 32 > strlen( constant( $key ) ) ) {
 				$this->requirements_met = false;
-				$this->error_message = sprintf(
+				$this->error_message    = sprintf(
 					'Church Community Builder Core API requires that you configure a random ' .
 					'value for the %s constant that is at least 32 characters long. See ' .
 					'https://codex.wordpress.org/Editing_wp-config.php#Security_Keys ' .
@@ -141,23 +149,38 @@ class CCB_Core_Requirements {
 	}
 
 	/**
-	 * Ensure the site has an encryption module installed.
+	 * Ensure the site has the required PHP modules installed.
 	 *
 	 * @return void
 	 */
-	private function validate_encryption_methods() {
-		if (
-			! function_exists( 'sodium_crypto_secretbox' )
-			&& ! function_exists( 'sodium_crypto_secretbox_open' )
-			&& ! function_exists( 'mcrypt_encrypt' )
-			&& ! function_exists( 'mcrypt_decrypt' )
-		) {
+	private function validate_modules() {
+		foreach ( $this->required_modules as $module_name => $module_slug ) {
+			if ( ! extension_loaded( $module_slug ) ) {
+				$this->requirements_met = false;
+				$this->error_message    = sprintf(
+					'Church Community Builder Core API requires that you have the ' .
+					'%s PHP module installed. Please contact your hosting provider ' .
+					'and ask them if they can install or enable that module for your site.',
+					$module_name
+				);
+				$this->register_disable_plugin();
+				return;
+			}
+		}
+	}
+
+	/**
+	 * Ensure we can write to the config file.
+	 *
+	 * @return void
+	 */
+	private function validate_writable_files() {
+		if ( ! wp_is_writable( CCB_CORE_PATH ) ) {
 			$this->requirements_met = false;
-			$this->error_message = 'Church Community Builder Core API requires that you ' .
-				'have an encryption library installed on your system. By default, ' .
-				'you should have the mcrypt module installed for PHP versions less than 7.2 ' .
-				'or the sodium module installed for PHP versions 7.2 or later. ' .
-				'Please contact your hosting provider for more information.';
+			$this->error_message    = 'Church Community Builder Core API requires that ' .
+				'its plugin folder and files are writable by your server. ' .
+				'Please <a target="_blank" href="https://wordpress.org/support/article/changing-file-permissions/">see this article</a>' .
+				' and contact your hosting provider for help.';
 			$this->register_disable_plugin();
 			return;
 		}

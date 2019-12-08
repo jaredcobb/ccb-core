@@ -44,23 +44,23 @@ class Example_Taxonomy extends CCB_Core_Taxonomy {
 	 */
 	public static function get_taxonomy_args() {
 		return [
-			'labels' => [
-				'name' => 'Example Categories',
-				'singular_name' => 'Example Category',
-				'search_items' => 'Search Example Categories',
-				'all_items' => 'All Example Categories',
-				'parent_item' => 'Parent Example Category',
+			'labels'            => [
+				'name'              => 'Example Categories',
+				'singular_name'     => 'Example Category',
+				'search_items'      => 'Search Example Categories',
+				'all_items'         => 'All Example Categories',
+				'parent_item'       => 'Parent Example Category',
 				'parent_item_colon' => 'Parent Example Category:',
-				'edit_item' => 'Edit Example Category',
-				'update_item' => 'Update Example Category',
-				'add_new_item' => 'Add New Example Category',
-				'new_item_name' => 'New Example Category',
+				'edit_item'         => 'Edit Example Category',
+				'update_item'       => 'Update Example Category',
+				'add_new_item'      => 'Add New Example Category',
+				'new_item_name'     => 'New Example Category',
 			],
-			'hierarchical' => true,
+			'hierarchical'      => true,
 			'show_admin_column' => true,
-			'show_ui' => true,
-			'query_var' => true,
-			'api_mapping' => 'entity_property_name', // The field key from the CCB API.
+			'show_ui'           => true,
+			'query_var'         => true,
+			'api_mapping'       => 'entity_property_name', // The field key from the CCB API.
 		];
 	}
 

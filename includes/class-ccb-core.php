@@ -47,13 +47,10 @@ class CCB_Core {
 	 */
 	private function load_dependencies() {
 
-		// For environments that do not support Sodium (usually PHP < 7.2) use a legacy class.
-		if ( ! function_exists( 'sodium_crypto_secretbox' ) || ! function_exists( 'sodium_crypto_secretbox_open' ) ) {
-			// Encryption class to provide better security and ease of use.
-			require_once CCB_CORE_PATH . 'lib/class-ccb-core-vendor-encryption.php';
-		}
+		// Autoloader for vendor files.
+		require_once CCB_CORE_PATH . 'lib/autoload.php';
 
-		// A generic helper class with commonly used mehtods.
+		// A generic helper class with commonly used methods.
 		require_once CCB_CORE_PATH . 'includes/class-ccb-core-helpers.php';
 
 		// The classes that define options and settings for the plugin.
@@ -90,6 +87,9 @@ class CCB_Core {
 
 		// Cron Management.
 		require_once CCB_CORE_PATH . 'includes/class-ccb-core-cron.php';
+
+		// Dismissible Notices.
+		require_once CCB_CORE_PATH . 'includes/class-ccb-core-notices.php';
 
 	}
 
@@ -164,6 +164,11 @@ class CCB_Core {
 			$this->upgrade_to_1_0_7();
 		}
 
+		// Upgrade to version 1.0.8.
+		if ( version_compare( $current_version, '1.0.8', '<' ) ) {
+			$this->upgrade_to_1_0_8();
+		}
+
 		// Update the DB version.
 		update_option( 'ccb_core_version', CCB_CORE_VERSION );
 	}
@@ -190,7 +195,7 @@ class CCB_Core {
 	 */
 	public function initialize_settings_menu() {
 
-		$settings = new CCB_Core_Settings();
+		$settings      = new CCB_Core_Settings();
 		$settings_page = new CCB_Core_Settings_Page( 'ccb_core_settings' );
 
 		add_menu_page(
@@ -272,9 +277,7 @@ class CCB_Core {
 
 					}
 				}
-
 			}
-
 		}
 
 	}
@@ -363,15 +366,24 @@ class CCB_Core {
 				'ccb-core',
 				'CCB_CORE_SETTINGS',
 				[
-					'nonce' => wp_create_nonce( 'ccb_core_nonce' ),
+					'nonce'        => wp_create_nonce( 'ccb_core_nonce' ),
 					'translations' => [
 						'credentialsSuccessful' => esc_html__( 'The credentials were successfully authenticated.', 'ccb-core' ),
-						'credentialsFailed' => esc_html__( 'The credentials failed authentication', 'ccb-core' ),
-						'syncInProgress' => esc_html__( 'Syncronization in progress... You can safely navigate away from this page while we work in the background.', 'ccb-core' ),
+						'credentialsFailed'     => esc_html__( 'The credentials failed authentication', 'ccb-core' ),
+						'syncInProgress'        => esc_html__( 'Syncronization in progress... You can safely navigate away from this page while we work in the background.', 'ccb-core' ),
 					],
 				]
 			);
 		}
+
+		wp_enqueue_script( 'ccb-core-notices', CCB_CORE_URL . 'js/ccb-core-notices.js', [ 'jquery' ], CCB_CORE_VERSION, false );
+		wp_localize_script(
+			'ccb-core-notices',
+			'CCB_CORE_NOTICES',
+			[
+				'nonce' => wp_create_nonce( 'ccb_core_nonce' ),
+			]
+		);
 
 	}
 
@@ -383,31 +395,31 @@ class CCB_Core {
 	private function upgrade_to_1_0_0() {
 		$current_options = CCB_Core_Helpers::instance()->get_options();
 		$updated_options = [];
-		$options_hash = [
-			'subdomain' => 'subdomain',
-			'credentials' => 'credentials',
-			'groups-enabled' => 'groups_enabled',
-			'groups-name' => 'groups_name',
-			'groups-slug' => 'groups_slug',
-			'groups-import-images' => 'groups_import_images',
-			'groups-advanced' => 'groups_advanced',
-			'groups-exclude-from-search' => 'groups_exclude_from_search',
-			'groups-publicly-queryable' => 'groups_publicly_queryable',
-			'groups-show-ui' => 'groups_show_ui',
-			'groups-show-in-nav-menus' => 'groups_show_in_nav_menus',
-			'calendar-enabled' => 'calendar_enabled',
-			'calendar-name' => 'calendar_name',
-			'calendar-slug' => 'calendar_slug',
-			'calendar-advanced' => 'calendar_advanced',
-			'calendar-date-range-type' => 'calendar_date_range_type',
-			'calendar-relative-weeks-past' => 'calendar_relative_weeks_past',
+		$options_hash    = [
+			'subdomain'                      => 'subdomain',
+			'credentials'                    => 'credentials',
+			'groups-enabled'                 => 'groups_enabled',
+			'groups-name'                    => 'groups_name',
+			'groups-slug'                    => 'groups_slug',
+			'groups-import-images'           => 'groups_import_images',
+			'groups-advanced'                => 'groups_advanced',
+			'groups-exclude-from-search'     => 'groups_exclude_from_search',
+			'groups-publicly-queryable'      => 'groups_publicly_queryable',
+			'groups-show-ui'                 => 'groups_show_ui',
+			'groups-show-in-nav-menus'       => 'groups_show_in_nav_menus',
+			'calendar-enabled'               => 'calendar_enabled',
+			'calendar-name'                  => 'calendar_name',
+			'calendar-slug'                  => 'calendar_slug',
+			'calendar-advanced'              => 'calendar_advanced',
+			'calendar-date-range-type'       => 'calendar_date_range_type',
+			'calendar-relative-weeks-past'   => 'calendar_relative_weeks_past',
 			'calendar-relative-weeks-future' => 'calendar_relative_weeks_future',
-			'calendar-specific-start' => 'calendar_specific_start',
-			'calendar-specific-end' => 'calendar_specific_end',
-			'calendar-exclude-from-search' => 'calendar_exclude_from_search',
-			'calendar-publicly-queryable' => 'calendar_publicly_queryable',
-			'calendar-show-ui' => 'calendar_show_ui',
-			'calendar-show-in-nav-menus' => 'calendar_show_in_nav_menus',
+			'calendar-specific-start'        => 'calendar_specific_start',
+			'calendar-specific-end'          => 'calendar_specific_end',
+			'calendar-exclude-from-search'   => 'calendar_exclude_from_search',
+			'calendar-publicly-queryable'    => 'calendar_publicly_queryable',
+			'calendar-show-ui'               => 'calendar_show_ui',
+			'calendar-show-in-nav-menus'     => 'calendar_show_in_nav_menus',
 		];
 
 		if ( ! empty( $current_options ) ) {
@@ -442,7 +454,7 @@ class CCB_Core {
 		if ( ! empty( $current_options['credentials']['password'] ) ) {
 			$key = wp_salt() . md5( 'ccb-core' );
 			try {
-				$e = new CCB_Core_Vendor_Encryption( MCRYPT_BlOWFISH, MCRYPT_MODE_CBC );
+				$e               = new CCB_Core_Vendor_Encryption( MCRYPT_BlOWFISH, MCRYPT_MODE_CBC );
 				$decrypted_value = $e->decrypt( base64_decode( $current_options['credentials']['password'] ), $key );
 			} catch ( Exception $ex ) {
 				$decrypted_value = false;
@@ -456,5 +468,28 @@ class CCB_Core {
 			}
 			update_option( 'ccb_core_settings', $current_options );
 		}
+	}
+
+	/**
+	 * Resets the credentials and queues a message.
+	 *
+	 * @return void
+	 */
+	private function upgrade_to_1_0_8() {
+		// Clear any existing password.
+		$current_options = CCB_Core_Helpers::instance()->get_options();
+
+		$current_options['credentials']['password'] = '';
+		update_option( 'ccb_core_settings', $current_options );
+
+		// Tell the user about the password.
+		$message = 'NOTE: This updated version of Church Community Builder Core API ' .
+			'implements a newer and better method of encryption. Unfortunately ' .
+			'we need you to enter your API credentials again. ' .
+			'<a href="/wp-admin/admin.php?page=ccb_core_settings_api_settings">' .
+			'Click here</a> to enter your API credentials.';
+
+		$ccb_core_notices = new CCB_Core_Notices();
+		$ccb_core_notices->save_notice( $message );
 	}
 }

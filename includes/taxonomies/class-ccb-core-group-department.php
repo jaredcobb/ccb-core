@@ -40,23 +40,23 @@ class CCB_Core_Group_Department extends CCB_Core_Taxonomy {
 	 */
 	public static function get_taxonomy_args() {
 		return [
-			'labels' => [
-				'name' => __( 'Departments', 'ccb-core' ),
-				'singular_name' => __( 'Department', 'ccb-core' ),
-				'search_items' => __( 'Search Departments', 'ccb-core' ),
-				'all_items' => __( 'All Departments', 'ccb-core' ),
-				'parent_item' => __( 'Parent Department', 'ccb-core' ),
+			'labels'            => [
+				'name'              => __( 'Departments', 'ccb-core' ),
+				'singular_name'     => __( 'Department', 'ccb-core' ),
+				'search_items'      => __( 'Search Departments', 'ccb-core' ),
+				'all_items'         => __( 'All Departments', 'ccb-core' ),
+				'parent_item'       => __( 'Parent Department', 'ccb-core' ),
 				'parent_item_colon' => __( 'Parent Department:', 'ccb-core' ),
-				'edit_item' => __( 'Edit Department', 'ccb-core' ),
-				'update_item' => __( 'Update Department', 'ccb-core' ),
-				'add_new_item' => __( 'Add New Department', 'ccb-core' ),
-				'new_item_name' => __( 'New Department', 'ccb-core' ),
+				'edit_item'         => __( 'Edit Department', 'ccb-core' ),
+				'update_item'       => __( 'Update Department', 'ccb-core' ),
+				'add_new_item'      => __( 'Add New Department', 'ccb-core' ),
+				'new_item_name'     => __( 'New Department', 'ccb-core' ),
 			],
-			'hierarchical' => true,
+			'hierarchical'      => true,
 			'show_admin_column' => true,
-			'show_ui' => true,
-			'query_var' => true,
-			'api_mapping' => 'department', // The field key from the CCB API.
+			'show_ui'           => true,
+			'query_var'         => true,
+			'api_mapping'       => 'department', // The field key from the CCB API.
 		];
 	}
 

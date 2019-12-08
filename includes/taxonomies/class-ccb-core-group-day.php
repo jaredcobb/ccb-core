@@ -40,23 +40,23 @@ class CCB_Core_Group_Day extends CCB_Core_Taxonomy {
 	 */
 	public static function get_taxonomy_args() {
 		return [
-			'labels' => [
-				'name' => __( 'Days', 'ccb-core' ),
-				'singular_name' => __( 'Day', 'ccb-core' ),
-				'search_items' => __( 'Search Days', 'ccb-core' ),
-				'all_items' => __( 'All Days', 'ccb-core' ),
-				'parent_item' => __( 'Parent Day', 'ccb-core' ),
+			'labels'            => [
+				'name'              => __( 'Days', 'ccb-core' ),
+				'singular_name'     => __( 'Day', 'ccb-core' ),
+				'search_items'      => __( 'Search Days', 'ccb-core' ),
+				'all_items'         => __( 'All Days', 'ccb-core' ),
+				'parent_item'       => __( 'Parent Day', 'ccb-core' ),
 				'parent_item_colon' => __( 'Parent Day:', 'ccb-core' ),
-				'edit_item' => __( 'Edit Day', 'ccb-core' ),
-				'update_item' => __( 'Update Day', 'ccb-core' ),
-				'add_new_item' => __( 'Add New Day', 'ccb-core' ),
-				'new_item_name' => __( 'New Day', 'ccb-core' ),
+				'edit_item'         => __( 'Edit Day', 'ccb-core' ),
+				'update_item'       => __( 'Update Day', 'ccb-core' ),
+				'add_new_item'      => __( 'Add New Day', 'ccb-core' ),
+				'new_item_name'     => __( 'New Day', 'ccb-core' ),
 			],
-			'hierarchical' => true,
+			'hierarchical'      => true,
 			'show_admin_column' => true,
-			'show_ui' => true,
-			'query_var' => true,
-			'api_mapping' => 'meeting_day', // The field key from the CCB API.
+			'show_ui'           => true,
+			'query_var'         => true,
+			'api_mapping'       => 'meeting_day', // The field key from the CCB API.
 		];
 	}
 
