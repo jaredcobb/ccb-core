@@ -65,7 +65,6 @@ class CCB_Core_Requirements {
 	 */
 	public function __construct() {
 		$this->validate_versions();
-		$this->validate_keys();
 		$this->validate_modules();
 		$this->validate_writable_files();
 	}
@@ -124,28 +123,6 @@ class CCB_Core_Requirements {
 			$version
 		);
 		$this->register_disable_plugin();
-	}
-
-	/**
-	 * Ensure the site has configured the required keys.
-	 *
-	 * @return void
-	 */
-	private function validate_keys() {
-		foreach ( $this->required_keys as $key ) {
-			if ( ! defined( $key ) || 32 > strlen( constant( $key ) ) ) {
-				$this->requirements_met = false;
-				$this->error_message    = sprintf(
-					'Church Community Builder Core API requires that you configure a random ' .
-					'value for the %s constant that is at least 32 characters long. See ' .
-					'https://codex.wordpress.org/Editing_wp-config.php#Security_Keys ' .
-					'for more information.',
-					$key
-				);
-				$this->register_disable_plugin();
-				return;
-			}
-		}
 	}
 
 	/**
