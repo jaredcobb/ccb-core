@@ -433,20 +433,23 @@ class CCB_Core {
 	 * @return void
 	 */
 	private function upgrade_to_1_0_8() {
-		// Clear any existing password.
 		$current_options = CCB_Core_Helpers::instance()->get_options();
 
-		$current_options['credentials']['password'] = '';
-		update_option( 'ccb_core_settings', $current_options );
+		// Clear any existing password.
+		if ( ! empty( $current_options['credentials'] ) ) {
+			$current_options['credentials']['username'] = ! empty( $current_options['credentials']['username'] ) ? $current_options['credentials']['username'] : '';
+			$current_options['credentials']['password'] = '';
+			update_option( 'ccb_core_settings', $current_options );
 
-		// Tell the user about the password.
-		$message = 'NOTE: This updated version of Church Community Builder Core API ' .
-			'implements a newer and better method of encryption. Unfortunately ' .
-			'we need you to enter your API credentials again. ' .
-			'<a href="/wp-admin/admin.php?page=ccb_core_settings_api_settings">' .
-			'Click here</a> to enter your API credentials.';
+			// Tell the user about the password.
+			$message = 'NOTE: This updated version of Church Community Builder Core API ' .
+				'implements a newer and better method of encryption. Unfortunately ' .
+				'we need you to enter your API credentials again. ' .
+				'<a href="/wp-admin/admin.php?page=ccb_core_settings_api_settings">' .
+				'Click here</a> to enter your API credentials.';
 
-		$ccb_core_notices = new CCB_Core_Notices();
-		$ccb_core_notices->save_notice( $message );
+			$ccb_core_notices = new CCB_Core_Notices();
+			$ccb_core_notices->save_notice( $message );
+		}
 	}
 }
