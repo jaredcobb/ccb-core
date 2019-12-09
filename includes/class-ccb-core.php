@@ -159,11 +159,6 @@ class CCB_Core {
 			$this->upgrade_to_1_0_0();
 		}
 
-		// Upgrade to version 1.0.7.
-		if ( version_compare( $current_version, '1.0.7', '<' ) ) {
-			$this->upgrade_to_1_0_7();
-		}
-
 		// Upgrade to version 1.0.8.
 		if ( version_compare( $current_version, '1.0.8', '<' ) ) {
 			$this->upgrade_to_1_0_8();
@@ -429,44 +424,6 @@ class CCB_Core {
 				}
 			}
 			update_option( 'ccb_core_settings', $updated_options );
-		}
-	}
-
-	/**
-	 * Decrypts any existing API password using the old
-	 * scheme and encrypts it back using the current method.
-	 *
-	 * @return void
-	 */
-	private function upgrade_to_1_0_7() {
-		// If mcrypt isn't installed it doesn't matter, we cannot
-		// decrypt any existing passwords.
-		if ( ! function_exists( 'mcrypt_decrypt' ) ) {
-			return;
-		}
-
-		// Ensure the legacy encryption class is loaded regardless of
-		// the current version of PHP running.
-		require_once CCB_CORE_PATH . 'lib/class-ccb-core-vendor-encryption.php';
-
-		$current_options = CCB_Core_Helpers::instance()->get_options();
-		$decrypted_value = false;
-		if ( ! empty( $current_options['credentials']['password'] ) ) {
-			$key = wp_salt() . md5( 'ccb-core' );
-			try {
-				$e               = new CCB_Core_Vendor_Encryption( MCRYPT_BlOWFISH, MCRYPT_MODE_CBC );
-				$decrypted_value = $e->decrypt( base64_decode( $current_options['credentials']['password'] ), $key );
-			} catch ( Exception $ex ) {
-				$decrypted_value = false;
-			}
-
-			$encrypted_value = CCB_Core_Helpers::instance()->encrypt( $decrypted_value );
-			if ( ! is_wp_error( $encrypted_value ) ) {
-				$current_options['credentials']['password'] = $encrypted_value;
-			} else {
-				$current_options['credentials']['password'] = '';
-			}
-			update_option( 'ccb_core_settings', $current_options );
 		}
 	}
 
