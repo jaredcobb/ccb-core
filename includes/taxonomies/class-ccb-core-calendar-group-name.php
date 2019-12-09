@@ -40,23 +40,23 @@ class CCB_Core_Calendar_Group_Name extends CCB_Core_Taxonomy {
 	 */
 	public static function get_taxonomy_args() {
 		return [
-			'labels' => [
-				'name' => __( 'Group Names', 'ccb-core' ),
-				'singular_name' => __( 'Group Name', 'ccb-core' ),
-				'search_items' => __( 'Search Group Names', 'ccb-core' ),
-				'all_items' => __( 'All Group Names', 'ccb-core' ),
-				'parent_item' => __( 'Parent Group Name', 'ccb-core' ),
+			'labels'            => [
+				'name'              => __( 'Group Names', 'ccb-core' ),
+				'singular_name'     => __( 'Group Name', 'ccb-core' ),
+				'search_items'      => __( 'Search Group Names', 'ccb-core' ),
+				'all_items'         => __( 'All Group Names', 'ccb-core' ),
+				'parent_item'       => __( 'Parent Group Name', 'ccb-core' ),
 				'parent_item_colon' => __( 'Parent Group Name:', 'ccb-core' ),
-				'edit_item' => __( 'Edit Group Name', 'ccb-core' ),
-				'update_item' => __( 'Update Group Name', 'ccb-core' ),
-				'add_new_item' => __( 'Add New Group Name', 'ccb-core' ),
-				'new_item_name' => __( 'New Group Name', 'ccb-core' ),
+				'edit_item'         => __( 'Edit Group Name', 'ccb-core' ),
+				'update_item'       => __( 'Update Group Name', 'ccb-core' ),
+				'add_new_item'      => __( 'Add New Group Name', 'ccb-core' ),
+				'new_item_name'     => __( 'New Group Name', 'ccb-core' ),
 			],
-			'hierarchical' => true,
+			'hierarchical'      => true,
 			'show_admin_column' => true,
-			'show_ui' => true,
-			'query_var' => true,
-			'api_mapping' => 'group_name', // The field key from the CCB API.
+			'show_ui'           => true,
+			'query_var'         => true,
+			'api_mapping'       => 'group_name', // The field key from the CCB API.
 		];
 	}
 

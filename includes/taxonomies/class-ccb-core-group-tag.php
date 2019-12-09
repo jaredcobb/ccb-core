@@ -40,23 +40,23 @@ class CCB_Core_Group_Tag extends CCB_Core_Taxonomy {
 	 */
 	public static function get_taxonomy_args() {
 		return [
-			'labels' => [
-				'name' => __( 'Group Tags', 'ccb-core' ),
-				'singular_name' => __( 'Group Tag', 'ccb-core' ),
-				'search_items' => __( 'Search Group Tags', 'ccb-core' ),
-				'all_items' => __( 'All Group Tags', 'ccb-core' ),
-				'parent_item' => __( 'Parent Group Tag', 'ccb-core' ),
+			'labels'            => [
+				'name'              => __( 'Group Tags', 'ccb-core' ),
+				'singular_name'     => __( 'Group Tag', 'ccb-core' ),
+				'search_items'      => __( 'Search Group Tags', 'ccb-core' ),
+				'all_items'         => __( 'All Group Tags', 'ccb-core' ),
+				'parent_item'       => __( 'Parent Group Tag', 'ccb-core' ),
 				'parent_item_colon' => __( 'Parent Group Tag:', 'ccb-core' ),
-				'edit_item' => __( 'Edit Group Tag', 'ccb-core' ),
-				'update_item' => __( 'Update Group Tag', 'ccb-core' ),
-				'add_new_item' => __( 'Add New Group Tag', 'ccb-core' ),
-				'new_item_name' => __( 'New Group Tag', 'ccb-core' ),
+				'edit_item'         => __( 'Edit Group Tag', 'ccb-core' ),
+				'update_item'       => __( 'Update Group Tag', 'ccb-core' ),
+				'add_new_item'      => __( 'Add New Group Tag', 'ccb-core' ),
+				'new_item_name'     => __( 'New Group Tag', 'ccb-core' ),
 			],
-			'hierarchical' => false,
+			'hierarchical'      => false,
 			'show_admin_column' => true,
-			'show_ui' => true,
-			'query_var' => true,
-			'api_mapping' => [
+			'show_ui'           => true,
+			'query_var'         => true,
+			'api_mapping'       => [
 				'childcare_provided' => __( 'Childcare Provided', 'ccb-core' ), // The field key from the CCB API.
 			],
 		];

@@ -113,8 +113,8 @@ class CCB_Core_API {
 			&& ! empty( $settings['credentials']['password'] )
 		) {
 			$this->subdomain = $settings['subdomain'];
-			$this->username = $settings['credentials']['username'];
-			$this->password = CCB_Core_Helpers::instance()->decrypt( $settings['credentials']['password'] );
+			$this->username  = $settings['credentials']['username'];
+			$this->password  = CCB_Core_Helpers::instance()->decrypt( $settings['credentials']['password'] );
 			if ( ! empty( $this->password ) && ! is_wp_error( $this->password ) ) {
 				$this->initialized = true;
 			}
@@ -166,8 +166,8 @@ class CCB_Core_API {
 
 		if ( ! $this->initialized ) {
 			return [
-				'code' => 401,
-				'error' => esc_html__( 'You are missing a subdomain, username, or password in the settings.', 'ccb-core' ),
+				'code'   => 401,
+				'error'  => esc_html__( 'You are missing a subdomain, username, or password in the settings.', 'ccb-core' ),
 				'status' => 'ERROR',
 			];
 		}
@@ -175,8 +175,8 @@ class CCB_Core_API {
 		$url = esc_url_raw( sprintf( 'https://%s.ccbchurch.com/api.php?srv=%s', $this->subdomain, $service ) );
 		if ( empty( $url ) ) {
 			return [
-				'code' => 404,
-				'error' => esc_html__( 'Invalid API URL.', 'ccb-core' ),
+				'code'   => 404,
+				'error'  => esc_html__( 'Invalid API URL.', 'ccb-core' ),
 				'status' => 'ERROR',
 			];
 		}
@@ -210,8 +210,8 @@ class CCB_Core_API {
 				break;
 			default:
 				return [
-					'code' => 403,
-					'error' => esc_html__( 'Invalid request method.', 'ccb-core' ),
+					'code'   => 403,
+					'error'  => esc_html__( 'Invalid request method.', 'ccb-core' ),
 					'status' => 'ERROR',
 				];
 		}
@@ -219,16 +219,16 @@ class CCB_Core_API {
 		// Check for WordPress HTTP errors.
 		if ( is_wp_error( $response ) ) {
 			return [
-				'code' => 500,
-				'error' => esc_html( $response->get_error_message() ),
+				'code'   => 500,
+				'error'  => esc_html( $response->get_error_message() ),
 				'status' => 'ERROR',
 			];
 		}
 
 		// Build result object.
 		$result = [
-			'xml' => wp_remote_retrieve_body( $response ),
-			'code' => absint( wp_remote_retrieve_response_code( $response ) ),
+			'xml'     => wp_remote_retrieve_body( $response ),
+			'code'    => absint( wp_remote_retrieve_response_code( $response ) ),
 			'headers' => wp_remote_retrieve_headers( $response ),
 		];
 
@@ -238,7 +238,7 @@ class CCB_Core_API {
 			|| $result['code'] > 204
 		) {
 			$result['status'] = 'ERROR';
-			$result['error'] = esc_html( sprintf( __( 'The API returned an empty response or an error code: %s', 'ccb-core' ), $result['code'] ) );
+			$result['error']  = esc_html( sprintf( __( 'The API returned an empty response or an error code: %s', 'ccb-core' ), $result['code'] ) );
 			return $result;
 		}
 
@@ -247,10 +247,9 @@ class CCB_Core_API {
 			libxml_use_internal_errors( true );
 			$parsed_response = simplexml_load_string( $result['xml'] );
 			if ( false === $parsed_response ) {
-				$result['error'] = esc_html__( 'Could not parse the XML response', 'ccb-core' );
+				$result['error']  = esc_html__( 'Could not parse the XML response', 'ccb-core' );
 				$result['status'] = 'ERROR';
 			} else {
-
 				$result['body'] = $parsed_response;
 
 				// We successfully parsed the XML response, however the
@@ -262,14 +261,14 @@ class CCB_Core_API {
 							$parsed_response->response->errors->error
 						)
 					);
+
 					$result['status'] = 'ERROR';
 				} else {
 					$result['status'] = 'SUCCESS';
 				}
-
 			}
 		} catch ( Exception $ex ) {
-			$result['error'] = esc_html( sprintf( __( 'Could not parse the XML response: %s', 'ccb-core' ), $ex->getMessage() ) );
+			$result['error']  = esc_html( sprintf( __( 'Could not parse the XML response: %s', 'ccb-core' ), $ex->getMessage() ) );
 			$result['status'] = 'ERROR';
 		}
 

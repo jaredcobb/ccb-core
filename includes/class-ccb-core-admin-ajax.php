@@ -77,7 +77,7 @@ class CCB_Core_Admin_AJAX {
 		check_ajax_referer( 'ccb_core_nonce', 'nonce' );
 
 		$message = '';
-		$result = [];
+		$result  = [];
 
 		// Latest sync results are always stored as an option after a sync takes place.
 		$latest_sync = get_option( 'ccb_core_latest_sync_result' );
@@ -93,7 +93,7 @@ class CCB_Core_Admin_AJAX {
 						// Translators: A formatted date/time.
 						__( 'The latest synchronization was successful on %s.', 'ccb-core' ),
 						get_date_from_gmt(
-							date( 'Y-m-d H:i:s', $latest_sync['timestamp'] ),
+							gmdate( 'Y-m-d H:i:s', $latest_sync['timestamp'] ),
 							get_option( 'date_format' ) . ' \a\t ' . get_option( 'time_format' )
 						)
 					)
@@ -134,14 +134,13 @@ class CCB_Core_Admin_AJAX {
 						$message .= '<br>';
 					}
 				}
-
 			} else {
 				$message .= esc_html(
 					sprintf(
 						__( '%1$s on %2$s', 'ccb-core' ),
 						$latest_sync['message'],
 						get_date_from_gmt(
-							date( 'Y-m-d H:i:s', $latest_sync['timestamp'] ),
+							gmdate( 'Y-m-d H:i:s', $latest_sync['timestamp'] ),
 							get_option( 'date_format' ) . ' \a\t ' . get_option( 'time_format' )
 						)
 					)

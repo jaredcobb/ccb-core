@@ -4,14 +4,10 @@
 
 	<!-- Include the WordPress ruleset, with exclusions. -->
 	<rule ref="WordPress">
-		<!-- These may need to be excluded if they throw too many false positives -->
-		<!-- <exclude name="Generic.WhiteSpace.ScopeIndent.Incorrect" /> -->
-		<!-- <exclude name="Generic.WhiteSpace.ScopeIndent.IncorrectExact" /> -->
-		<exclude name="PEAR.Functions.FunctionCallSignature.Indent" />
-		<exclude name="WordPress.WhiteSpace.ControlStructureSpacing.BlankLineAfterEnd" />
-    <exclude name="Generic.Formatting.MultipleStatementAlignment" />
-    <exclude name="WordPress.Arrays.MultipleStatementAlignment" />
+    <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
     <exclude name="WordPress.WP.I18n.MissingTranslatorsComment" />
+    <exclude name="WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode" />
+    <exclude name="WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode" />
 	</rule>
 
 	<rule ref="Generic.WhiteSpace.ScopeIndent.IncorrectExact">
@@ -19,20 +15,6 @@
 	</rule>
 
 	<rule ref="WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid">
-		<type>warning</type>
-	</rule>
-
-	<!-- Tweak the VIP rules -->
-	<rule ref="WordPress.XSS.EscapeOutput.OutputNotEscaped">
-		<type>warning</type>
-	</rule>
-	<rule ref="WordPress.XSS.EscapeOutput.OutputNotSanitized">
-		<type>warning</type>
-	</rule>
-	<rule ref="WordPress.XSS.EscapeOutput.">
-		<type>warning</type>
-	</rule>
-	<rule ref="WordPress.VIP.DirectDatabaseQuery.NoCaching">
 		<type>warning</type>
 	</rule>
 

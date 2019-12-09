@@ -2,8 +2,8 @@
 Contributors: jaredcobb
 Tags: ccb, church, api, chms
 Requires at least: 4.6.0
-Tested up to: 5.0.1
-Stable tag: 1.0.7
+Tested up to: 5.3.0
+Stable tag: 1.0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,6 +60,10 @@ You'll need to ensure your [group settings](https://churchcommunitybuilder.force
 2. screenshot-2.png
 
 == Changelog ==
+
+= 1.0.8 =
+* Implements OpenSSL based encryption for better support across platforms.
+* Fixes a bug where some environments couldn't save API credentials.
 
 = 1.0.7 =
 * Fix for a bug where auto-sync was failing when group images are enabled.

@@ -32,7 +32,7 @@ class CCB_Core_Calendar extends CCB_Core_CPT {
 		// Add the CCB event id as post meta onto each instance of the event.
 		add_action( 'ccb_core_after_insert_update_post', [ $this, 'update_event_id' ], 10, 5 );
 
-		$options = CCB_Core_Helpers::instance()->get_options();
+		$options       = CCB_Core_Helpers::instance()->get_options();
 		$this->enabled = ! empty( $options['calendar_enabled'] ) ? true : false;
 		parent::__construct();
 	}
@@ -45,46 +45,46 @@ class CCB_Core_Calendar extends CCB_Core_CPT {
 	 */
 	public function get_post_args() {
 
-		$options = CCB_Core_Helpers::instance()->get_options();
-		$plural = ! empty( $options['calendar_name'] ) ? $options['calendar_name'] : __( 'Events', 'ccb-core' );
-		$singular = ! empty( $options['calendar_name_singular'] ) ? $options['calendar_name_singular'] : __( 'Event', 'ccb-core' );
-		$rewrite = ! empty( $options['calendar_slug'] ) ? [ 'slug' => sanitize_title( $options['calendar_slug'] ) ] : [ 'slug' => 'events' ];
-		$has_archive = ! empty( $options['calendar_slug'] ) ? sanitize_title( $options['calendar_slug'] ) : 'events';
+		$options             = CCB_Core_Helpers::instance()->get_options();
+		$plural              = ! empty( $options['calendar_name'] ) ? $options['calendar_name'] : __( 'Events', 'ccb-core' );
+		$singular            = ! empty( $options['calendar_name_singular'] ) ? $options['calendar_name_singular'] : __( 'Event', 'ccb-core' );
+		$rewrite             = ! empty( $options['calendar_slug'] ) ? [ 'slug' => sanitize_title( $options['calendar_slug'] ) ] : [ 'slug' => 'events' ];
+		$has_archive         = ! empty( $options['calendar_slug'] ) ? sanitize_title( $options['calendar_slug'] ) : 'events';
 		$exclude_from_search = ! empty( $options['calendar_exclude_from_search'] ) && 'yes' === $options['calendar_exclude_from_search'] ? true : false;
-		$publicly_queryable = ! empty( $options['calendar_publicly_queryable'] ) && 'no' === $options['calendar_publicly_queryable'] ? false : true;
-		$show_ui = ! empty( $options['calendar_show_ui'] ) && 'no' === $options['calendar_show_ui'] ? false : true;
-		$show_in_nav_menus = ! empty( $options['calendar_show_in_nav_menus'] ) && 'yes' === $options['calendar_show_in_nav_menus'] ? true : false;
+		$publicly_queryable  = ! empty( $options['calendar_publicly_queryable'] ) && 'no' === $options['calendar_publicly_queryable'] ? false : true;
+		$show_ui             = ! empty( $options['calendar_show_ui'] ) && 'no' === $options['calendar_show_ui'] ? false : true;
+		$show_in_nav_menus   = ! empty( $options['calendar_show_in_nav_menus'] ) && 'yes' === $options['calendar_show_in_nav_menus'] ? true : false;
 
 		return [
-			'labels' => [
-				'name' => $plural,
-				'singular_name' => $singular,
-				'all_items' => sprintf( __( 'All %s', 'ccb-core' ), $plural ),
-				'add_new' => __( 'Add New', 'ccb-core' ),
-				'add_new_item' => sprintf( __( 'Add New %s', 'ccb-core' ), $singular ),
-				'edit' => __( 'Edit', 'ccb-core' ),
-				'edit_item' => sprintf( __( 'Edit %s', 'ccb-core' ), $singular ),
-				'new_item' => sprintf( __( 'New %s', 'ccb-core' ), $singular ),
-				'view_item' => sprintf( __( 'View %s', 'ccb-core' ), $singular ),
-				'search_items' => sprintf( __( 'Search %s', 'ccb-core' ), $plural ),
-				'not_found' => __( 'Nothing found in the Database.', 'ccb-core' ),
+			'labels'              => [
+				'name'               => $plural,
+				'singular_name'      => $singular,
+				'all_items'          => sprintf( __( 'All %s', 'ccb-core' ), $plural ),
+				'add_new'            => __( 'Add New', 'ccb-core' ),
+				'add_new_item'       => sprintf( __( 'Add New %s', 'ccb-core' ), $singular ),
+				'edit'               => __( 'Edit', 'ccb-core' ),
+				'edit_item'          => sprintf( __( 'Edit %s', 'ccb-core' ), $singular ),
+				'new_item'           => sprintf( __( 'New %s', 'ccb-core' ), $singular ),
+				'view_item'          => sprintf( __( 'View %s', 'ccb-core' ), $singular ),
+				'search_items'       => sprintf( __( 'Search %s', 'ccb-core' ), $plural ),
+				'not_found'          => __( 'Nothing found in the Database.', 'ccb-core' ),
 				'not_found_in_trash' => __( 'Nothing found in Trash', 'ccb-core' ),
-				'parent_item_colon' => '',
+				'parent_item_colon'  => '',
 			],
-			'description' => sprintf( __( 'These are the %s that are synchronized with your Church Community Builder software.', 'ccb-core' ), $plural ),
-			'public' => true,
-			'publicly_queryable' => $publicly_queryable,
+			'description'         => sprintf( __( 'These are the %s that are synchronized with your Church Community Builder software.', 'ccb-core' ), $plural ),
+			'public'              => true,
+			'publicly_queryable'  => $publicly_queryable,
 			'exclude_from_search' => $exclude_from_search,
-			'show_ui' => $show_ui,
-			'show_in_nav_menus' => $show_in_nav_menus,
-			'query_var' => true,
-			'menu_position' => 8,
-			'menu_icon' => 'dashicons-calendar',
-			'rewrite' => $rewrite,
-			'has_archive' => $has_archive,
-			'capability_type' => 'post',
-			'hierarchical' => false,
-			'supports' => [ 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields', 'sticky' ],
+			'show_ui'             => $show_ui,
+			'show_in_nav_menus'   => $show_in_nav_menus,
+			'query_var'           => true,
+			'menu_position'       => 8,
+			'menu_icon'           => 'dashicons-calendar',
+			'rewrite'             => $rewrite,
+			'has_archive'         => $has_archive,
+			'capability_type'     => 'post',
+			'hierarchical'        => false,
+			'supports'            => [ 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields', 'sticky' ],
 		];
 
 	}
@@ -100,59 +100,59 @@ class CCB_Core_Calendar extends CCB_Core_CPT {
 
 		$settings['ccb_core_settings_calendar'] = [
 			'page_title' => esc_html__( 'Public Events', 'ccb-core' ),
-			'sections' => [
+			'sections'   => [
 				'calendar' => [
 					'section_title' => esc_html__( 'Public Events', 'ccb-core' ),
-					'fields' => [
-						'calendar_enabled' => [
-							'field_title' => esc_html__( 'Enable Events', 'ccb-core' ),
+					'fields'        => [
+						'calendar_enabled'               => [
+							'field_title'           => esc_html__( 'Enable Events', 'ccb-core' ),
 							'field_render_function' => 'render_switch',
-							'field_validation' => 'switch',
+							'field_validation'      => 'switch',
 						],
-						'calendar_name' => [
-							'field_title' => esc_html__( 'Event Display Name (Plural)', 'ccb-core' ),
+						'calendar_name'                  => [
+							'field_title'           => esc_html__( 'Event Display Name (Plural)', 'ccb-core' ),
 							'field_render_function' => 'render_text',
-							'field_placeholder' => esc_html__( 'Events', 'ccb-core' ),
-							'field_validation' => 'alphanumeric_extended',
-							'field_attributes' => [ 'data-requires' => '{"calendar_enabled":1}' ],
-							'field_tooltip' => esc_html__( 'This is what you call the events in your church (i.e. Meetups, Hangouts, etc.).', 'ccb-core' ),
+							'field_placeholder'     => esc_html__( 'Events', 'ccb-core' ),
+							'field_validation'      => 'alphanumeric_extended',
+							'field_attributes'      => [ 'data-requires' => '{"calendar_enabled":1}' ],
+							'field_tooltip'         => esc_html__( 'This is what you call the events in your church (i.e. Meetups, Hangouts, etc.).', 'ccb-core' ),
 						],
-						'calendar_name_singular' => [
-							'field_title' => esc_html__( 'Event Display Name (Singular)', 'ccb-core' ),
+						'calendar_name_singular'         => [
+							'field_title'           => esc_html__( 'Event Display Name (Singular)', 'ccb-core' ),
 							'field_render_function' => 'render_text',
-							'field_placeholder' => esc_html__( 'Event', 'ccb-core' ),
-							'field_validation' => 'alphanumeric_extended',
-							'field_attributes' => [ 'data-requires' => '{"calendar_enabled":1}' ],
-							'field_tooltip' => esc_html__( 'This is the singular name of what you call the events in your church (i.e. Meetup, Hangout, etc.).', 'ccb-core' ),
+							'field_placeholder'     => esc_html__( 'Event', 'ccb-core' ),
+							'field_validation'      => 'alphanumeric_extended',
+							'field_attributes'      => [ 'data-requires' => '{"calendar_enabled":1}' ],
+							'field_tooltip'         => esc_html__( 'This is the singular name of what you call the events in your church (i.e. Meetup, Hangout, etc.).', 'ccb-core' ),
 						],
-						'calendar_slug' => [
-							'field_title' => esc_html__( 'Events URL Name', 'ccb-core' ),
+						'calendar_slug'                  => [
+							'field_title'           => esc_html__( 'Events URL Name', 'ccb-core' ),
 							'field_render_function' => 'render_text',
-							'field_placeholder' => 'events',
-							'field_validation' => 'slug',
-							'field_attributes' => [ 'data-requires' => '{"calendar_enabled":1}' ],
-							'field_tooltip' => esc_html__( 'This is typically where your theme will display all the events. WordPress calls this a "slug".', 'ccb-core' ),
+							'field_placeholder'     => 'events',
+							'field_validation'      => 'slug',
+							'field_attributes'      => [ 'data-requires' => '{"calendar_enabled":1}' ],
+							'field_tooltip'         => esc_html__( 'This is typically where your theme will display all the events. WordPress calls this a "slug".', 'ccb-core' ),
 						],
-						'calendar_advanced' => [
-							'field_title' => esc_html__( 'Enable Advanced Settings (Optional)', 'ccb-core' ),
+						'calendar_advanced'              => [
+							'field_title'           => esc_html__( 'Enable Advanced Settings (Optional)', 'ccb-core' ),
 							'field_render_function' => 'render_switch',
-							'field_validation' => 'switch',
-							'field_attributes' => [ 'data-requires' => '{"calendar_enabled":1}' ],
+							'field_validation'      => 'switch',
+							'field_attributes'      => [ 'data-requires' => '{"calendar_enabled":1}' ],
 						],
-						'calendar_date_range_type' => [
-							'field_title' => esc_html__( 'Date Range Type', 'ccb-core' ),
+						'calendar_date_range_type'       => [
+							'field_title'           => esc_html__( 'Date Range Type', 'ccb-core' ),
 							'field_render_function' => 'render_radio',
-							'field_options' => [
+							'field_options'         => [
 								'relative' => esc_html__( 'Relative Range', 'ccb-core' ),
 								'specific' => esc_html__( 'Specific Range', 'ccb-core' ),
 							],
-							'field_validation' => '',
-							'field_default' => 'relative',
-							'field_attributes' => [
-								'class' => 'date-range-type',
+							'field_validation'      => '',
+							'field_default'         => 'relative',
+							'field_attributes'      => [
+								'class'         => 'date-range-type',
 								'data-requires' => '{"calendar_enabled":1,"calendar_advanced":1}',
 							],
-							'field_tooltip' => sprintf(
+							'field_tooltip'         => sprintf(
 								esc_html__(
 									'Relative: For example, always get the events from "One week ago", up to "Eight weeks from now".%1$s
 									This is the best setting for most churches.%2$s
@@ -165,38 +165,38 @@ class CCB_Core_Calendar extends CCB_Core_CPT {
 								'<br>'
 							),
 						],
-						'calendar_relative_weeks_past' => [
-							'field_title' => esc_html__( 'How Far Back?', 'ccb-core' ),
+						'calendar_relative_weeks_past'   => [
+							'field_title'           => esc_html__( 'How Far Back?', 'ccb-core' ),
 							'field_render_function' => 'render_slider',
-							'field_options' => [
-								'min' => '0',
-								'max' => '26',
+							'field_options'         => [
+								'min'   => '0',
+								'max'   => '26',
 								'units' => 'weeks',
 							],
-							'field_default' => 1,
-							'field_validation' => '',
-							'field_attributes' => [ 'data-requires' => '{"calendar_enabled":1,"calendar_advanced":1,"calendar_date_range_type":"relative"}' ],
-							'field_tooltip' => esc_html__( 'Every time we synchronize, how many weeks in the past should we look? (0 would be "today")', 'ccb-core' ),
+							'field_default'         => 1,
+							'field_validation'      => '',
+							'field_attributes'      => [ 'data-requires' => '{"calendar_enabled":1,"calendar_advanced":1,"calendar_date_range_type":"relative"}' ],
+							'field_tooltip'         => esc_html__( 'Every time we synchronize, how many weeks in the past should we look? (0 would be "today")', 'ccb-core' ),
 						],
 						'calendar_relative_weeks_future' => [
-							'field_title' => esc_html__( 'How Into The Future?', 'ccb-core' ),
+							'field_title'           => esc_html__( 'How Into The Future?', 'ccb-core' ),
 							'field_render_function' => 'render_slider',
-							'field_options' => [
-								'min' => '1',
-								'max' => '52',
+							'field_options'         => [
+								'min'   => '1',
+								'max'   => '52',
 								'units' => 'weeks',
 							],
-							'field_default' => 16,
-							'field_validation' => '',
-							'field_attributes' => [ 'data-requires' => '{"calendar_enabled":1,"calendar_advanced":1,"calendar_date_range_type":"relative"}' ],
-							'field_tooltip' => esc_html__( 'Every time we synchronize, how many weeks in the future should we look?', 'ccb-core' ),
+							'field_default'         => 16,
+							'field_validation'      => '',
+							'field_attributes'      => [ 'data-requires' => '{"calendar_enabled":1,"calendar_advanced":1,"calendar_date_range_type":"relative"}' ],
+							'field_tooltip'         => esc_html__( 'Every time we synchronize, how many weeks in the future should we look?', 'ccb-core' ),
 						],
-						'calendar_specific_start' => [
-							'field_title' => esc_html__( 'Specific Start Date', 'ccb-core' ),
+						'calendar_specific_start'        => [
+							'field_title'           => esc_html__( 'Specific Start Date', 'ccb-core' ),
 							'field_render_function' => 'render_date_picker',
-							'field_validation' => '',
-							'field_attributes' => [ 'data-requires' => '{"calendar_enabled":1,"calendar_advanced":1,"calendar_date_range_type":"specific"}' ],
-							'field_tooltip' => sprintf(
+							'field_validation'      => '',
+							'field_attributes'      => [ 'data-requires' => '{"calendar_enabled":1,"calendar_advanced":1,"calendar_date_range_type":"specific"}' ],
+							'field_tooltip'         => sprintf(
 								esc_html__(
 									'When synchronizing, we should get events that start after this date.%s
 									(Leave empty to always start "today")',
@@ -205,12 +205,12 @@ class CCB_Core_Calendar extends CCB_Core_CPT {
 								'<br>'
 							),
 						],
-						'calendar_specific_end' => [
-							'field_title' => esc_html__( 'Specific End Date', 'ccb-core' ),
+						'calendar_specific_end'          => [
+							'field_title'           => esc_html__( 'Specific End Date', 'ccb-core' ),
 							'field_render_function' => 'render_date_picker',
-							'field_validation' => '',
-							'field_attributes' => [ 'data-requires' => '{"calendar_enabled":1,"calendar_advanced":1,"calendar_date_range_type":"specific"}' ],
-							'field_tooltip' => sprintf(
+							'field_validation'      => '',
+							'field_attributes'      => [ 'data-requires' => '{"calendar_enabled":1,"calendar_advanced":1,"calendar_date_range_type":"specific"}' ],
+							'field_tooltip'         => sprintf(
 								esc_html__(
 									'When synchronizing, we should get events that start before this date.%s
 									(Setting this too far into the future may cause the API to timeout)',
@@ -219,49 +219,49 @@ class CCB_Core_Calendar extends CCB_Core_CPT {
 								'<br>'
 							),
 						],
-						'calendar_exclude_from_search' => [
-							'field_title' => esc_html__( 'Exclude From Search?', 'ccb-core' ),
+						'calendar_exclude_from_search'   => [
+							'field_title'           => esc_html__( 'Exclude From Search?', 'ccb-core' ),
 							'field_render_function' => 'render_radio',
-							'field_options' => [
+							'field_options'         => [
 								'yes' => esc_html__( 'Yes', 'ccb-core' ),
-								'no' => esc_html__( 'No', 'ccb-core' ),
+								'no'  => esc_html__( 'No', 'ccb-core' ),
 							],
-							'field_validation' => '',
-							'field_default' => 'no',
-							'field_attributes' => [ 'data-requires' => '{"calendar_enabled":1,"calendar_advanced":1}' ],
+							'field_validation'      => '',
+							'field_default'         => 'no',
+							'field_attributes'      => [ 'data-requires' => '{"calendar_enabled":1,"calendar_advanced":1}' ],
 						],
-						'calendar_publicly_queryable' => [
-							'field_title' => esc_html__( 'Publicly Queryable?', 'ccb-core' ),
+						'calendar_publicly_queryable'    => [
+							'field_title'           => esc_html__( 'Publicly Queryable?', 'ccb-core' ),
 							'field_render_function' => 'render_radio',
-							'field_options' => [
+							'field_options'         => [
 								'yes' => esc_html__( 'Yes', 'ccb-core' ),
-								'no' => esc_html__( 'No', 'ccb-core' ),
+								'no'  => esc_html__( 'No', 'ccb-core' ),
 							],
-							'field_validation' => '',
-							'field_default' => 'yes',
-							'field_attributes' => [ 'data-requires' => '{"calendar_enabled":1,"calendar_advanced":1}' ],
+							'field_validation'      => '',
+							'field_default'         => 'yes',
+							'field_attributes'      => [ 'data-requires' => '{"calendar_enabled":1,"calendar_advanced":1}' ],
 						],
-						'calendar_show_ui' => [
-							'field_title' => esc_html__( 'Show In Admin UI?', 'ccb-core' ),
+						'calendar_show_ui'               => [
+							'field_title'           => esc_html__( 'Show In Admin UI?', 'ccb-core' ),
 							'field_render_function' => 'render_radio',
-							'field_options' => [
+							'field_options'         => [
 								'yes' => esc_html__( 'Yes', 'ccb-core' ),
-								'no' => esc_html__( 'No', 'ccb-core' ),
+								'no'  => esc_html__( 'No', 'ccb-core' ),
 							],
-							'field_validation' => '',
-							'field_default' => 'yes',
-							'field_attributes' => [ 'data-requires' => '{"calendar_enabled":1,"calendar_advanced":1}' ],
+							'field_validation'      => '',
+							'field_default'         => 'yes',
+							'field_attributes'      => [ 'data-requires' => '{"calendar_enabled":1,"calendar_advanced":1}' ],
 						],
-						'calendar_show_in_nav_menus' => [
-							'field_title' => esc_html__( 'Show In Navigation Menus?', 'ccb-core' ),
+						'calendar_show_in_nav_menus'     => [
+							'field_title'           => esc_html__( 'Show In Navigation Menus?', 'ccb-core' ),
 							'field_render_function' => 'render_radio',
-							'field_options' => [
+							'field_options'         => [
 								'yes' => esc_html__( 'Yes', 'ccb-core' ),
-								'no' => esc_html__( 'No', 'ccb-core' ),
+								'no'  => esc_html__( 'No', 'ccb-core' ),
 							],
-							'field_validation' => '',
-							'field_default' => 'no',
-							'field_attributes' => [ 'data-requires' => '{"calendar_enabled":1,"calendar_advanced":1}' ],
+							'field_validation'      => '',
+							'field_default'         => 'no',
+							'field_attributes'      => [ 'data-requires' => '{"calendar_enabled":1,"calendar_advanced":1}' ],
 						],
 					],
 				],
@@ -284,19 +284,19 @@ class CCB_Core_Calendar extends CCB_Core_CPT {
 
 			$maps[ $this->name ] = [
 				'service' => 'public_calendar_listing',
-				'data' => [
+				'data'    => [
 					'date_start' => $calendar_options['date_start'],
-					'date_end' => $calendar_options['date_end'],
+					'date_end'   => $calendar_options['date_end'],
 				],
-				'nodes' => [ 'items', 'item' ],
-				'fields' => [
-					'event_name' => 'post_title',
+				'nodes'   => [ 'items', 'item' ],
+				'fields'  => [
+					'event_name'        => 'post_title',
 					'event_description' => 'post_content',
-					'date' => 'post_meta',
-					'start_time' => 'post_meta',
-					'end_time' => 'post_meta',
-					'event_duration' => 'post_meta',
-					'location' => 'post_meta',
+					'date'              => 'post_meta',
+					'start_time'        => 'post_meta',
+					'end_time'          => 'post_meta',
+					'event_duration'    => 'post_meta',
+					'location'          => 'post_meta',
 				],
 			];
 		}
@@ -341,8 +341,8 @@ class CCB_Core_Calendar extends CCB_Core_CPT {
 
 		// By default, set some sane limits.
 		$calendar_options = [
-			'date_start' => date( 'Y-m-d', strtotime( '1 weeks ago' ) ),
-			'date_end' => date( 'Y-m-d', strtotime( '+8 weeks' ) ),
+			'date_start' => gmdate( 'Y-m-d', strtotime( '1 weeks ago' ) ),
+			'date_end'   => gmdate( 'Y-m-d', strtotime( '+8 weeks' ) ),
 		];
 
 		// If the user has set a preferred date range type.
@@ -350,8 +350,8 @@ class CCB_Core_Calendar extends CCB_Core_CPT {
 
 			if ( 'relative' === $options['calendar_date_range_type'] ) {
 
-				$calendar_options['date_start'] = date( 'Y-m-d', strtotime( $options['calendar_relative_weeks_past'] . ' weeks ago' ) );
-				$calendar_options['date_end'] = date( 'Y-m-d', strtotime( '+' . $options['calendar_relative_weeks_future'] . ' weeks' ) );
+				$calendar_options['date_start'] = gmdate( 'Y-m-d', strtotime( $options['calendar_relative_weeks_past'] . ' weeks ago' ) );
+				$calendar_options['date_end']   = gmdate( 'Y-m-d', strtotime( '+' . $options['calendar_relative_weeks_future'] . ' weeks' ) );
 
 			} elseif ( 'specific' === $options['calendar_date_range_type'] ) {
 
@@ -359,27 +359,26 @@ class CCB_Core_Calendar extends CCB_Core_CPT {
 				// 1 year in the past or 1 year into the future to prevent
 				// them from blowing up their server.
 				if ( ! empty( $options['calendar_specific_start'] ) ) {
-					$last_year = strtotime( '1 year ago' );
+					$last_year       = strtotime( '1 year ago' );
 					$start_timestamp = strtotime( $options['calendar_specific_start'] );
 
 					if ( $last_year < $start_timestamp ) {
-						$calendar_options['date_start'] = date( 'Y-m-d', $start_timestamp );
+						$calendar_options['date_start'] = gmdate( 'Y-m-d', $start_timestamp );
 					} else {
-						$calendar_options['date_start'] = date( 'Y-m-d', $last_year );
+						$calendar_options['date_start'] = gmdate( 'Y-m-d', $last_year );
 					}
 				}
 
 				if ( ! empty( $options['calendar_specific_end'] ) ) {
-					$next_year = strtotime( '+1 year' );
+					$next_year     = strtotime( '+1 year' );
 					$end_timestamp = strtotime( $options['calendar_specific_end'] );
 
 					if ( $next_year > $end_timestamp ) {
-						$calendar_options['date_end'] = date( 'Y-m-d', $end_timestamp );
+						$calendar_options['date_end'] = gmdate( 'Y-m-d', $end_timestamp );
 					} else {
-						$calendar_options['date_end'] = date( 'Y-m-d', $next_year );
+						$calendar_options['date_end'] = gmdate( 'Y-m-d', $next_year );
 					}
 				}
-
 			}
 		}
 

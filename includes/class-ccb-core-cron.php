@@ -45,7 +45,7 @@ class CCB_Core_Cron {
 		if ( ! empty( $settings['auto_sync_timeout'] ) ) {
 			$schedules['ccb_core_schedule'] = [
 				'interval' => MINUTE_IN_SECONDS * absint( $settings['auto_sync_timeout'] ),
-				'display' => esc_html(
+				'display'  => esc_html(
 					sprintf(
 						__( 'Every %s Minutes' ),
 						absint( $settings['auto_sync_timeout'] )

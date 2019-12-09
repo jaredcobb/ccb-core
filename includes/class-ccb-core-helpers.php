@@ -109,56 +109,25 @@ class CCB_Core_Helpers {
 	 * @return   string
 	 */
 	public function encrypt( $data ) {
-		if ( ! function_exists( 'sodium_crypto_secretbox' ) ) {
-			return $this->legacy_encrypt( $data );
-		}
-
 		$encrypted_value = false;
 		if ( ! empty( $data ) ) {
+			if ( ! defined( 'CCB_CORE_ENCRYPTION_KEY' ) || ! CCB_CORE_ENCRYPTION_KEY ) {
+				$key_string = $this->generate_encryption_key();
+				$this->save_encryption_key( $key_string );
+			} else {
+				$key_string = CCB_CORE_ENCRYPTION_KEY;
+			}
 			try {
-				// Create a one-time random nonce and salt.
-				$nonce = random_bytes( SODIUM_CRYPTO_SECRETBOX_NONCEBYTES );
-				$salt = random_bytes( SODIUM_CRYPTO_PWHASH_SALTBYTES );
-				// Create a unique key that is seeded from the site's AUTH_KEY constant.
-				$key = sodium_crypto_pwhash(
-					SODIUM_CRYPTO_SECRETBOX_KEYBYTES,
-					AUTH_KEY,
-					$salt,
-					SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE,
-					SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE
+				$encrypted_value = base64_encode( \CCBCore\Defuse\Crypto\Crypto::encrypt( $data, \CCBCore\Defuse\Crypto\Key::loadFromAsciiSafeString( $key_string ) ) );
+			} catch ( Exception $ex ) {
+				$message = sprintf(
+					'CCB Core API could not encrypt your password. %s',
+					esc_html( $ex->getMessage() )
 				);
-				// Encrypt the data with the nonce and salt prepended so that we can
-				// use them to decrypt the value later.
-				$encrypted_value = base64_encode( $nonce . $salt . sodium_crypto_secretbox( $data, $nonce, $key ) );
-			} catch ( Exception $ex ) {
-				return new WP_Error( 'encrypt_failure', __( 'The string could not be encrypted via Sodium', 'ccb-core' ) );
+
+				$ccb_core_notices = new CCB_Core_Notices();
+				$ccb_core_notices->save_notice( $message, 'error' );
 			}
-
-		}
-
-		return $encrypted_value;
-	}
-
-	/**
-	 * Encrypts and base64_encodes a string safe for serialization in WordPress
-	 * when the Sodium functions are not available (typically below PHP 7.2)
-	 *
-	 * @param string $data The data to be encrypted.
-	 *
-	 * @return string
-	 */
-	private function legacy_encrypt( $data ) {
-		$encrypted_value = false;
-		$key = hash_hmac( 'sha512', AUTH_SALT, AUTH_KEY );
-
-		if ( ! empty( $data ) ) {
-			try {
-				$e = new CCB_Core_Vendor_Encryption( MCRYPT_BlOWFISH, MCRYPT_MODE_CBC );
-				$encrypted_value = base64_encode( $e->encrypt( $data, $key ) );
-			} catch ( Exception $ex ) {
-				return new WP_Error( 'encrypt_failure', __( 'The string could not be encrypted', 'ccb-core' ) );
-			}
-
 		}
 
 		return $encrypted_value;
@@ -173,80 +142,103 @@ class CCB_Core_Helpers {
 	 * @return   string
 	 */
 	public function decrypt( $data ) {
-		if ( ! function_exists( 'sodium_crypto_secretbox_open' ) ) {
-			return $this->legacy_decrypt( $data );
-		}
-
 		$decrypted_value = false;
-		if ( ! empty( $data ) ) {
+		if ( ! empty( $data ) && defined( 'CCB_CORE_ENCRYPTION_KEY' ) && CCB_CORE_ENCRYPTION_KEY ) {
+			$key_string = CCB_CORE_ENCRYPTION_KEY;
 			try {
-				// Decode the stored value.
-				$decoded_data = base64_decode( $data );
-				// Get the stored nonce from the beginning of the multibyte string.
-				$nonce = mb_substr(
-					$decoded_data,
-					0,
-					SODIUM_CRYPTO_SECRETBOX_NONCEBYTES,
-					'8bit'
-				);
-				// Get the stored salt from the middle of the multibyte string.
-				$salt = mb_substr(
-					$decoded_data,
-					SODIUM_CRYPTO_SECRETBOX_NONCEBYTES,
-					SODIUM_CRYPTO_PWHASH_SALTBYTES,
-					'8bit'
-				);
-				// Get the encrypted data from the end of the multibyte string.
-				$cipher = mb_substr(
-					$decoded_data,
-					SODIUM_CRYPTO_SECRETBOX_NONCEBYTES + SODIUM_CRYPTO_PWHASH_SALTBYTES,
-					null,
-					'8bit'
-				);
-				// Generate the known key from the stored salt and site's AUTH_KEY constant.
-				$key = sodium_crypto_pwhash(
-					SODIUM_CRYPTO_SECRETBOX_KEYBYTES,
-					AUTH_KEY,
-					$salt,
-					SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE,
-					SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE
-				);
 				// Decrypt the data using the stored nonce.
-				$decrypted_value = sodium_crypto_secretbox_open( $cipher, $nonce, $key );
+				$decrypted_value = \CCBCore\Defuse\Crypto\Crypto::decrypt( base64_decode( $data ), \CCBCore\Defuse\Crypto\Key::loadFromAsciiSafeString( $key_string ) );
 			} catch ( Exception $ex ) {
-				return new WP_Error( 'decrypt_failure', __( 'The string could not be decrypted', 'ccb-core' ) );
-			}
+				$message = sprintf(
+					'CCB Core API could not decrypt your password. %s',
+					esc_html( $ex->getMessage() )
+				);
 
+				$ccb_core_notices = new CCB_Core_Notices();
+				$ccb_core_notices->save_notice( $message, 'error' );
+			}
 		}
 
 		return $decrypted_value;
 	}
 
 	/**
-	 * Decrypts and base64_decodes a string when the Sodium functions
-	 * are not available (typically below PHP 7.2)
+	 * Generate a new encryption key.
 	 *
-	 * @since    1.0.0
-	 * @access   public
-	 * @param    string $data The data to be decrypted.
-	 * @return   string
+	 * @return mixed
 	 */
-	public function legacy_decrypt( $data ) {
+	private function generate_encryption_key() {
+		try {
+			$key = \CCBCore\Defuse\Crypto\Key::createNewRandomKey();
+			return $key->saveToAsciiSafeString();
+		} catch ( Exception $ex ) {
+			$message = sprintf(
+				'CCB Core API could not generate an encryption key. %s',
+				esc_html( $ex->getMessage() )
+			);
 
-		$decrypted_value = false;
-		$key = hash_hmac( 'sha512', AUTH_SALT, AUTH_KEY );
+			$ccb_core_notices = new CCB_Core_Notices();
+			$ccb_core_notices->save_notice( $message, 'error' );
+			return false;
+		}
+	}
 
-		if ( ! empty( $data ) ) {
-			try {
-				$e = new CCB_Core_Vendor_Encryption( MCRYPT_BlOWFISH, MCRYPT_MODE_CBC );
-				$decrypted_value = $e->decrypt( base64_decode( $data ), $key );
-			} catch ( Exception $ex ) {
-				return new WP_Error( 'decrypt_failure', __( 'The string could not be decrypted', 'ccb-core' ) );
+	/**
+	 * Saves the encryption key to a config file.
+	 *
+	 * @param string $key_string Ascii representation of the key.
+	 *
+	 * @return bool
+	 * @throws Exception Error on save.
+	 */
+	private function save_encryption_key( $key_string ) {
+		global $wp_filesystem;
+		$config_path = CCB_CORE_PATH . 'ccb-core-config.php';
+
+		try {
+			if ( $wp_filesystem->exists( $config_path ) ) {
+				$wp_filesystem->delete( $config_path );
 			}
 
-		}
+			$key_definition = "define( 'CCB_CORE_ENCRYPTION_KEY', '{$key_string}' );\n";
+			if ( ! $wp_filesystem->put_contents( $config_path, $this->get_config_file_template() . $key_definition ) ) {
+				throw new Exception( 'The WP_Filesystem class failed to save the file.' );
+			}
+		} catch ( Exception $ex ) {
+			$message = sprintf(
+				'CCB Core API could not save the encryption key. %s',
+				esc_html( $ex->getMessage() )
+			);
 
-		return $decrypted_value;
+			$ccb_core_notices = new CCB_Core_Notices();
+			$ccb_core_notices->save_notice( $message, 'error' );
+			return false;
+		}
+	}
+
+	/**
+	 * Returns a PHP template for the config file.
+	 *
+	 * @return string
+	 */
+	private function get_config_file_template() {
+		return <<<'PHP'
+<?php
+/**
+ * CCB Core Config
+ *
+ * @link       https://www.wpccb.com
+ * @since      1.0.8
+ *
+ * @package    CCB_Core
+ */
+
+// Do not allow direct access to this file.
+if ( ! defined( 'WPINC' ) ) {
+	die;
+}
+
+PHP;
 	}
 
 	/**
@@ -269,7 +261,7 @@ class CCB_Core_Helpers {
 		echo wp_json_encode(
 			[
 				'success' => true,
-				'data' => $data,
+				'data'    => $data,
 			]
 		);
 
@@ -345,7 +337,7 @@ class CCB_Core_Helpers {
 			finfo_close( $resource );
 			if ( $mimetype ) {
 				$mimetype_array = explode( '/', $mimetype );
-				$extension = '.' . $mimetype_array[1];
+				$extension      = '.' . $mimetype_array[1];
 			}
 		}
 
@@ -356,7 +348,7 @@ class CCB_Core_Helpers {
 			$filename = ! empty( $filename ) ? sanitize_file_name( $filename ) : 'ccb_' . crc32( $image_url );
 
 			$file_array = [
-				'name' => $filename . $extension,
+				'name'     => $filename . $extension,
 				'tmp_name' => $temp_file,
 			];
 
@@ -379,7 +371,6 @@ class CCB_Core_Helpers {
 
 				return $media_id;
 			}
-
 		}
 
 		return false;
@@ -403,8 +394,8 @@ class CCB_Core_Helpers {
 		 * @param   bool $allowed Whether this plugin is allowed to use custom upload paths.
 		 */
 		if ( apply_filters( 'ccb_core_allow_custom_uploads_directory', true ) ) {
-			$upload['path'] = trailingslashit( $upload['basedir'] ) . 'ccb';
-			$upload['url'] = $upload['baseurl'] . '/ccb';
+			$upload['path']   = trailingslashit( $upload['basedir'] ) . 'ccb';
+			$upload['url']    = $upload['baseurl'] . '/ccb';
 			$upload['subdir'] = '/ccb';
 		}
 		return $upload;

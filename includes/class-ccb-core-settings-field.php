@@ -54,8 +54,8 @@ class CCB_Core_Settings_Field {
 	 */
 	public function __construct( $field_id, $field ) {
 
-		$this->field_id = $field_id;
-		$this->field = $field;
+		$this->field_id          = $field_id;
+		$this->field             = $field;
 		$this->existing_settings = CCB_Core_Helpers::instance()->get_options();
 
 	}

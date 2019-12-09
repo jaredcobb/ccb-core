@@ -79,8 +79,8 @@ class CCB_Core_Synchronizer {
 	 */
 	public function initialize_map() {
 		$post_type_maps = [];
-		$taxonomy_maps = [];
-		$this->map = array_merge_recursive(
+		$taxonomy_maps  = [];
+		$this->map      = array_merge_recursive(
 			/**
 			 * Get a collection of all post type / API mappings.
 			 *
@@ -197,7 +197,6 @@ class CCB_Core_Synchronizer {
 					break;
 
 				}
-
 			}
 		}
 
@@ -222,13 +221,13 @@ class CCB_Core_Synchronizer {
 	public function update_content( $response, $settings, $post_type ) {
 
 		$result = [
-			'success' => true,
+			'success'       => true,
 			'insert_update' => [
-				'success' => true,
+				'success'   => true,
 				'processed' => 0,
 			],
-			'delete' => [
-				'success' => true,
+			'delete'        => [
+				'success'   => true,
 				'processed' => 0,
 			],
 		];
@@ -308,7 +307,7 @@ class CCB_Core_Synchronizer {
 	 */
 	public function get_entities( $response, $nodes ) {
 		if ( ! empty( $nodes ) ) {
-			$depth = count( $nodes ) - 1;
+			$depth      = count( $nodes ) - 1;
 			$collection = $response['body']->response;
 			for ( $i = 0; $i < $depth; $i++ ) {
 				$collection = $collection->{$nodes[ $i ]};
@@ -335,33 +334,33 @@ class CCB_Core_Synchronizer {
 	public function get_existing_post_data( $post_type ) {
 		// Batch the WP_Query for performance.
 		$posts_per_page = 100;
-		$offset = 0;
-		$collection = [];
+		$offset         = 0;
+		$collection     = [];
 
 		do {
 			$args = [
-				'post_type' => $post_type,
-				'post_status' => 'any',
+				'post_type'      => $post_type,
+				'post_status'    => 'any',
 				'posts_per_page' => $posts_per_page,
-				'offset' => $offset,
-				'orderby' => 'ID',
-				'no_rows_found' => true,
-				'fields' => 'ids',
+				'offset'         => $offset,
+				'orderby'        => 'ID',
+				'no_rows_found'  => true,
+				'fields'         => 'ids',
 			];
 
-			$posts = new WP_Query( $args );
+			$posts      = new WP_Query( $args );
 			$have_posts = ! empty( $posts->posts );
 
 			if ( $have_posts ) {
 				foreach ( $posts->posts as $post_id ) {
 					// These are saved during the insert / update process (if possible)
 					// in order to attempt future updates.
-					$entity_id = get_post_meta( $post_id, 'entity_id', true );
+					$entity_id         = get_post_meta( $post_id, 'entity_id', true );
 					$ccb_modified_date = get_post_meta( $post_id, 'ccb_modified_date', true );
 
 					if ( ! empty( $entity_id ) ) {
 						$collection[ $entity_id ] = [
-							'post_id' => $post_id,
+							'post_id'           => $post_id,
 							'ccb_modified_date' => $ccb_modified_date,
 						];
 					}
@@ -396,7 +395,7 @@ class CCB_Core_Synchronizer {
 
 		$collection = [
 			'insert_update' => [],
-			'delete' => [],
+			'delete'        => [],
 		];
 
 		// Create a master collection of new entity ids
@@ -478,11 +477,10 @@ class CCB_Core_Synchronizer {
 					if ( apply_filters( 'ccb_core_synchronizer_entity_insert_allowed', true, $entity, $entity_id, $post_type ) ) {
 						$entity->addChild( 'post_id', 0 ); // This is a WordPress post ID, so this will be an insert.
 						$collection['insert_update'][] = $entity;
-						$synced_entity_ids[] = $entity_id;
+						$synced_entity_ids[]           = $entity_id;
 					}
 				}
 			}
-
 		}
 
 		// For each existing post, check to see if it was included
@@ -578,21 +576,21 @@ class CCB_Core_Synchronizer {
 		$this->enable_optimizations();
 
 		$result = [
-			'success' => true,
+			'success'   => true,
 			'processed' => 0,
-			'message' => '',
+			'message'   => '',
 		];
 
 		foreach ( $entities as $entity ) {
 			// Build a new $args array for each post insert
 			// based on the settings config.
 			$args = [
-				'ID' => (int) $entity->post_id, // Will be set to 0 if this is an insert.
-				'post_title' => '', // Default to empty, expected to be overriden by the settings.
+				'ID'           => (int) $entity->post_id, // Will be set to 0 if this is an insert.
+				'post_title'   => '', // Default to empty, expected to be overriden by the settings.
 				'post_content' => '', // Default to empty, expected to be overriden by the settings.
-				'post_status' => 'publish',
-				'post_type' => $post_type,
-				'meta_input' => [],
+				'post_status'  => 'publish',
+				'post_type'    => $post_type,
+				'meta_input'   => [],
 			];
 
 			// Inspect each field defined in the settings. If it's a
@@ -698,9 +696,9 @@ class CCB_Core_Synchronizer {
 	 */
 	public function delete_posts( $post_ids ) {
 		$result = [
-			'success' => true,
+			'success'   => true,
 			'processed' => 0,
-			'message' => '',
+			'message'   => '',
 		];
 
 		foreach ( $post_ids as $post_id ) {
@@ -776,7 +774,7 @@ class CCB_Core_Synchronizer {
 	 */
 	public function prepare_terms( $entity, $settings ) {
 		$categories = [];
-		$tags = [];
+		$tags       = [];
 
 		if ( ! empty( $settings['taxonomies']['hierarchical'] ) ) {
 			foreach ( $settings['taxonomies']['hierarchical'] as $taxonomy => $node ) {

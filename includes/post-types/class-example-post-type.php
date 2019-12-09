@@ -48,33 +48,33 @@ class Example_Post_Type extends CCB_Core_CPT {
 	public function get_post_args() {
 
 		return [
-			'labels' => [
-				'name' => 'Example Posts',
-				'singular_name' => 'Example Post',
-				'all_items' => 'All Example Posts',
-				'add_new' => 'Add New',
-				'add_new_item' => 'Add New Example Post',
-				'edit' => 'Edit',
-				'edit_item' => 'Edit Example Post',
-				'new_item' => 'New Example Post',
-				'view_item' => 'View Example Post',
-				'search_items' => 'Search Example Posts',
-				'not_found' => 'Nothing found in the Database.',
+			'labels'              => [
+				'name'               => 'Example Posts',
+				'singular_name'      => 'Example Post',
+				'all_items'          => 'All Example Posts',
+				'add_new'            => 'Add New',
+				'add_new_item'       => 'Add New Example Post',
+				'edit'               => 'Edit',
+				'edit_item'          => 'Edit Example Post',
+				'new_item'           => 'New Example Post',
+				'view_item'          => 'View Example Post',
+				'search_items'       => 'Search Example Posts',
+				'not_found'          => 'Nothing found in the Database.',
 				'not_found_in_trash' => 'Nothing found in Trash',
 			],
-			'description' => 'These are Example Posts that came from CCB',
-			'public' => true,
-			'publicly_queryable' => true,
+			'description'         => 'These are Example Posts that came from CCB',
+			'public'              => true,
+			'publicly_queryable'  => true,
 			'exclude_from_search' => false,
-			'show_ui' => true,
-			'show_in_nav_menus' => false,
-			'query_var' => true,
-			'menu_position' => 8,
-			'rewrite' => [ 'slug' => 'examples' ],
-			'has_archive' => 'examples',
-			'capability_type' => 'post',
-			'hierarchical' => false,
-			'supports' => [ 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields', 'sticky' ],
+			'show_ui'             => true,
+			'show_in_nav_menus'   => false,
+			'query_var'           => true,
+			'menu_position'       => 8,
+			'rewrite'             => [ 'slug' => 'examples' ],
+			'has_archive'         => 'examples',
+			'capability_type'     => 'post',
+			'hierarchical'        => false,
+			'supports'            => [ 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields', 'sticky' ],
 		];
 
 	}
@@ -104,13 +104,13 @@ class Example_Post_Type extends CCB_Core_CPT {
 
 		$maps[ $this->name ] = [
 			'service' => 'ccb_service_name', // This becomes the `srv` URL parameter in the API request.
-			'data' => [
-				'another_parameter' => true, // These are any additional URL parameters that need to be sent with the API request.
+			'data'    => [
+				'another_parameter'     => true, // These are any additional URL parameters that need to be sent with the API request.
 				'yet_another_parameter' => 'abc123',
 			],
-			'nodes' => [ 'elements', 'element' ], // The path from <response> all the way to (and including) the CCB Entity.
-			'fields' => [
-				'some_property' => 'post_title', // Map to a Post Title from an entity's property.
+			'nodes'   => [ 'elements', 'element' ], // The path from <response> all the way to (and including) the CCB Entity.
+			'fields'  => [
+				'some_property'    => 'post_title', // Map to a Post Title from an entity's property.
 				'another_property' => 'post_content', // Map to any other WP_Post property by name.
 				'a_third_property' => 'post_meta', // Map to `post_meta` to have this saved as post meta.
 			],
