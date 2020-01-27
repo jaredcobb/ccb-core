@@ -149,6 +149,9 @@ class CCB_Core_Synchronizer {
 		// Set a flag to globally signal that a sync is in progress.
 		set_transient( CCB_Core_Helpers::SYNC_STATUS_KEY, true, MINUTE_IN_SECONDS * 10 );
 
+		global $wpdb;
+		do_action( 'ai_logger_insert', 'Queries Pre', var_export( $wpdb->queries, true ) );
+
 		// For each registered custom post type, call the
 		// API and get a response object.
 		foreach ( $this->map as $post_type => $settings ) {
@@ -206,6 +209,8 @@ class CCB_Core_Synchronizer {
 		// Delete the sync in progress flag.
 		delete_transient( CCB_Core_Helpers::SYNC_STATUS_KEY );
 
+		do_action( 'ai_logger_insert', 'Queries Post', var_export( $wpdb->queries, true ) );
+
 		return $result;
 	}
 
@@ -240,7 +245,8 @@ class CCB_Core_Synchronizer {
 		// Get a collection of existing posts (previously imported) from WordPress.
 		// This is organized by a key of an entitiy id (from CCB) and contains
 		// the WordPress post_id and optional ccb_modified_date.
-		$post_data = $this->get_existing_post_data( $post_type );
+		$ccb_core_query = new CCB_Core_Query();
+		$post_data      = $ccb_core_query->get_existing_post_data( $post_type );
 
 		// Organize the entities and existing post data into their
 		// respective CRUD operations. This will return an array
@@ -340,11 +346,11 @@ class CCB_Core_Synchronizer {
 		do {
 			$args = [
 				'post_type'      => $post_type,
-				'post_status'    => 'any',
+				'post_status'    => 'publish',
 				'posts_per_page' => $posts_per_page,
 				'offset'         => $offset,
 				'orderby'        => 'ID',
-				'no_rows_found'  => true,
+				'no_found_rows'  => true,
 				'fields'         => 'ids',
 			];
 
@@ -406,7 +412,8 @@ class CCB_Core_Synchronizer {
 
 		foreach ( $entities->children() as $entity ) {
 
-			$entity_id = $this->get_entity_id( $entity );
+			$entity_id        = $this->get_entity_id( $entity );
+			$existing_post_id = array_search( strval( $entity_id ), array_combine( array_keys( $post_data ), array_column( $post_data, 'entity_id' ) ), true );
 
 			// If the entity_id is a 32 character hash it means we cannot
 			// map it to some known older post data because it either
@@ -434,7 +441,7 @@ class CCB_Core_Synchronizer {
 					// If the unique id for the new entity couldn't be found
 					// in the existing collection, it is new. Add it
 					// to the insert collection.
-					if ( ! array_key_exists( $entity_id, $post_data ) ) {
+					if ( ! $existing_post_id ) {
 						$entity->addChild( 'post_id', 0 ); // This is a WordPress post ID, so this will be an insert.
 						$collection['insert_update'][] = $entity;
 					}
@@ -444,7 +451,7 @@ class CCB_Core_Synchronizer {
 					$synced_entity_ids[] = $entity_id;
 				}
 			} else {
-				if ( array_key_exists( $entity_id, $post_data ) && ! empty( $entity->modified ) ) {
+				if ( $existing_post_id && ! empty( $entity->modified ) ) {
 					/**
 					 * Whether or not this specific entity is allowed to update.
 					 *
@@ -461,14 +468,14 @@ class CCB_Core_Synchronizer {
 					if ( apply_filters( 'ccb_core_synchronizer_entity_update_allowed', true, $entity, $entity_id, $post_type ) ) {
 						// If an existing post has a newer modified date from the API
 						// add it to the insert_update collection with its existing post id.
-						if ( strtotime( $entity->modified ) > strtotime( $post_data[ $entity_id ]['ccb_modified_date'] ) ) {
-							$entity->addChild( 'post_id', $post_data[ $entity_id ]['post_id'] ); // This is a WordPress post ID, so this will be an update.
+						if ( strtotime( $entity->modified ) > strtotime( $post_data[ $existing_post_id ]['ccb_modified_date'] ) ) {
+							$entity->addChild( 'post_id', $existing_post_id ); // This is a WordPress post ID, so this will be an update.
 							$collection['insert_update'][] = $entity;
 						}
 						// Even though we may not have made an update (i.e. it currently
 						// exists but hasn't changed), we still add this as a "synced" id
 						// so that it doesn't get deleted.
-						$synced_entity_ids[] = $entity_id;
+						$synced_entity_ids[] = (string) $entity_id;
 					}
 				} else {
 					// The unique id for the new entity couldn't be found
@@ -477,7 +484,7 @@ class CCB_Core_Synchronizer {
 					if ( apply_filters( 'ccb_core_synchronizer_entity_insert_allowed', true, $entity, $entity_id, $post_type ) ) {
 						$entity->addChild( 'post_id', 0 ); // This is a WordPress post ID, so this will be an insert.
 						$collection['insert_update'][] = $entity;
-						$synced_entity_ids[]           = $entity_id;
+						$synced_entity_ids[]           = (string) $entity_id;
 					}
 				}
 			}
@@ -486,8 +493,8 @@ class CCB_Core_Synchronizer {
 		// For each existing post, check to see if it was included
 		// in this entity id collection from this most recent
 		// API response. If it doesn't exist, it was deleted in CCB.
-		foreach ( $post_data as $entity_id => $data ) {
-			if ( ! in_array( $entity_id, $synced_entity_ids, true ) ) {
+		foreach ( $post_data as $existing_post_id => $data ) {
+			if ( ! in_array( $data['entity_id'], $synced_entity_ids, true ) ) {
 				/**
 				 * Whether or not this specific entity is allowed to delete.
 				 *
@@ -502,7 +509,7 @@ class CCB_Core_Synchronizer {
 				 * @param   string $post_type The current post type.
 				 */
 				if ( apply_filters( 'ccb_core_synchronizer_entity_delete_allowed', true, $data, $entity_id, $post_type ) ) {
-					$collection['delete'][] = $data['post_id'];
+					$collection['delete'][] = $existing_post_id;
 				}
 			}
 		}
@@ -860,11 +867,11 @@ class CCB_Core_Synchronizer {
 	private function enable_optimizations() {
 		// Remove expensive unneeded actions.
 		remove_action( 'do_pings', 'do_all_pings', 10, 1 );
+		add_filter( 'wpseo_should_index_links', '__return_false' );
 
 		// Temporarily disable counting for performance.
 		wp_defer_term_counting( true );
 		wp_defer_comment_counting( true );
-		wp_suspend_cache_addition( true );
 
 		// Unit tests rollback database transactions, do not
 		// alter commit settings for unit tests.
@@ -881,7 +888,6 @@ class CCB_Core_Synchronizer {
 	 * @return void
 	 */
 	private function disable_optimizations() {
-
 		// Unit tests rollback database transactions, do not
 		// alter commit settings for unit tests.
 		if ( ! defined( 'IS_UNIT_TEST' ) ) {
@@ -893,12 +899,8 @@ class CCB_Core_Synchronizer {
 		}
 
 		// Re-enable counting.
-		wp_suspend_cache_addition( false );
-		wp_defer_term_counting( false );
 		wp_defer_comment_counting( false );
-
-		// Re-attach expensive actions.
-		add_action( 'do_pings', 'do_all_pings', 10, 1 );
+		wp_defer_term_counting( false );
 	}
 
 }

@@ -49,7 +49,7 @@ class CCB_Core_Requirements {
 	 *
 	 * @var array
 	 */
-	private $required_modules = [ 'OpenSSL' => 'openssl' ];
+	private $required_modules = [ 'OpenSSL' => [ 'openssl', '1.0.1' ] ];
 
 	/**
 	 * Any applicable error messages
@@ -131,14 +131,29 @@ class CCB_Core_Requirements {
 	 * @return void
 	 */
 	private function validate_modules() {
-		foreach ( $this->required_modules as $module_name => $module_slug ) {
-			if ( ! extension_loaded( $module_slug ) ) {
+		foreach ( $this->required_modules as $module_name => $module_slug_version ) {
+			if ( ! extension_loaded( $module_slug_version[0] ) ) {
 				$this->requirements_met = false;
 				$this->error_message    = sprintf(
 					'Church Community Builder Core API requires that you have the ' .
-					'%s PHP module installed. Please contact your hosting provider ' .
+					'%s PHP module (version %s or newer) installed. Please contact your hosting provider ' .
 					'and ask them if they can install or enable that module for your site.',
-					$module_name
+					$module_name,
+					$module_slug_version[1]
+				);
+				$this->register_disable_plugin();
+				return;
+			} elseif ( defined( 'OPENSSL_VERSION_NUMBER' ) && defined( 'OPENSSL_VERSION_TEXT' ) && OPENSSL_VERSION_NUMBER < 0x1000100f ) {
+				$this->requirements_met = false;
+				$this->error_message    = sprintf(
+					'Church Community Builder Core API requires that you have the ' .
+					'%1$s PHP module (version %2$s or newer) installed. While you do have the ' .
+					'module installed, it is reporting your version is "%3$s". Please contact ' .
+					'your hosting provider and ask them if they can install and enable the newer ' .
+					'version of the module for your site.',
+					$module_name,
+					$module_slug_version[1],
+					OPENSSL_VERSION_TEXT
 				);
 				$this->register_disable_plugin();
 				return;

@@ -59,6 +59,9 @@ class CCB_Core {
 		require_once CCB_CORE_PATH . 'includes/class-ccb-core-settings-section.php';
 		require_once CCB_CORE_PATH . 'includes/class-ccb-core-settings-field.php';
 
+		// A class to optimize some heavy queries for synchronization.
+		require_once CCB_CORE_PATH . 'includes/class-ccb-core-query.php';
+
 		// The class that handles communication with the CCB API.
 		require_once CCB_CORE_PATH . 'includes/class-ccb-core-api.php';
 
