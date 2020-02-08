@@ -149,8 +149,6 @@ class CCB_Core_Synchronizer {
 		// Set a flag to globally signal that a sync is in progress.
 		set_transient( CCB_Core_Helpers::SYNC_STATUS_KEY, true, MINUTE_IN_SECONDS * 10 );
 
-		global $wpdb;
-
 		// For each registered custom post type, call the
 		// API and get a response object.
 		foreach ( $this->map as $post_type => $settings ) {
