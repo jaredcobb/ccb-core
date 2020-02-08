@@ -8,6 +8,8 @@
     <exclude name="WordPress.WP.I18n.MissingTranslatorsComment" />
     <exclude name="WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode" />
     <exclude name="WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode" />
+    <exclude name="WordPress.DB.DirectDatabaseQuery.DirectQuery" />
+    <exclude name="WordPress.DB.DirectDatabaseQuery.NoCaching" />
 	</rule>
 
 	<rule ref="Generic.WhiteSpace.ScopeIndent.IncorrectExact">
