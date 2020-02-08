@@ -150,7 +150,6 @@ class CCB_Core_Synchronizer {
 		set_transient( CCB_Core_Helpers::SYNC_STATUS_KEY, true, MINUTE_IN_SECONDS * 10 );
 
 		global $wpdb;
-		do_action( 'ai_logger_insert', 'Queries Pre', var_export( $wpdb->queries, true ) );
 
 		// For each registered custom post type, call the
 		// API and get a response object.
@@ -208,8 +207,6 @@ class CCB_Core_Synchronizer {
 		update_option( 'ccb_core_latest_sync_result', $result );
 		// Delete the sync in progress flag.
 		delete_transient( CCB_Core_Helpers::SYNC_STATUS_KEY );
-
-		do_action( 'ai_logger_insert', 'Queries Post', var_export( $wpdb->queries, true ) );
 
 		return $result;
 	}
