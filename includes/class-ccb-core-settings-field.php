@@ -226,6 +226,43 @@ class CCB_Core_Settings_Field {
 	}
 
 	/**
+	 * Render a select
+	 *
+	 * @access    protected
+	 * @since     1.0.8
+	 * @return    void
+	 */
+	protected function render_select() {
+		$value = '';
+
+		if ( isset( $this->existing_settings[ $this->field_id ] ) ) {
+			$value = $this->existing_settings[ $this->field_id ];
+		}
+
+		echo sprintf(
+			'<select name="ccb_core_settings[%s]" ',
+			esc_attr( $this->field_id )
+		);
+
+		$this->output_attributes();
+
+		echo '>';
+
+		if ( ! empty( $this->field['field_options'] ) ) {
+			foreach ( (array) $this->field['field_options'] as $option_value => $option_label ) {
+				echo sprintf(
+					'<option value="%1$s" %2$s >%3$s</option>',
+					esc_attr( $option_value ),
+					selected( $value, $option_value, false ),
+					esc_attr( $option_label )
+				);
+			}
+		}
+
+		echo '</select>';
+	}
+
+	/**
 	 * Render a username and password field
 	 *
 	 * @access    protected
